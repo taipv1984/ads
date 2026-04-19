@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_CONFIG } from './config';
+import { API_CONFIG } from '@/services/config';
 
 /**
  * Cấu hình Axios Client chuyên nghiệp.

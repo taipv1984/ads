@@ -1,4 +1,4 @@
-import { User } from '../types/user.type';
+import { User } from '@/services/types/user.type';
 
 export const initialUsers: User[] = [
   {

@@ -1,5 +1,5 @@
-import { Product, CreateProductDTO, UpdateProductDTO, ProductFilter } from '../../types/product.type';
-import { initialProducts } from '../../mocks/product.mock';
+import { Product, CreateProductDTO, UpdateProductDTO, ProductFilter } from '@/services/types/product.type';
+import { initialProducts } from '@/services/mocks/product.mock';
 
 // In-memory state for mock data
 let products: Product[] = [...initialProducts];

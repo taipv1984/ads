@@ -1,5 +1,5 @@
-import apiClient from '../../api.client';
-import { CreateUserDTO, UpdateUserDTO, User, UserFilter } from '../../types/user.type';
+import apiClient from '@/services/api.client';
+import { CreateUserDTO, UpdateUserDTO, User, UserFilter } from '@/services/types/user.type';
 
 export const userApi = {
   getUsers: async (filter?: UserFilter): Promise<User[]> => {

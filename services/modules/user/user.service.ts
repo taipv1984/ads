@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { USE_MOCK } from '../../config';
-import { CreateUserDTO, UpdateUserDTO, UserFilter } from '../../types/user.type';
+import { USE_MOCK } from '@/services/config';
+import { CreateUserDTO, UpdateUserDTO, UserFilter } from '@/services/types/user.type';
 import { userApi } from './user.api';
 import { userMock } from './user.mock';
 

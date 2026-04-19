@@ -1,5 +1,5 @@
-import { initialUsers } from '../../mocks/user.mock';
-import { CreateUserDTO, UpdateUserDTO, User, UserFilter } from '../../types/user.type';
+import { initialUsers } from '@/services/mocks/user.mock';
+import { CreateUserDTO, UpdateUserDTO, User, UserFilter } from '@/services/types/user.type';
 
 // In-memory state for mock data
 let users: User[] = [...initialUsers];

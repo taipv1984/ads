@@ -1,5 +1,5 @@
-import apiClient from '../../api.client';
-import { Product, CreateProductDTO, UpdateProductDTO, ProductFilter } from '../../types/product.type';
+import apiClient from '@/services/api.client';
+import { Product, CreateProductDTO, UpdateProductDTO, ProductFilter } from '@/services/types/product.type';
 
 export const productApi = {
   getProducts: async (filter?: ProductFilter): Promise<Product[]> => {
