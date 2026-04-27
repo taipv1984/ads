@@ -45,6 +45,7 @@
         {
           "android": {
             "kotlinVersion": "2.0.21",
+            "useLegacyPackaging": true,
             "extraCompilerArgs": [
               "-Xskip-metadata-version-check"
             ]
