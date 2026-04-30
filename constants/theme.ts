@@ -14,6 +14,8 @@ export const COLOR = {
   error: '#FF3B30',
   warning: '#FFCC00',
   info: '#007AFF',
+  blue: '#007AFF',
+  blue_light: '#E6F2FF',
 
   // Nhóm màu trung tính (Neutral Colors)
   background: '#FFF9F1', // Màu kem nền nhẹ kiểu cổ điển

@@ -39,6 +39,15 @@ const OtherModes = () => {
         </View>
         <Text style={styles.cardTitle}>Nối Phép Tính</Text>
       </TouchableOpacity>
+      <TouchableOpacity 
+        style={[styles.card, { marginTop: SPACING.md }]} 
+        onPress={() => router.push('/math-fill')}
+      >
+        <View style={styles.iconContainer}>
+          <MaterialCommunityIcons name="format-text-variant-outline" size={40} color={COLOR.secondary} />
+        </View>
+        <Text style={styles.cardTitle}>Điền Vào Chỗ Trống</Text>
+      </TouchableOpacity>
     </View>
   );
 };
