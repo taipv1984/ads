@@ -1,18 +1,18 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { Canvas, Line, Path, Skia, Group, Shadow } from '@shopify/react-native-skia';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useSharedValue, runOnJS, useDerivedValue } from 'react-native-reanimated';
-import { EquationQuestion, Connection, EquationItemData } from '../types/equation.types';
-import EquationItem, { ITEM_WIDTH, ITEM_HEIGHT } from './EquationItem';
 import { COLOR } from '@/constants/theme';
+import { Canvas, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import { Connection, EquationItemData, EquationQuestion } from '../../../services/types/equation-matching.types';
+import EquationItem, { ITEM_HEIGHT, ITEM_WIDTH } from './EquationItem';
 
 const { width } = Dimensions.get('window');
 
 // Layout constants
 const LEFT_COL_X = width * 0.04;
 const RIGHT_COL_X = width * 0.96 - ITEM_WIDTH;
-const VERTICAL_GAP = 75; 
+const VERTICAL_GAP = 75;
 const START_Y = 20;
 
 interface Props {
@@ -54,7 +54,7 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
   const getAnchor = (id: string) => {
     const pos = itemPositions[id];
     if (!pos) return { x: 0, y: 0 };
-    return pos.side === 'left' 
+    return pos.side === 'left'
       ? { x: pos.x + ITEM_WIDTH, y: pos.y + ITEM_HEIGHT / 2 }
       : { x: pos.x, y: pos.y + ITEM_HEIGHT / 2 };
   };
@@ -75,8 +75,8 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
 
       for (const id in currentPos) {
         const p = currentPos[id];
-        if (e.x >= p.x && e.x <= p.x + ITEM_WIDTH && 
-            e.y >= p.y && e.y <= p.y + ITEM_HEIGHT) {
+        if (e.x >= p.x && e.x <= p.x + ITEM_WIDTH &&
+          e.y >= p.y && e.y <= p.y + ITEM_HEIGHT) {
           foundId = id;
           break;
         }
@@ -85,11 +85,11 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
       if (foundId) {
         activeIdSV.value = foundId;
         runOnJS(setLocalActiveId)(foundId);
-        
+
         const p = currentPos[foundId];
         const ax = p.side === 'left' ? p.x + ITEM_WIDTH : p.x;
         const ay = p.y + ITEM_HEIGHT / 2;
-        
+
         startX.value = ax;
         startY.value = ay;
         curX.value = ax;
@@ -114,9 +114,9 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
 
       for (const id in currentPos) {
         const p = currentPos[id];
-        if (p.side !== fromSide && 
-            e.x >= p.x && e.x <= p.x + ITEM_WIDTH && 
-            e.y >= p.y && e.y <= p.y + ITEM_HEIGHT) {
+        if (p.side !== fromSide &&
+          e.x >= p.x && e.x <= p.x + ITEM_WIDTH &&
+          e.y >= p.y && e.y <= p.y + ITEM_HEIGHT) {
           toId = id;
           break;
         }
@@ -173,13 +173,13 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
           </Canvas>
 
           {question.leftItems.map((item) => (
-            <View 
-              key={item.id} 
+            <View
+              key={item.id}
               style={[styles.itemWrapper, { left: itemPositions[item.id].x, top: itemPositions[item.id].y }]}
               pointerEvents="none"
             >
-              <EquationItem 
-                item={item} 
+              <EquationItem
+                item={item}
                 isSelected={localActiveId === item.id}
                 isConnected={connections.some(c => c.fromId === item.id || c.toId === item.id)}
                 isCorrect={isChecked ? connections.find(c => c.fromId === item.id)?.isCorrect : null}
@@ -188,13 +188,13 @@ export const EquationCanvas: React.FC<Props> = ({ question, connections, isCheck
           ))}
 
           {question.rightItems.map((item) => (
-            <View 
-              key={item.id} 
+            <View
+              key={item.id}
               style={[styles.itemWrapper, { left: itemPositions[item.id].x, top: itemPositions[item.id].y }]}
               pointerEvents="none"
             >
-              <EquationItem 
-                item={item} 
+              <EquationItem
+                item={item}
                 isSelected={localActiveId === item.id}
                 isConnected={connections.some(c => c.fromId === item.id || c.toId === item.id)}
                 isCorrect={isChecked ? connections.find(c => c.toId === item.id)?.isCorrect : null}

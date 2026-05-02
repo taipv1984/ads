@@ -12,12 +12,12 @@ const GAP = 8;
 const KEY_WIDTH = (width - PADDING * 2 - GAP * 5) / 6;
 const KEY_HEIGHT = 56;
 
-interface VirtualKeyboardProps {
+interface _Props {
   onKeyPress: (key: string) => void;
   onDelete: () => void;
 }
 
-const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({ onKeyPress, onDelete }) => {
+const VirtualKeyboard: React.FC<_Props> = ({ onKeyPress, onDelete }) => {
   const row1 = ['0', '1', '2', '3', '4'];
   const row2 = ['5', '6', '7', '8', '9'];
 

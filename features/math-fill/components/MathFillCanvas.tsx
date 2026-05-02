@@ -5,7 +5,7 @@ import { Dimensions, Image as RNImage, StyleSheet, Text, View } from 'react-nati
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import { GAME_CONFIG } from '../../../game_config';
-import { ImageElement, LineElement, Question, ShapeElement, TextElement } from '../types/math-fill.types';
+import { ImageElement, LineElement, Question, ShapeElement, TextElement } from '../../../services/types/math-fill.types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SCALE = SCREEN_WIDTH / GAME_CONFIG.virtualWidth;
@@ -207,14 +207,14 @@ const AnimatedTextOverlay = memo(({ shape, textToRender }: { shape: ShapeElement
       ]}
       pointerEvents="none"
     >
-      <Animated.Text 
+      <Animated.Text
         style={[
-          styles.shapeText, 
-          { 
-            color: getColor(shape.textColor), 
+          styles.shapeText,
+          {
+            color: getColor(shape.textColor),
             fontSize: (shape.textSize || 40) * SCALE,
-            textAlign: align 
-          }, 
+            textAlign: align
+          },
           animatedStyle
         ]}
       >
@@ -237,7 +237,7 @@ const OverlayImage = memo(({ imageEl }: { imageEl: ImageElement }) => {
     <View
       style={{
         position: 'absolute',
-        left: cx - w / 2, 
+        left: cx - w / 2,
         top: cy - h / 2,
         width: w,
         height: h,
@@ -271,7 +271,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
   const tapGesture = useMemo(() => Gesture.Tap().onEnd((e) => {
     let foundInputId: number | null = null;
     let absolutePos: { x: number, y: number } | undefined = undefined;
-    
+
     const sorted = [...question.elements].sort((a, b) => (b.zIndex || 0) - (a.zIndex || 0));
 
     // Hiệu chỉnh tọa độ chạm dựa trên offsetY
@@ -290,7 +290,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
         if (e.x >= cx - halfW && e.x <= cx + halfW &&
           adjustedY >= cy - halfH && adjustedY <= cy + halfH) {
           foundInputId = el.id;
-          
+
           // Tính toán tọa độ tuyệt đối của tâm Shape trên màn hình
           // e.absoluteX/Y là vị trí ngón tay chạm trên màn hình
           // e.x/y là vị trí ngón tay chạm so với container
@@ -312,7 +312,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
   const layers = useMemo(() => {
     const sorted = [...question.elements].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
     const groupedLayers: RenderLayer[] = [];
-    
+
     sorted.forEach((el) => {
       const zIndex = el.zIndex || 0;
       const lastLayer = groupedLayers[groupedLayers.length - 1];
@@ -327,7 +327,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
         groupedLayers.push({ type: 'image', elements: [el], zIndex });
       }
     });
-    
+
     return groupedLayers;
   }, [question.elements]);
 
@@ -337,7 +337,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
         <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
           {layers.map((layer, layerIdx) => {
             const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
-            
+
             if (layer.type === 'canvas') {
               return (
                 <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
@@ -357,9 +357,9 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
                     const textToRender = shape.isInput ? (userInputs[shape.id] || '') : (shape.value || '');
                     if (textToRender === '' && !shape.isInput) return null;
                     return (
-                       <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
-                          <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
-                       </View>
+                      <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
+                        <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
+                      </View>
                     );
                   })}
                 </View>
@@ -373,9 +373,9 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
                     const textEl = el as TextElement;
                     const fs = (textEl.fontSize || 40) * SCALE;
                     return (
-                      <View 
-                        key={`text-${el.id}`} 
-                        style={[styles.textContainer, { left: textEl.position.x * SCALE, top: textEl.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]} 
+                      <View
+                        key={`text-${el.id}`}
+                        style={[styles.textContainer, { left: textEl.position.x * SCALE, top: textEl.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
                         pointerEvents="none"
                       >
                         <Text style={{ fontSize: fs, color: getColor(textEl.color), fontWeight: 'bold' }}>

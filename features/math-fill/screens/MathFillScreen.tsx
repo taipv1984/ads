@@ -1,3 +1,5 @@
+import OptionPicker from '@/app/components/common/OptionPicker';
+import VirtualKeyboard from '@/app/components/common/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -5,11 +7,9 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Alert, Dimensions, FlatList, Image as RNImage, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MATH_FILL_MOCKS } from '../../../services/mocks/math-fill.mock';
+import { ShapeElement } from '../../../services/types/math-fill.types';
 import { MathFillCanvas } from '../components/MathFillCanvas';
-import OptionsPicker from '../components/OptionsPicker';
-import VirtualKeyboard from '../components/VirtualKeyboard';
-import { MATH_FILL_MOCKS } from '../mock/math-fill.mock';
-import { ShapeElement } from '../types/math-fill.types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -317,7 +317,7 @@ const MathFillScreen: React.FC = () => {
             const options = JSON.parse(activeEl.valueOptions);
             if (Array.isArray(options)) {
               return (
-                <OptionsPicker
+                <OptionPicker
                   options={options}
                   position={pickerPosition} // Sử dụng tọa độ tuyệt đối
                   shapeWidth={activeEl.width || activeEl.size || 100}

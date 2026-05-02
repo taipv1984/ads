@@ -1,7 +1,7 @@
+import { COLOR, SHADOWS } from '@/constants/theme';
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { EquationItemData } from '../types/equation.types';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { EquationItemData } from '../../../services/types/equation-matching.types';
 
 const { width } = Dimensions.get('window');
 
@@ -12,12 +12,12 @@ interface Props {
   isCorrect?: boolean | null; // null if not checked
 }
 
-export const ITEM_WIDTH = width * 0.42; 
-export const ITEM_HEIGHT = 60; 
+export const ITEM_WIDTH = width * 0.42;
+export const ITEM_HEIGHT = 60;
 
 const EquationItem: React.FC<Props> = ({ item, isSelected, isConnected, isCorrect }) => {
   const isLeft = item.side === 'left';
-  
+
   let borderColor = isLeft ? '#FF814A' : '#1E88E5';
   let bgColor = COLOR.white;
   let textColor = COLOR.text;
@@ -36,7 +36,7 @@ const EquationItem: React.FC<Props> = ({ item, isSelected, isConnected, isCorrec
 
   return (
     <View style={[
-      styles.container, 
+      styles.container,
       { borderColor },
       isSelected && styles.selected,
       { backgroundColor: bgColor }
@@ -44,9 +44,9 @@ const EquationItem: React.FC<Props> = ({ item, isSelected, isConnected, isCorrec
       <View style={styles.content}>
         <Text style={styles.emoji}>{isLeft ? '🐱' : '🐟'}</Text>
         <View style={styles.expressionContainer}>
-          <Text 
-            numberOfLines={1} 
-            adjustsFontSizeToFit 
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
             style={[styles.expression, { color: textColor }]}
           >
             {item.expression}

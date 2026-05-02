@@ -5,7 +5,7 @@ import { GAME_CONFIG } from '../../../game_config';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SCALE = SCREEN_WIDTH / GAME_CONFIG.virtualWidth;
 
-interface OptionsPickerProps {
+interface _Props {
   options: string[];
   onSelect: (val: string) => void;
   onClose?: () => void;
@@ -19,7 +19,7 @@ const OPTION_HEIGHT = 42;
 const PICKER_WIDTH = 150;
 const ARROW_SIZE = 10;
 
-const OptionsPicker: React.FC<OptionsPickerProps> = ({ options, onSelect, onClose, position, shapeWidth, shapeHeight, textSize }) => {
+const OptionPicker: React.FC<_Props> = ({ options, onSelect, onClose, position, shapeWidth, shapeHeight, textSize }) => {
   // position.x và position.y lúc này đã là tọa độ pixel tuyệt đối trên màn hình
   const scaledCX = position.x;
   const scaledCY = position.y;
@@ -157,4 +157,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default OptionsPicker;
+export default OptionPicker;

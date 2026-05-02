@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
-import { EquationQuestion, Connection, EquationItemData } from '../types/equation.types';
+import { useCallback, useMemo, useState } from 'react';
+import { Connection, EquationItemData, EquationQuestion } from '../../../services/types/equation-matching.types';
 
 export function evaluateExpression(expr: string): number {
   const cleanExpr = expr.replace(/\s+/g, '');
@@ -48,7 +48,7 @@ export function useEquationGame(questions: EquationQuestion[]) {
         [currentQuestion.id]: [...filtered, { fromId: leftItem.id, toId: rightItem.id, isCorrect }]
       };
     });
-    
+
     // Nếu đã check rồi mà nối lại thì reset trạng thái check của câu đó? 
     // Hoặc giữ nguyên. Ở đây ta chọn reset check nếu có thay đổi.
     setIsChecked(prev => ({ ...prev, [currentQuestion.id]: false }));
