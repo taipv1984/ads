@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import EquationCanvas from '../features/equation-matching/components/EquationCanvas';
 import { useEquationGame } from '../features/equation-matching/hooks/useEquationGame';
 import { EQUATION_QUESTIONS } from '../services/mocks/equation-matching.mock';
-import QuestionNav from './components/common/BottomNavigation';
+import BottomNavigation from './components/common/BottomNavigation';
 
 // --- Result Modal ---
 function ResultModal({ visible, results, onClose }: {
@@ -115,7 +115,7 @@ export default function EquationMatchingScreen() {
         </ScrollView>
 
         {/* Bottom Navigation */}
-        <QuestionNav
+        <BottomNavigation
           currentIndex={currentIndex}
           total={EQUATION_QUESTIONS.length}
           onNext={() => setCurrentIndex(prev => Math.min(EQUATION_QUESTIONS.length - 1, prev + 1))}

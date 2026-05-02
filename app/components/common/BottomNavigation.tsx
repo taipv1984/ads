@@ -1,8 +1,8 @@
+import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
-import Animated, { useAnimatedStyle, withSpring, useSharedValue } from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 interface _Props {
   currentIndex: number;
@@ -26,7 +26,7 @@ const Dot = ({ active }: { active: boolean }) => {
   return <Animated.View style={[styles.dot, animatedStyle]} />;
 };
 
-const QuestionNav: React.FC<_Props> = ({
+const BottomNavigation: React.FC<_Props> = ({
   currentIndex,
   total,
   onNext,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     opacity: 0.35,
   },
   navBtnText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: TYPOGRAPHY.weight.bold as any,
     color: COLOR.white,
     marginHorizontal: 4,
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionNav;
+export default BottomNavigation;

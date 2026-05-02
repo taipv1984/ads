@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, Modal, Text as RNText, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
-import QuestionNav from './components/common/BottomNavigation';
+import BottomNavigation from './components/common/BottomNavigation';
 
 const { width } = Dimensions.get('window');
 
@@ -361,7 +361,7 @@ export default function FractionMatchingScreen() {
         </GestureDetector>
       </View>
 
-      <QuestionNav
+      <BottomNavigation
         currentIndex={currentIndex}
         total={FRACTION_QUESTIONS.length}
         onNext={goNext}

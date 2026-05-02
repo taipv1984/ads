@@ -1,4 +1,4 @@
-import QuestionNav from '@/app/components/common/BottomNavigation';
+import BottomNavigation from '@/app/components/common/BottomNavigation';
 import OptionPicker from '@/app/components/common/OptionPicker';
 import VirtualKeyboard from '@/app/components/common/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
@@ -292,7 +292,7 @@ const MathFillScreen: React.FC = () => {
 
         </View>
 
-        <QuestionNav
+        <BottomNavigation
           currentIndex={currentIndex}
           total={MATH_FILL_MOCKS.length}
           onNext={handleNext}
