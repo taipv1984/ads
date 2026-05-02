@@ -1,3 +1,4 @@
+import QuestionNav from '@/app/components/common/BottomNavigation';
 import OptionPicker from '@/app/components/common/OptionPicker';
 import VirtualKeyboard from '@/app/components/common/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
@@ -281,28 +282,22 @@ const MathFillScreen: React.FC = () => {
             maxToRenderPerBatch={1}
             windowSize={3}
             removeClippedSubviews={false}
+            getItemLayout={(data, index) => ({
+              length: SCREEN_WIDTH,
+              offset: SCREEN_WIDTH * index,
+              index,
+            })}
           />
 
 
         </View>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.btn, currentIndex === 0 && styles.disabledBtn]}
-            onPress={handlePrev}
-            disabled={currentIndex === 0}
-          >
-            <Text style={styles.btnText}>Prev</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.btn, currentIndex === MATH_FILL_MOCKS.length - 1 && styles.disabledBtn]}
-            onPress={handleNext}
-            disabled={currentIndex === MATH_FILL_MOCKS.length - 1}
-          >
-            <Text style={styles.btnText}>Next</Text>
-          </TouchableOpacity>
-        </View>
+        <QuestionNav
+          currentIndex={currentIndex}
+          total={MATH_FILL_MOCKS.length}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
 
         {activeInputId !== null && !((currentQuestion.elements.find(el => el.id === activeInputId) as any)?.valueOptions) && (
           <VirtualKeyboard onKeyPress={handleKeyPress} onDelete={handleDelete} />
@@ -434,40 +429,6 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 4,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: SPACING.sm,
-    backgroundColor: '#f2f2f2',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  btn: {
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    backgroundColor: '#2196F3',
-    borderRadius: 6,
-    minWidth: 90,
-    alignItems: 'center',
-  },
-  disabledBtn: {
-    backgroundColor: '#ccc',
-  },
-  btnText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  checkBtn: {
-    backgroundColor: '#4CAF50',
-    paddingHorizontal: 40,
-  },
-  checkBtnText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  }
 });
 
 export default MathFillScreen;

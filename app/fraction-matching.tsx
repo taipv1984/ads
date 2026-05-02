@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Text as RNText, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import { Canvas, Oval, Line, RoundedRect, Shadow, Path, Skia, Group, Fill } from '@shopify/react-native-skia';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useSharedValue, withSpring, useDerivedValue, runOnJS } from 'react-native-reanimated';
+import { COLOR, SPACING } from '@/constants/theme';
+import { FRACTION_QUESTIONS, QuestionData } from '@/services/mocks/fraction-matching.mock';
+import { Canvas, Fill, Group, Line, Oval, Path, RoundedRect, Shadow, Skia } from '@shopify/react-native-skia';
 import { Stack } from 'expo-router';
-import { FRACTION_QUESTIONS, QuestionData, CandidateData } from '@/services/mocks/fraction-matching.mock';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Modal, Text as RNText, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { runOnJS, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
+import QuestionNav from './components/common/BottomNavigation';
 
 const { width } = Dimensions.get('window');
 
 // ─── Layout constants ─────────────────────────────────────────────────────────
-const NODE_W    = 64;
-const NODE_H    = 64;
-const OVAL_W    = 72;
-const OVAL_H    = 88;
-const SNAP_R    = 80;
-const LINE_W    = 6;
+const NODE_W = 64;
+const NODE_H = 64;
+const OVAL_W = 72;
+const OVAL_H = 88;
+const SNAP_R = 80;
+const LINE_W = 6;
 const LINE_COLOR = '#64B5F6';
-const LINE_GLOW  = 'rgba(100,181,246,0.28)';
+const LINE_GLOW = 'rgba(100,181,246,0.28)';
 
 // Fixed positions: indices 0-3 = top row, 4-5 = bottom sides, 'target' = center
 const CAND_POSITIONS = [
@@ -68,12 +70,12 @@ function ResultModal({ visible, allConnections, onClose }: {
   onClose: () => void;
 }) {
   const results = FRACTION_QUESTIONS.map((q, idx) => {
-    const conns       = allConnections[idx] ?? [];
-    const correctIds  = getCorrectIds(q);
-    const wrongConns  = conns.filter(c => !c.isCorrect);
+    const conns = allConnections[idx] ?? [];
+    const correctIds = getCorrectIds(q);
+    const wrongConns = conns.filter(c => !c.isCorrect);
     const connectedOk = conns.filter(c => c.isCorrect).map(c => c.fromId);
-    const missing     = correctIds.filter(id => !connectedOk.includes(id));
-    const perfect     = wrongConns.length === 0 && missing.length === 0;
+    const missing = correctIds.filter(id => !connectedOk.includes(id));
+    const perfect = wrongConns.length === 0 && missing.length === 0;
     return { q, idx, perfect, wrongConns, missing };
   });
 
@@ -122,56 +124,56 @@ function ResultModal({ visible, allConnections, onClose }: {
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function FractionMatchingScreen() {
-  const [currentIndex,   setCurrentIndex]   = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [allConnections, setAllConnections] = useState<Record<number, Connection[]>>({});
-  const [selectedId,     setSelectedId]     = useState('');
-  const [modalVisible,   setModalVisible]   = useState(false);
+  const [selectedId, setSelectedId] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const question   = FRACTION_QUESTIONS[currentIndex];
+  const question = FRACTION_QUESTIONS[currentIndex];
   const candidates = question.candidates;
-  const target     = question.target;
-  const isLast     = currentIndex === FRACTION_QUESTIONS.length - 1;
-  const curConns   = allConnections[currentIndex] ?? [];
+  const target = question.target;
+  const isLast = currentIndex === FRACTION_QUESTIONS.length - 1;
+  const curConns = allConnections[currentIndex] ?? [];
   const connectedIds = curConns.map(c => c.fromId);
 
   // Shared values for gesture (UI thread)
-  const startX    = useSharedValue(0);
-  const startY    = useSharedValue(0);
-  const curX      = useSharedValue(0);
-  const curY      = useSharedValue(0);
-  const dragging  = useSharedValue(false);
-  const activIdx  = useSharedValue(-1); // index into candidates array
-  const activNum  = useSharedValue(0);
-  const activDen  = useSharedValue(0);
-  const activId   = useSharedValue('');
+  const startX = useSharedValue(0);
+  const startY = useSharedValue(0);
+  const curX = useSharedValue(0);
+  const curY = useSharedValue(0);
+  const dragging = useSharedValue(false);
+  const activIdx = useSharedValue(-1); // index into candidates array
+  const activNum = useSharedValue(0);
+  const activDen = useSharedValue(0);
+  const activId = useSharedValue('');
 
   // Shared values updated when question changes
-  const candXs   = useSharedValue<number[]>(CAND_POSITIONS.map(p => p.x));
-  const candYs   = useSharedValue<number[]>(CAND_POSITIONS.map(p => p.y));
+  const candXs = useSharedValue<number[]>(CAND_POSITIONS.map(p => p.x));
+  const candYs = useSharedValue<number[]>(CAND_POSITIONS.map(p => p.y));
   const candNums = useSharedValue<number[]>(candidates.map(c => c.numerator));
   const candDens = useSharedValue<number[]>(candidates.map(c => c.denominator));
-  const candIds  = useSharedValue<string[]>(candidates.map(c => c.id));
-  const tgtX     = useSharedValue(TARGET_POS.x);
-  const tgtY     = useSharedValue(TARGET_POS.y);
-  const tgtNum   = useSharedValue(target.numerator);
-  const tgtDen   = useSharedValue(target.denominator);
+  const candIds = useSharedValue<string[]>(candidates.map(c => c.id));
+  const tgtX = useSharedValue(TARGET_POS.x);
+  const tgtY = useSharedValue(TARGET_POS.y);
+  const tgtNum = useSharedValue(target.numerator);
+  const tgtDen = useSharedValue(target.denominator);
 
   useEffect(() => {
     const q = FRACTION_QUESTIONS[currentIndex];
     candNums.value = q.candidates.map(c => c.numerator);
     candDens.value = q.candidates.map(c => c.denominator);
-    candIds.value  = q.candidates.map(c => c.id);
-    tgtNum.value   = q.target.numerator;
-    tgtDen.value   = q.target.denominator;
+    candIds.value = q.candidates.map(c => c.id);
+    tgtNum.value = q.target.numerator;
+    tgtDen.value = q.target.denominator;
     setSelectedId('');
     dragging.value = false;
     activIdx.value = -1;
   }, [currentIndex]);
 
   // JS-thread callbacks
-  const handleSelect   = (id: string) => setSelectedId(id);
+  const handleSelect = (id: string) => setSelectedId(id);
   const handleDeselect = () => setSelectedId('');
-  const addConnection  = (fromId: string, isCorrect: boolean, qIdx: number) => {
+  const addConnection = (fromId: string, isCorrect: boolean, qIdx: number) => {
     setAllConnections(prev => {
       const existing = prev[qIdx] ?? [];
       if (existing.some(c => c.fromId === fromId)) return prev;
@@ -199,23 +201,23 @@ export default function FractionMatchingScreen() {
         }
       }
       if (found >= 0) {
-        startX.value   = xs[found];
-        startY.value   = ys[found];
-        curX.value     = xs[found];
-        curY.value     = ys[found];
+        startX.value = xs[found];
+        startY.value = ys[found];
+        curX.value = xs[found];
+        curY.value = ys[found];
         dragging.value = true;
         activIdx.value = found;
         activNum.value = candNums.value[found];
         activDen.value = candDens.value[found];
-        activId.value  = candIds.value[found];
+        activId.value = candIds.value[found];
         runOnJS(handleSelect)(candIds.value[found]);
       }
     })
     .onUpdate(e => {
       'worklet';
       if (!dragging.value) return;
-      const tx   = tgtX.value;
-      const ty   = tgtY.value;
+      const tx = tgtX.value;
+      const ty = tgtY.value;
       const dist = Math.sqrt((e.x - tx) * (e.x - tx) + (e.y - ty) * (e.y - ty));
       if (dist < SNAP_R) {
         curX.value = withSpring(tx, { damping: 15, stiffness: 200 });
@@ -228,8 +230,8 @@ export default function FractionMatchingScreen() {
     .onEnd(() => {
       'worklet';
       if (!dragging.value) return;
-      const dx      = Math.abs(curX.value - tgtX.value);
-      const dy      = Math.abs(curY.value - tgtY.value);
+      const dx = Math.abs(curX.value - tgtX.value);
+      const dy = Math.abs(curY.value - tgtY.value);
       const dropped = dx < OVAL_W / 2 && dy < OVAL_H / 2;
       if (dropped && activId.value !== '') {
         const correct = activNum.value * tgtDen.value === tgtNum.value * activDen.value;
@@ -254,7 +256,24 @@ export default function FractionMatchingScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-      <Stack.Screen options={{ title: 'Nối phân số', headerShown: true }} />
+      <Stack.Screen
+        options={{
+          title: 'Nối phân số',
+          headerShown: true,
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.headerCheckButton}
+              onPress={() => setModalVisible(true)}
+            >
+              <RNText style={styles.headerCheckText}>Kiểm tra</RNText>
+            </TouchableOpacity>
+          ),
+          headerStyle: {
+            backgroundColor: COLOR.primary,
+          },
+          headerTintColor: COLOR.white,
+        }}
+      />
 
       {/* Canvas area */}
       <View style={{ flex: 1 }}>
@@ -285,7 +304,7 @@ export default function FractionMatchingScreen() {
               {/* Candidate rectangles */}
               {candidates.map((cand, i) => {
                 const pos = CAND_POSITIONS[i];
-                const isSel  = selectedId === cand.id;
+                const isSel = selectedId === cand.id;
                 const isConn = connectedIds.includes(cand.id);
                 return (
                   <Group key={cand.id}>
@@ -342,34 +361,12 @@ export default function FractionMatchingScreen() {
         </GestureDetector>
       </View>
 
-      {/* Navigation bar */}
-      <View style={styles.navBar}>
-        <TouchableOpacity
-          style={[styles.navBtn, currentIndex === 0 && styles.navBtnDisabled]}
-          onPress={goPrev}
-          disabled={currentIndex === 0}
-          activeOpacity={0.8}
-        >
-          <RNText style={styles.navBtnText}>← Trước</RNText>
-        </TouchableOpacity>
-
-        {/* Dots indicator */}
-        <View style={styles.dots}>
-          {FRACTION_QUESTIONS.map((_, i) => (
-            <View key={i} style={[styles.dot, i === currentIndex && styles.dotActive]} />
-          ))}
-        </View>
-
-        {isLast ? (
-          <TouchableOpacity style={[styles.navBtn, styles.checkBtn]} onPress={() => setModalVisible(true)} activeOpacity={0.85}>
-            <RNText style={styles.checkBtnText}>Kiểm tra</RNText>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.navBtn} onPress={goNext} activeOpacity={0.8}>
-            <RNText style={styles.navBtnText}>Tiếp →</RNText>
-          </TouchableOpacity>
-        )}
-      </View>
+      <QuestionNav
+        currentIndex={currentIndex}
+        total={FRACTION_QUESTIONS.length}
+        onNext={goNext}
+        onPrev={goPrev}
+      />
 
       <ResultModal visible={modalVisible} allConnections={allConnections} onClose={() => setModalVisible(false)} />
     </GestureHandlerRootView>
@@ -388,30 +385,18 @@ const styles = StyleSheet.create({
   fracNum: { fontSize: 15, fontWeight: '700', color: '#222', lineHeight: 19 },
   fracDen: { fontSize: 15, fontWeight: '700', color: '#222', lineHeight: 19 },
   fracBar: { width: 28, height: 2, backgroundColor: '#333', marginVertical: 1 },
-  blue:    { color: '#1565C0' },
+  blue: { color: '#1565C0' },
   barBlue: { backgroundColor: '#1565C0' },
 
-  // Navigation
-  navBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 16, paddingVertical: 12,
-    backgroundColor: 'white',
-    borderTopWidth: 1, borderTopColor: '#E0E0E0',
-    shadowColor: '#000', shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.06, shadowRadius: 4, elevation: 4,
+  headerCheckButton: {
+    paddingVertical: SPACING.xs,
+    paddingHorizontal: SPACING.sm,
   },
-  navBtn: {
-    paddingHorizontal: 20, paddingVertical: 10,
-    borderRadius: 12, backgroundColor: '#F0F4FF',
-    minWidth: 90, alignItems: 'center',
+  headerCheckText: {
+    color: COLOR.white,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-  navBtnDisabled: { opacity: 0.35 },
-  navBtnText: { fontSize: 14, fontWeight: '700', color: '#1E88E5' },
-  checkBtn: { backgroundColor: '#1E88E5' },
-  checkBtnText: { fontSize: 14, fontWeight: '700', color: 'white' },
-  dots: { flexDirection: 'row', gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#BDBDBD' },
-  dotActive: { backgroundColor: '#1E88E5', width: 20, borderRadius: 4 },
 
   // Reset button
   resetBtn: {
