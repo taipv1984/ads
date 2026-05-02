@@ -67,7 +67,9 @@ export interface Question {
   category: string;
   desc: string;
   content: string;
-  inputLength?: number;
+  imagePath?: string;
   elements: CanvasElement[];
   validations: ValidationRule[];
+  extraData?: string;
+  inputLength?: number;
 }

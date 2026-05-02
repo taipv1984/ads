@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useMemo, memo } from 'react';
-import { View, StyleSheet, Dimensions, Text, Image as RNImage } from 'react-native';
-import { Canvas, RoundedRect, Circle, Line, Path, Skia, Group } from '@shopify/react-native-skia';
+import { COLOR } from '@/constants/theme';
+import { Canvas, Circle, Group, Line, Path, RoundedRect, Skia } from '@shopify/react-native-skia';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { Dimensions, Image as RNImage, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
-import { LineElement, Question, ShapeElement, TextElement, ImageElement } from '../types/math-fill.types';
 import { GAME_CONFIG } from '../../../game_config';
-import { COLOR } from '@/constants/theme';
+import { ImageElement, LineElement, Question, ShapeElement, TextElement } from '../types/math-fill.types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SCALE = SCREEN_WIDTH / GAME_CONFIG.virtualWidth;
@@ -14,7 +14,8 @@ interface MathFillCanvasProps {
   question: Question;
   userInputs: Record<number, string>;
   activeInputId: number | null;
-  onSelectInput: (id: number | null) => void;
+  onSelectInput: (id: number | null, absPos?: { x: number, y: number }) => void;
+  offsetY?: number;
 }
 
 const getColor = (c?: string, fallback: string = 'black') => c ? ((COLOR as any)[c] || c) : fallback;
@@ -94,31 +95,72 @@ const AnimatedShapeElement = memo(({ shape, isFocused }: { shape: ShapeElement, 
 });
 
 const RenderLine = memo(({ line }: { line: LineElement }) => {
-  if (line.lineType === 'straight') {
-    return (
+  const p1 = { x: line.start.x * SCALE, y: line.start.y * SCALE };
+  const p2 = { x: line.end.x * SCALE, y: line.end.y * SCALE };
+  const color = getColor(line.color);
+  const strokeWidth = (line.strokeWidth || 4) * SCALE;
+
+  if (line.lineType === 'straight' || line.lineType === 'arrow') {
+    const mainLine = (
       <Line
-        p1={{ x: line.start.x * SCALE, y: line.start.y * SCALE }}
-        p2={{ x: line.end.x * SCALE, y: line.end.y * SCALE }}
-        color={getColor(line.color)}
-        strokeWidth={(line.strokeWidth || 4) * SCALE}
+        key={`main-${line.id}`}
+        p1={p1}
+        p2={p2}
+        color={color}
+        strokeWidth={strokeWidth}
+        strokeCap="round"
       />
     );
+
+    if (line.lineType === 'arrow') {
+      const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+      const arrowSize = 35 * SCALE;
+      const arrowAngle = Math.PI / 6; // 30 degrees
+
+      const path = Skia.Path.Make();
+      // Tip of the arrow
+      path.moveTo(p2.x, p2.y);
+      // Left wing
+      path.lineTo(
+        p2.x - arrowSize * Math.cos(angle - arrowAngle),
+        p2.y - arrowSize * Math.sin(angle - arrowAngle)
+      );
+      // Right wing
+      path.lineTo(
+        p2.x - arrowSize * Math.cos(angle + arrowAngle),
+        p2.y - arrowSize * Math.sin(angle + arrowAngle)
+      );
+      path.close();
+
+      return (
+        <Group>
+          {mainLine}
+          <Path
+            path={path}
+            color={color}
+            style="fill"
+          />
+        </Group>
+      );
+    }
+    return mainLine;
   } else if (line.lineType === 'curve' && line.controlPoints) {
     const path = Skia.Path.Make();
-    path.moveTo(line.start.x * SCALE, line.start.y * SCALE);
+    path.moveTo(p1.x, p1.y);
     if (line.controlPoints.length >= 2) {
       path.cubicTo(
         line.controlPoints[0].x * SCALE, line.controlPoints[0].y * SCALE,
         line.controlPoints[1].x * SCALE, line.controlPoints[1].y * SCALE,
-        line.end.x * SCALE, line.end.y * SCALE
+        p2.x, p2.y
       );
     }
     return (
       <Path
         path={path}
-        color={getColor(line.color)}
+        color={color}
         style="stroke"
-        strokeWidth={(line.strokeWidth || 4) * SCALE}
+        strokeWidth={strokeWidth}
+        strokeCap="round"
       />
     );
   }
@@ -222,12 +264,18 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
   question,
   userInputs,
   activeInputId,
-  onSelectInput
+  onSelectInput,
+  offsetY = 0
 }) => {
 
   const tapGesture = useMemo(() => Gesture.Tap().onEnd((e) => {
     let foundInputId: number | null = null;
+    let absolutePos: { x: number, y: number } | undefined = undefined;
+    
     const sorted = [...question.elements].sort((a, b) => (b.zIndex || 0) - (a.zIndex || 0));
+
+    // Hiệu chỉnh tọa độ chạm dựa trên offsetY
+    const adjustedY = e.y - offsetY;
 
     for (const el of sorted) {
       if (el.type === 'shape' && (el as ShapeElement).isInput) {
@@ -240,17 +288,26 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
         const halfH = h / 2;
 
         if (e.x >= cx - halfW && e.x <= cx + halfW &&
-          e.y >= cy - halfH && e.y <= cy + halfH) {
+          adjustedY >= cy - halfH && adjustedY <= cy + halfH) {
           foundInputId = el.id;
+          
+          // Tính toán tọa độ tuyệt đối của tâm Shape trên màn hình
+          // e.absoluteX/Y là vị trí ngón tay chạm trên màn hình
+          // e.x/y là vị trí ngón tay chạm so với container
+          // Tâm của shape so với container là (cx, cy + offsetY)
+          absolutePos = {
+            x: e.absoluteX - (e.x - cx),
+            y: e.absoluteY - (e.y - (cy + offsetY))
+          };
           break;
         }
       }
     }
 
     if (onSelectInput) {
-      onSelectInput(foundInputId);
+      onSelectInput(foundInputId, absolutePos);
     }
-  }).runOnJS(true), [question, onSelectInput]);
+  }).runOnJS(true), [question, onSelectInput, offsetY]);
 
   const layers = useMemo(() => {
     const sorted = [...question.elements].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
@@ -277,7 +334,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
   return (
     <View style={styles.container}>
       <GestureDetector gesture={tapGesture}>
-        <View style={StyleSheet.absoluteFill}>
+        <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
           {layers.map((layer, layerIdx) => {
             const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
             
@@ -354,7 +411,7 @@ export const MathFillCanvas: React.FC<MathFillCanvasProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(245, 246, 228, 1)',
   },
   absoluteCenter: {
     position: 'absolute',
