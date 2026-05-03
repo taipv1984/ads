@@ -78,19 +78,19 @@ export const MATH_FILL_MOCKS: Question[] = [
   //   ],
   //   validations: []
   // },
-  {
-    id: 5,
-    type: "fill",
-    category: "",
-    desc: "viet_so_thich_hop_2.jpg",
-    content: "Đúng ghi Đ, sai ghi S.",
-    inputLength: 1,
-    elements: [
-      { id: 18, type: "text", position: { x: 180, y: 83 }, content: "b) Ba mươi tư viết là 304.", fontSize: 46 },
-      { id: 19, type: "shape", shapeType: "square", position: { x: 800, y: 110 }, size: 100, isInput: true, value: "S", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' }
-    ],
-    validations: []
-  },
+  // {
+  //   id: 5,
+  //   type: "fill",
+  //   category: "",
+  //   desc: "viet_so_thich_hop_2.jpg",
+  //   content: "Đúng ghi Đ, sai ghi S.",
+  //   inputLength: 1,
+  //   elements: [
+  //     { id: 18, type: "text", position: { x: 180, y: 83 }, content: "b) Ba mươi tư viết là 304.", fontSize: 46 },
+  //     { id: 19, type: "shape", shapeType: "square", position: { x: 800, y: 110 }, size: 100, isInput: true, value: "S", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' }
+  //   ],
+  //   validations: []
+  // },
   // {
   //   id: 6,
   //   category: "",
@@ -283,8 +283,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //   validations: []
   // },
   {
-    type: "match",
     id: 14,
+    type: "match",
     category: "Matching",
     desc: "matching_example.jpg",
     content: "Nối các hình có cùng số lượng hoặc giá trị.",
@@ -302,15 +302,8 @@ export const MATH_FILL_MOCKS: Question[] = [
       { id: 2005, type: "anchor", position: { x: 400, y: 600 }, size: 120, isShow: true },
       { id: 2006, type: "anchor", position: { x: 600, y: 200 }, size: 120, isShow: true },
       { id: 2007, type: "anchor", position: { x: 800, y: 700 }, size: 150 },
-
-      { id: 2008, type: "shape", shapeType: "square", position: { x: 800, y: 110 }, size: 100, isInput: true, value: "S", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' },
-
-      { id: 2009, type: "shape", shapeType: "square", position: { x: 650, y: 450 }, size: 100, isInput: true, value: "", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 42 },
-      { id: 2010, type: "shape", shapeType: "square", position: { x: 850, y: 450 }, size: 100, isInput: true, value: "", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 42 }
     ],
-
     validations: [
-      { id: 1001, formula: "#2009 + #2010 === 30" }
     ],
   },
 ];

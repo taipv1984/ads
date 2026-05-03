@@ -2,13 +2,14 @@ import { COLOR } from '@/constants/theme';
 import { AnchorElement, Question, ShapeElement } from '@/services/types/math.types';
 import { Canvas, Circle, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
   DEFAULT_Z_INDEX,
+  getColor,
   OverlayImage,
   RenderLayer,
   RenderLine,
@@ -119,7 +120,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       let found = -1;
       for (let i = 0; i < xs.length; i++) {
         const dx = e.x - xs[i];
-        const dy = (e.y - offsetY) - ys[i];
+        const dy = e.y - ys[i];
         if (Math.sqrt(dx * dx + dy * dy) <= rs[i] * 1.5) {
           found = i;
           break;
@@ -140,27 +141,24 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       const xs = anchorXs.value;
       const ys = anchorYs.value;
       const rs = anchorRs.value;
-      let snapped = false;
-      let targetFound = -1;
-      const adjY = e.y - offsetY;
+      const adjY = e.y;
 
+      // LUÔN cập nhật đầu đường kẻ theo ngón tay để cảm giác kéo mượt mà
+      curX.value = e.x;
+      curY.value = adjY;
+
+      let targetFound = -1;
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
         const dx = e.x - xs[i];
         const dy = adjY - ys[i];
-        if (Math.sqrt(dx * dx + dy * dy) <= rs[i] * 1.5) {
-          curX.value = withSpring(xs[i], { damping: 15, stiffness: 200 });
-          curY.value = withSpring(ys[i], { damping: 15, stiffness: 200 });
-          snapped = true;
+        // Kiểm tra xem có đang "hover" qua điểm neo nào không
+        if (Math.sqrt(dx * dx + dy * dy) <= rs[i] * 2) {
           targetFound = i;
           break;
         }
       }
       hoverAnchorIdx.value = targetFound;
-      if (!snapped) {
-        curX.value = e.x;
-        curY.value = adjY;
-      }
     })
     .onEnd(e => {
       'worklet';
@@ -169,7 +167,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       const ys = anchorYs.value;
       const rs = anchorRs.value;
       let targetIdx = -1;
-      const adjY = e.y - offsetY;
+      const adjY = e.y;
 
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
@@ -184,7 +182,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       isDragging.value = false;
       activeAnchorIdx.value = -1;
       hoverAnchorIdx.value = -1;
-    }), [handleConnect, offsetY]);
+    }), [handleConnect]);
 
   const layers = useMemo(() => {
     const allElements: any[] = [
@@ -222,9 +220,10 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   }, [question.elements, anchorElements]);
 
   return (
-    <GestureDetector gesture={panGesture}>
-      <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
-        {layers.map((layer, layerIdx) => {
+    <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
+      <GestureDetector gesture={panGesture}>
+        <View style={StyleSheet.absoluteFill}>
+          {layers.map((layer, layerIdx) => {
           const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
 
           if (layer.type === 'canvas') {
@@ -293,6 +292,29 @@ const QuestionMatchCanvas: React.FC<Props> = ({
             );
           }
 
+          if (layer.type === 'text') {
+            return (
+              <React.Fragment key={layerKey}>
+                {layer.elements.map(el => {
+                  const fs = (el.fontSize || 40) * SCALE;
+                  return (
+                    <View
+                      key={`text-${el.id}`}
+                      style={[styles.textContainer, { left: el.position.x * SCALE, top: el.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
+                      pointerEvents="none"
+                    >
+                      <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Text style={{ fontSize: fs, color: getColor(el.color), fontWeight: 'bold' }}>
+                          {el.content}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </React.Fragment>
+            );
+          }
+
           if (layer.type === 'image') {
             return (
               <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
@@ -303,9 +325,17 @@ const QuestionMatchCanvas: React.FC<Props> = ({
 
           return null;
         })}
-      </View>
-    </GestureDetector>
+        </View>
+      </GestureDetector>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  textContainer: {
+    position: 'absolute',
+    pointerEvents: 'none',
+  }
+});
 
 export default memo(QuestionMatchCanvas);

@@ -4,13 +4,14 @@ import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
 import { MATH_FILL_MOCKS } from '@/services/mocks/math.mock';
 import { ShapeElement } from '@/services/types/math.types';
+import QuestionCanvas from '../components/QuestionCanvas';
+import { SCALE } from '../components/shared/BaseElements';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, Dimensions, FlatList, Image as RNImage, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import QuestionCanvas from '../components/QuestionCanvas';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -194,7 +195,6 @@ const MathScreen: React.FC = () => {
 
     if (minY === Infinity) return { height: 300, offsetY: 0 };
 
-    const SCALE = SCREEN_WIDTH / 1080;
     // Chiều cao nội dung thực tế (không cần buffer lớn)
     const contentHeight = (maxY - minY) * SCALE + SPACING.lg;
     const padding = SPACING.md;

@@ -1,12 +1,13 @@
 import { Question, ShapeElement } from '@/services/types/math.types';
 import { Canvas } from '@shopify/react-native-skia';
 import React, { memo, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
   DEFAULT_Z_INDEX,
+  getColor,
   OverlayImage,
   RenderLayer,
   RenderLine,
@@ -38,7 +39,7 @@ const QuestionFillCanvas: React.FC<_Props> = ({
       return bz - az;
     });
 
-    const adjustedY = e.y - offsetY;
+    const adjustedY = e.y;
 
     for (const el of sorted) {
       if (el.type === 'shape' && (el as ShapeElement).isInput) {
@@ -55,7 +56,7 @@ const QuestionFillCanvas: React.FC<_Props> = ({
           foundInputId = el.id;
           absolutePos = {
             x: e.absoluteX - (e.x - cx),
-            y: e.absoluteY - (e.y - (cy + offsetY))
+            y: e.absoluteY - (e.y - cy)
           };
           break;
         }
@@ -65,7 +66,7 @@ const QuestionFillCanvas: React.FC<_Props> = ({
     if (onSelectInput) {
       onSelectInput(foundInputId, absolutePos);
     }
-  }).runOnJS(true), [question, onSelectInput, offsetY]);
+  }).runOnJS(true), [question, onSelectInput]);
 
   const layers = useMemo(() => {
     const allElements: any[] = question.elements.map(el => ({
@@ -96,8 +97,9 @@ const QuestionFillCanvas: React.FC<_Props> = ({
   }, [question.elements]);
 
   return (
-    <GestureDetector gesture={tapGesture}>
-      <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
+    <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
+      <GestureDetector gesture={tapGesture}>
+        <View style={StyleSheet.absoluteFill}>
         {layers.map((layer, layerIdx) => {
           const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
 
@@ -128,19 +130,42 @@ const QuestionFillCanvas: React.FC<_Props> = ({
             );
           }
 
-          if (layer.type === 'image') {
+          if (layer.type === 'text') {
             return (
-              <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
-                {layer.elements.map(el => <OverlayImage key={`img-${el.id}`} imageEl={el} />)}
-              </View>
+              <React.Fragment key={layerKey}>
+                {layer.elements.map(el => {
+                  const fs = (el.fontSize || 40) * SCALE;
+                  return (
+                    <View
+                      key={`text-${el.id}`}
+                      style={[styles.textContainer, { left: el.position.x * SCALE, top: el.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
+                      pointerEvents="none"
+                    >
+                      <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Text style={{ fontSize: fs, color: getColor(el.color), fontWeight: 'bold' }}>
+                          {el.content}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </React.Fragment>
             );
           }
 
           return null;
         })}
-      </View>
-    </GestureDetector>
+        </View>
+      </GestureDetector>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  textContainer: {
+    position: 'absolute',
+    pointerEvents: 'none',
+  }
+});
 
 export default memo(QuestionFillCanvas);
