@@ -1,5 +1,3 @@
-export type QuestionType = 'fill' | 'match' | 'color' | 'quiz' | 'step';
-
 export interface Point {
   x: number;
   y: number;
@@ -59,22 +57,29 @@ export interface ImageElement extends BaseElement {
   height: number;
 }
 
-export type CanvasElement = ShapeElement | LineElement | TextElement | ImageElement;
+export type QuestionType = 'fill' | 'match' | 'color' | 'quiz' | 'step';
 
-export interface ValidationRule {
+export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
+
+export interface QuestionValidation {
   id: number;
   formula: string; //'#9 + #10 === 32'
 }
 
+export interface QuestionExtraData {
+  id: number;
+  matchMode?: '1-1' | '1-n'
+}
+
 export interface Question {
   id: number;
-  category: string;
+  category?: string;
   type: QuestionType;
-  desc: string;
   content: string;
+  desc?: string;
   imagePath?: string;
-  elements: CanvasElement[];
-  validations: ValidationRule[];
-  extraData?: string;
+  elements?: QuestionElement[];
+  validations?: QuestionValidation[];
+  extraData?: QuestionExtraData;
   inputLength?: number;
 }

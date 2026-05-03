@@ -82,7 +82,7 @@ const MathScreen: React.FC = () => {
     setActiveInputId(null);
     let isCorrect = true;
 
-    for (const el of currentQuestion.elements) {
+    for (const el of (currentQuestion.elements || [])) {
       if (el.type === 'shape') {
         const shape = el as ShapeElement;
         if (shape.isInput && shape.value && shape.value.trim() !== '') {
@@ -100,7 +100,7 @@ const MathScreen: React.FC = () => {
       return;
     }
 
-    for (const rule of currentQuestion.validations) {
+    for (const rule of (currentQuestion.validations || [])) {
       if (rule.formula) {
         try {
           let evalStr = rule.formula;
@@ -207,7 +207,7 @@ const MathScreen: React.FC = () => {
 
   const renderQuestionItem = ({ item, index }: { item: typeof MATH_FILL_MOCKS[0], index: number }) => {
     const qInputs = allAnswers[item.id] || {};
-    const { height: canvasHeight, offsetY } = getCanvasLayout(item.elements);
+    const { height: canvasHeight, offsetY } = getCanvasLayout(item.elements || []);
 
     return (
       <ScrollView
@@ -225,9 +225,9 @@ const MathScreen: React.FC = () => {
           </View>
         )}
 
-        {item.extraData && (
+        {typeof item.extraData === 'string' && (
           <View style={styles.extraDataContainer}>
-            {item.extraData.split('<br/>').map((line, i) => (
+            {(item.extraData as string).split('<br/>').map((line, i) => (
               <Text key={i} style={styles.extraDataText}>{line.trim()}</Text>
             ))}
           </View>
@@ -299,14 +299,14 @@ const MathScreen: React.FC = () => {
           onPrev={handlePrev}
         />
 
-        {activeInputId !== null && !((currentQuestion.elements.find(el => el.id === activeInputId) as any)?.valueOptions) && (
+        {activeInputId !== null && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions) && (
           <VirtualKeyboard onKeyPress={handleKeyPress} onDelete={handleDelete} />
         )}
       </SafeAreaView>
 
       {/* OptionsPicker được đưa ra root để dùng tọa độ tuyệt đối */}
       {activeInputId !== null && pickerPosition && (() => {
-        const activeEl = currentQuestion.elements.find(el => el.id === activeInputId) as ShapeElement;
+        const activeEl = currentQuestion.elements?.find(el => el.id === activeInputId) as ShapeElement;
         if (activeEl?.valueOptions) {
           try {
             const options = JSON.parse(activeEl.valueOptions);

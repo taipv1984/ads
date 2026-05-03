@@ -66,7 +66,6 @@ export const MATH_FILL_MOCKS: Question[] = [
   //   desc: "viet_so_thich_hop_2.jpg",
   //   content: "Đúng ghi Đ, sai ghi S.",
   //   imagePath: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
-  //   extraData: "Tiểu Học Thạnh Mỹ Tây <br/> Địa chỉ: 10 Phạm Viết Chánh Phường 19 Quận Bình Thạnh TP.HCM. <br/>Điện thoại: 02838992103",
   //   inputLength: 1,
   //   elements: [
   //     { id: 16, type: "text", position: { x: 200, y: 410 }, content: "a) Ba mươi tư viết là 34.", fontSize: 46 },
@@ -209,7 +208,7 @@ export const MATH_FILL_MOCKS: Question[] = [
   // {
   //   type: "fill",
   //   id: 12,
-  //   category: "Arithmetic",
+  //   category: "",
   //   desc: "viet_so_thich_hop_8.jpg",
   //   content: "#8 Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -238,7 +237,7 @@ export const MATH_FILL_MOCKS: Question[] = [
   // },
   // {
   //   id: 13,
-  //   category: "Patterns",
+  //   category: "",
   //   type: "fill",
   //   desc: "viet_so_thich_hop_4.jpg",
   //   content: "#4 Viết số thích hợp vào ô trống.",
@@ -285,22 +284,47 @@ export const MATH_FILL_MOCKS: Question[] = [
   {
     id: 14,
     type: "match",
-    category: "Matching",
-    desc: "matching_example.jpg",
-    content: "Nối các hình có cùng số lượng hoặc giá trị.",
+    category: "",
+    desc: "",
+    content: "Nối các hình có cùng số lượng hoặc giá trị. 1-n",
     elements: [
-      // Cột trái
-      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "left" },
-      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "left" },
-      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "left" },
-      // Cột phải
-      { id: 2001, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "right" },
-      { id: 2002, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "right" },
-      { id: 2003, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "right" },
+      //left
+      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "1" },
+      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "1" },
+      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "1" },
+      //right
+      { id: 1004, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "2" },
+      { id: 1005, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "2" },
+      { id: 1006, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "2" },
     ],
-    validations: [
-      { id: 1, formula: "" }
+    extraData: {
+      id: 1,
+      matchMode: '1-1'
+    }
+  },
+  {
+    id: 15,
+    type: "match",
+    category: "",
+    desc: "",
+    content: "Nối các hình có cùng số lượng hoặc giá trị. 1-n",
+    elements: [
+      //top
+      { id: 1007, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "6 - 2", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "top" },
+      { id: 1008, type: "shape", shapeType: "circle", position: { x: 400, y: 200 }, size: 120, isAnchor: true, value: "4 + 1", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "top" },
+      { id: 1009, type: "shape", shapeType: "circle", position: { x: 600, y: 200 }, size: 120, isAnchor: true, value: "8 - 4", bgColor: "orange_light", textSize: 40, borderWidth: 5, group: "top" },
+      //master
+      { id: 2001, type: "shape", shapeType: "square", position: { x: 400, y: 400 }, size: 120, isAnchor: true, value: "4", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "master" },
+      { id: 2002, type: "shape", shapeType: "square", position: { x: 600, y: 400 }, size: 120, isAnchor: true, value: "5", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "master" },
+      //bottom
+      { id: 1010, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "16 - 9", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "bottom" },
+      { id: 1011, type: "shape", shapeType: "circle", position: { x: 400, y: 700 }, size: 120, isAnchor: true, value: "4 + 11", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "bottom" },
+      { id: 1012, type: "shape", shapeType: "circle", position: { x: 600, y: 700 }, size: 120, isAnchor: true, value: "8 - 14", bgColor: "orange_light", textSize: 40, borderWidth: 5, group: "bottom" },
     ],
+    extraData: {
+      id: 2,
+      matchMode: '1-n'
+    }
   },
 ];
 

@@ -63,7 +63,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const anchorGroups = useSharedValue<string[]>([]);
 
   const anchorElements = useMemo(() => {
-    return question.elements.filter(el => el.type === 'shape' && (el as ShapeElement).isAnchor) as ShapeElement[];
+    return (question.elements || []).filter(el => el.type === 'shape' && (el as ShapeElement).isAnchor) as ShapeElement[];
   }, [question.elements]);
 
   useEffect(() => {
@@ -187,7 +187,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
 
   const layers = useMemo(() => {
     const allElements: any[] = [
-      ...question.elements.map(el => {
+      ...(question.elements || []).map(el => {
         const effectiveZIndex = el.zIndex ?? DEFAULT_Z_INDEX[el.type];
         if (el.type === 'shape' && (el as ShapeElement).isAnchor) {
           const anchorIdx = anchorElements.findIndex(a => a.id === el.id);
