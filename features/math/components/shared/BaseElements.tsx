@@ -101,12 +101,12 @@ export const AnimatedShapeElement = memo(({ shape, isFocused, externalScale }: {
 
   const strokeWidth = useDerivedValue(() => {
     const focused = isFocusedValue.value;
-    // Đối với Anchor, độ dày viền LUÔN LUÔN giữ nguyên
+    // Sử dụng ?? để chấp nhận giá trị 0
     if (shape.isAnchor) {
-      return (shape.borderWidth || 4) * SCALE;
+      return (shape.borderWidth ?? 4) * SCALE;
     }
 
-    return focused ? 6 * SCALE : (shape.borderWidth || 4) * SCALE;
+    return focused ? 6 * SCALE : (shape.borderWidth ?? 4) * SCALE;
   });
   const bgColor = getColor(shape.bgColor, 'white');
   const origin = { x: cx, y: cy };

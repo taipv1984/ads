@@ -23,13 +23,14 @@ export interface ShapeElement extends BaseElement {
   borderColor?: string;
   borderWidth?: number;
 
-  isInput: boolean;
+  isInput?: boolean;
   isAnchor?: boolean;
   value?: string;
   valueOptions?: string; //'["Đ", "S"]'
   textColor?: string;
   textSize?: number;
   textAlign?: 'left' | 'center' | 'right';
+  group?: string;
 }
 
 export interface LineElement extends BaseElement {

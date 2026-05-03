@@ -290,15 +290,16 @@ export const MATH_FILL_MOCKS: Question[] = [
     content: "Nối các hình có cùng số lượng hoặc giá trị.",
     elements: [
       // Cột trái
-      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isInput: false, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
-      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isInput: false, isAnchor: true, value: "10", bgColor: "green_light", textSize: 40 },
-      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isInput: false, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 40 },
+      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "left" },
+      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "left" },
+      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "left" },
       // Cột phải
-      { id: 2001, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isInput: false, isAnchor: true, value: "10", bgColor: "green_light", textSize: 40 },
-      { id: 2002, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isInput: false, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 40 },
-      { id: 2003, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isInput: false, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
+      { id: 2001, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "right" },
+      { id: 2002, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "right" },
+      { id: 2003, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "right" },
     ],
     validations: [
+      { id: 1, formula: "" }
     ],
   },
 ];

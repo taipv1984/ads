@@ -60,6 +60,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const anchorXs = useSharedValue<number[]>([]);
   const anchorYs = useSharedValue<number[]>([]);
   const anchorRs = useSharedValue<number[]>([]);
+  const anchorGroups = useSharedValue<string[]>([]);
 
   const anchorElements = useMemo(() => {
     return question.elements.filter(el => el.type === 'shape' && (el as ShapeElement).isAnchor) as ShapeElement[];
@@ -70,10 +71,12 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       anchorXs.value = anchorElements.map(a => a.position.x * SCALE);
       anchorYs.value = anchorElements.map(a => a.position.y * SCALE);
       anchorRs.value = anchorElements.map(a => ((a.size || 40) / 2) * SCALE);
+      anchorGroups.value = anchorElements.map(a => a.group || '');
     } else {
       anchorXs.value = [];
       anchorYs.value = [];
       anchorRs.value = [];
+      anchorGroups.value = [];
     }
     setConnections([]);
   }, [anchorElements]);
@@ -126,6 +129,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       const xs = anchorXs.value;
       const ys = anchorYs.value;
       const rs = anchorRs.value;
+      const groups = anchorGroups.value;
       const adjY = e.y;
 
       // LUÔN cập nhật đầu đường kẻ theo ngón tay để cảm giác kéo mượt mà
@@ -133,8 +137,14 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       curY.value = adjY;
 
       let targetFound = -1;
+      const sourceGroup = groups[activeAnchorIdx.value];
+
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
+        
+        // KIỂM TRA NHÓM
+        if (sourceGroup && groups[i] === sourceGroup) continue;
+
         const dx = e.x - xs[i];
         const dy = adjY - ys[i];
         // Kiểm tra xem có đang "hover" qua điểm neo nào không
@@ -151,11 +161,17 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       const xs = anchorXs.value;
       const ys = anchorYs.value;
       const rs = anchorRs.value;
+      const groups = anchorGroups.value;
       let targetIdx = -1;
       const adjY = e.y;
+      const sourceGroup = groups[activeAnchorIdx.value];
 
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
+        
+        // KIỂM TRA NHÓM
+        if (sourceGroup && groups[i] === sourceGroup) continue;
+
         const dx = e.x - xs[i];
         const dy = adjY - ys[i];
         if (Math.sqrt(dx * dx + dy * dy) <= rs[i] * 2) {
@@ -167,7 +183,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       isDragging.value = false;
       activeAnchorIdx.value = -1;
       hoverAnchorIdx.value = -1;
-    }), [handleConnect]);
+    }), [handleConnect, anchorElements]);
 
   const layers = useMemo(() => {
     const allElements: any[] = [
