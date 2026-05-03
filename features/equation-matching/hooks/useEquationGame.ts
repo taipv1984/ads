@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Connection, EquationItemData, EquationQuestion } from '../../../services/types/equation-matching.types';
+import { Connection, EquationItemData, EquationQuestion } from '@/services/types/equation-matching.types';
 
 export function evaluateExpression(expr: string): number {
   const cleanExpr = expr.replace(/\s+/g, '');

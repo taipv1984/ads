@@ -1,3 +1,5 @@
+export type QuestionType = 'fill' | 'match' | 'color' | 'quiz' | 'step';
+
 export interface Point {
   x: number;
   y: number;
@@ -5,7 +7,7 @@ export interface Point {
 
 export interface BaseElement {
   id: number;
-  type: 'shape' | 'line' | 'text' | 'image';
+  type: 'shape' | 'line' | 'text' | 'image' | 'anchor';
   zIndex?: number;
 }
 
@@ -55,7 +57,15 @@ export interface ImageElement extends BaseElement {
   height: number;
 }
 
-export type CanvasElement = ShapeElement | LineElement | TextElement | ImageElement;
+export interface AnchorElement extends BaseElement {
+  type: 'anchor';
+  position: Point;
+  size?: number;
+  value?: string;
+  isShow?: boolean;
+}
+
+export type CanvasElement = ShapeElement | LineElement | TextElement | ImageElement | AnchorElement;
 
 export interface ValidationRule {
   id: number;
@@ -65,6 +75,7 @@ export interface ValidationRule {
 export interface Question {
   id: number;
   category: string;
+  type: QuestionType;
   desc: string;
   content: string;
   imagePath?: string;

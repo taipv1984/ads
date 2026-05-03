@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
-import { GAME_CONFIG } from '../../../game_config';
+import { GAME_CONFIG } from '@/game_config';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SCALE = SCREEN_WIDTH / GAME_CONFIG.virtualWidth;

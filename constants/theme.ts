@@ -16,6 +16,8 @@ export const COLOR = {
   info: '#007AFF',
   blue: '#007AFF',
   blue_light: '#E6F2FF',
+  green_light: '#E6F9EA',
+  orange_light: '#FFF3E0',
 
   // Nhóm màu trung tính (Neutral Colors)
   background: '#FFF9F1', // Màu kem nền nhẹ kiểu cổ điển

@@ -1,16 +1,16 @@
-import BottomNavigation from '@/app/components/common/BottomNavigation';
-import OptionPicker from '@/app/components/common/OptionPicker';
-import VirtualKeyboard from '@/app/components/common/VirtualKeyboard';
+import BottomNavigation from '@/app/components/shared/BottomNavigation';
+import OptionPicker from '@/app/components/shared/OptionPicker';
+import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { MATH_FILL_MOCKS } from '@/services/mocks/math.mock';
+import { ShapeElement } from '@/services/types/math.types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Alert, Dimensions, FlatList, Image as RNImage, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MATH_FILL_MOCKS } from '../../../services/mocks/math-fill.mock';
-import { ShapeElement } from '../../../services/types/math-fill.types';
-import { MathFillCanvas } from '../components/MathFillCanvas';
+import QuestionCanvas from '../components/QuestionCanvas';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -37,7 +37,7 @@ const AutoHeightImage = ({ uri }: { uri: string }) => {
   );
 };
 
-const MathFillScreen: React.FC = () => {
+const MathScreen: React.FC = () => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [allAnswers, setAllAnswers] = useState<Record<number, Record<number, string>>>({});
@@ -235,7 +235,7 @@ const MathFillScreen: React.FC = () => {
 
         {/* Canvas với viền đen */}
         <View style={[styles.canvasContainer, { height: canvasHeight }]}>
-          <MathFillCanvas
+          <QuestionCanvas
             question={item}
             userInputs={qInputs}
             activeInputId={index === currentIndex ? activeInputId : null}
@@ -288,8 +288,6 @@ const MathFillScreen: React.FC = () => {
               index,
             })}
           />
-
-
         </View>
 
         <BottomNavigation
@@ -431,4 +429,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MathFillScreen;
+export default MathScreen;

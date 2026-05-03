@@ -1,7 +1,7 @@
 import { COLOR, SHADOWS } from '@/constants/theme';
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { EquationItemData } from '../../../services/types/equation-matching.types';
+import { EquationItemData } from '@/services/types/equation-matching.types';
 
 const { width } = Dimensions.get('window');
 

@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimated';
-import { Connection, EquationItemData, EquationQuestion } from '../../../services/types/equation-matching.types';
+import { Connection, EquationItemData, EquationQuestion } from '@/services/types/equation-matching.types';
 import EquationItem, { ITEM_HEIGHT, ITEM_WIDTH } from './EquationItem';
 
 const { width } = Dimensions.get('window');

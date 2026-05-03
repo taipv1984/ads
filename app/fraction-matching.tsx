@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, Modal, Text as RNText, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
-import BottomNavigation from './components/common/BottomNavigation';
+import BottomNavigation from './components/shared/BottomNavigation';
 
 const { width } = Dimensions.get('window');
 

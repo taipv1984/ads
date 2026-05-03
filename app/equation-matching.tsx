@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import EquationCanvas from '../features/equation-matching/components/EquationCanvas';
 import { useEquationGame } from '../features/equation-matching/hooks/useEquationGame';
 import { EQUATION_QUESTIONS } from '../services/mocks/equation-matching.mock';
-import BottomNavigation from './components/common/BottomNavigation';
+import BottomNavigation from './components/shared/BottomNavigation';
 
 // --- Result Modal ---
 function ResultModal({ visible, results, onClose }: {
