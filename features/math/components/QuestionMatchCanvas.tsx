@@ -1,5 +1,5 @@
 import { COLOR } from '@/constants/theme';
-import { AnchorElement, Question, ShapeElement } from '@/services/types/math.types';
+import { Question, ShapeElement } from '@/services/types/math.types';
 import { Canvas, Circle, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -23,12 +23,7 @@ interface Props {
   offsetY?: number;
 }
 
-const AnimatedAnchor = memo(({ anchor, activeAnchorIdx, hoverAnchorIdx, index, isConnected }: { anchor: AnchorElement, activeAnchorIdx: any, hoverAnchorIdx: any, index: number, isConnected: boolean }) => {
-  const cx = anchor.position.x * SCALE;
-  const cy = anchor.position.y * SCALE;
-  const r = ((anchor.size || 40) / 2) * SCALE;
-  const isVisible = anchor.isShow ?? false;
-
+const AnimatedAnchor = memo(({ shape, activeAnchorIdx, hoverAnchorIdx, index, isConnected }: { shape: ShapeElement, activeAnchorIdx: any, hoverAnchorIdx: any, index: number, isConnected: boolean }) => {
   const scale = useDerivedValue(() => {
     const activeIdx = activeAnchorIdx?.value ?? -1;
     const hoverIdx = hoverAnchorIdx?.value ?? -1;
@@ -37,22 +32,12 @@ const AnimatedAnchor = memo(({ anchor, activeAnchorIdx, hoverAnchorIdx, index, i
     return withSpring(isActive || isHovered ? 1.2 : 1, { mass: 0.5, damping: 10 });
   });
 
-  const transform = useDerivedValue(() => [{ scale: scale.value }]);
-
-  const strokeColor = useDerivedValue(() => {
-    if (!isVisible) return 'transparent';
-    const activeIdx = activeAnchorIdx?.value ?? -1;
-    const isActive = activeIdx === index;
-    return (isActive || isConnected) ? COLOR.primary : 'black';
-  });
-
-  const bgColor = isVisible ? 'white' : 'transparent';
-
   return (
-    <Group transform={transform} origin={{ x: cx, y: cy }}>
-      <Circle cx={cx} cy={cy} r={r} color={bgColor} />
-      <Circle cx={cx} cy={cy} r={r} color={strokeColor} style="stroke" strokeWidth={isVisible ? 5 * SCALE : 0} />
-    </Group>
+    <AnimatedShapeElement 
+      shape={shape} 
+      isFocused={isConnected} 
+      externalScale={scale}
+    />
   );
 });
 
@@ -77,7 +62,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const anchorRs = useSharedValue<number[]>([]);
 
   const anchorElements = useMemo(() => {
-    return question.elements.filter(el => el.type === 'anchor') as AnchorElement[];
+    return question.elements.filter(el => el.type === 'shape' && (el as ShapeElement).isAnchor) as ShapeElement[];
   }, [question.elements]);
 
   useEffect(() => {
@@ -188,7 +173,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
     const allElements: any[] = [
       ...question.elements.map(el => {
         const effectiveZIndex = el.zIndex ?? DEFAULT_Z_INDEX[el.type];
-        if (el.type === 'anchor') {
+        if (el.type === 'shape' && (el as ShapeElement).isAnchor) {
           const anchorIdx = anchorElements.findIndex(a => a.id === el.id);
           return { ...el, effectiveZIndex, anchorIdx };
         }
@@ -203,7 +188,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
     allElements.forEach((el) => {
       const zIndex = el.effectiveZIndex;
       const lastLayer = groupedLayers[groupedLayers.length - 1];
-      const isCanvasType = el.type === 'shape' || el.type === 'line' || el.type === 'anchor' || el.type === 'user-connections';
+      const isCanvasType = el.type === 'shape' || el.type === 'line' || el.type === 'user-connections';
 
       if (isCanvasType && lastLayer?.type === 'canvas' && lastLayer.zIndex === zIndex) {
         lastLayer.elements.push(el);
@@ -232,19 +217,21 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                 <Canvas style={StyleSheet.absoluteFill}>
                   {layer.elements.map((el) => {
                     if (el.type === 'line') return <RenderLine key={`line-${el.id}`} line={el} />;
-                    if (el.type === 'shape') return <AnimatedShapeElement key={`shape-${el.id}`} shape={el} isFocused={false} />;
-                    if (el.type === 'anchor') {
-                      const isConnected = connections.some(c => c.from === el.anchorIdx || c.to === el.anchorIdx);
-                      return (
-                        <AnimatedAnchor
-                          key={`anchor-${el.id}`}
-                          anchor={el}
-                          activeAnchorIdx={activeAnchorIdx}
-                          hoverAnchorIdx={hoverAnchorIdx}
-                          index={el.anchorIdx}
-                          isConnected={isConnected}
-                        />
-                      );
+                    if (el.type === 'shape') {
+                      if (el.isAnchor) {
+                        const isConnected = connections.some(c => c.from === el.anchorIdx || c.to === el.anchorIdx);
+                        return (
+                          <AnimatedAnchor
+                            key={`anchor-${el.id}`}
+                            shape={el}
+                            activeAnchorIdx={activeAnchorIdx}
+                            hoverAnchorIdx={hoverAnchorIdx}
+                            index={el.anchorIdx}
+                            isConnected={isConnected}
+                          />
+                        );
+                      }
+                      return <AnimatedShapeElement key={`shape-${el.id}`} shape={el} isFocused={false} />;
                     }
                     if (el.type === 'user-connections') {
                       if (anchorElements.length === 0) return null;

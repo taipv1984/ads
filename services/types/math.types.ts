@@ -7,7 +7,7 @@ export interface Point {
 
 export interface BaseElement {
   id: number;
-  type: 'shape' | 'line' | 'text' | 'image' | 'anchor';
+  type: 'shape' | 'line' | 'text' | 'image';
   zIndex?: number;
 }
 
@@ -24,6 +24,7 @@ export interface ShapeElement extends BaseElement {
   borderWidth?: number;
 
   isInput: boolean;
+  isAnchor?: boolean;
   value?: string;
   valueOptions?: string; //'["Đ", "S"]'
   textColor?: string;
@@ -57,15 +58,7 @@ export interface ImageElement extends BaseElement {
   height: number;
 }
 
-export interface AnchorElement extends BaseElement {
-  type: 'anchor';
-  position: Point;
-  size?: number;
-  value?: string;
-  isShow?: boolean;
-}
-
-export type CanvasElement = ShapeElement | LineElement | TextElement | ImageElement | AnchorElement;
+export type CanvasElement = ShapeElement | LineElement | TextElement | ImageElement;
 
 export interface ValidationRule {
   id: number;

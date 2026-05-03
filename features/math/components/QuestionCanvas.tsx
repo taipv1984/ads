@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import QuestionFillCanvas from './QuestionFillCanvas';
 import QuestionMatchCanvas from './QuestionMatchCanvas';
 
-interface Props {
+interface _Props {
   question: Question;
   userInputs: Record<number, string>;
   activeInputId: number | null;
@@ -13,16 +13,23 @@ interface Props {
   offsetY?: number;
 }
 
-const QuestionCanvas: React.FC<Props> = (props) => {
+const QuestionCanvas: React.FC<_Props> = (props) => {
   const { question } = props;
+
+  const renderCanvas = () => {
+    switch (question.type) {
+      case 'match':
+        return <QuestionMatchCanvas {...props} />;
+      case 'fill':
+        return <QuestionFillCanvas {...props} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {question.type === 'match' ? (
-        <QuestionMatchCanvas {...props} />
-      ) : (
-        <QuestionFillCanvas {...props} />
-      )}
+      {renderCanvas()}
     </View>
   );
 };

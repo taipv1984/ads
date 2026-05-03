@@ -290,18 +290,13 @@ export const MATH_FILL_MOCKS: Question[] = [
     content: "Nối các hình có cùng số lượng hoặc giá trị.",
     elements: [
       // Cột trái
-      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isInput: false, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
-      // { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isInput: false, value: "10", bgColor: "green_light", textSize: 40 },
-      // { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isInput: false, value: "3", bgColor: "orange_light", textSize: 40 },
-      // // Cột phải
-      { id: 2001, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isInput: false, value: "10", bgColor: "green_light", textSize: 40 },
-      // { id: 2002, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isInput: false, value: "3", bgColor: "orange_light", textSize: 40 },
-      { id: 2003, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isInput: false, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
-
-      { id: 2004, type: "anchor", position: { x: 200, y: 200 }, size: 160 },
-      { id: 2005, type: "anchor", position: { x: 400, y: 600 }, size: 120, isShow: true },
-      { id: 2006, type: "anchor", position: { x: 600, y: 200 }, size: 120, isShow: true },
-      { id: 2007, type: "anchor", position: { x: 800, y: 700 }, size: 150 },
+      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isInput: false, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
+      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isInput: false, isAnchor: true, value: "10", bgColor: "green_light", textSize: 40 },
+      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isInput: false, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 40 },
+      // Cột phải
+      { id: 2001, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isInput: false, isAnchor: true, value: "10", bgColor: "green_light", textSize: 40 },
+      { id: 2002, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isInput: false, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 40 },
+      { id: 2003, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isInput: false, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 40, borderWidth: 5 },
     ],
     validations: [
     ],

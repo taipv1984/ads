@@ -233,19 +233,21 @@ const MathScreen: React.FC = () => {
           </View>
         )}
 
-        {/* Canvas với viền đen */}
-        <View style={[styles.canvasContainer, { height: canvasHeight }]}>
-          <QuestionCanvas
-            question={item}
-            userInputs={qInputs}
-            activeInputId={index === currentIndex ? activeInputId : null}
-            onSelectInput={(id, absPos) => {
-              setActiveInputId(id);
-              if (absPos) setPickerPosition(absPos);
-            }}
-            offsetY={offsetY}
-          />
-        </View>
+        {/* Canvas hiển thị khi có elements */}
+        {item.elements && item.elements.length > 0 && (
+          <View style={[styles.canvasContainer, { height: canvasHeight }]}>
+            <QuestionCanvas
+              question={item}
+              userInputs={qInputs}
+              activeInputId={index === currentIndex ? activeInputId : null}
+              onSelectInput={(id, absPos) => {
+                setActiveInputId(id);
+                if (absPos) setPickerPosition(absPos);
+              }}
+              offsetY={offsetY}
+            />
+          </View>
+        )}
       </ScrollView>
     );
   };
