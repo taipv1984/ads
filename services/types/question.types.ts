@@ -3,6 +3,11 @@ export interface Point {
   y: number;
 }
 
+export enum MatchType {
+  single = 'single',
+  multi = 'multi',
+}
+
 export interface BaseElement {
   id: number;
   type: 'shape' | 'line' | 'text' | 'image';
@@ -66,20 +71,16 @@ export interface QuestionValidation {
   formula: string; //'#9 + #10 === 32'
 }
 
-export interface QuestionExtraData {
-  id: number;
-  matchMode?: '1-1' | '1-n'
-}
-
 export interface Question {
   id: number;
   category?: string;
   type: QuestionType;
+  title?: string;
   content: string;
   desc?: string;
   imagePath?: string;
   elements?: QuestionElement[];
   validations?: QuestionValidation[];
-  extraData?: QuestionExtraData;
   inputLength?: number;
+  score?: number;
 }

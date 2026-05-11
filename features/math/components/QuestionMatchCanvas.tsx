@@ -1,17 +1,16 @@
 import { COLOR } from '@/constants/theme';
-import { Question, ShapeElement } from '@/services/types/math.types';
-import { Canvas, Circle, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
+import { ImageElement, LineElement, MatchType, Question, ShapeElement, TextElement } from '@/services/types/question.types';
+import { Canvas, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
+import { runOnJS, SharedValue, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
+import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '../utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
-  DEFAULT_Z_INDEX,
   getColor,
   OverlayImage,
-  RenderLayer,
   RenderLine,
   SCALE
 } from './shared/BaseElements';
@@ -19,11 +18,26 @@ import {
 interface Props {
   question: Question;
   userInputs: Record<number, string>;
+  mode?: 'edit' | 'review';
+  connections?: { from: number, to: number }[]; // Thêm prop này để nhận dữ liệu hiện tại
+  reviewConnections?: { from: number, to: number }[];
   onConnectionsChange?: (connections: { from: number, to: number }[]) => void;
   offsetY?: number;
 }
 
-const AnimatedAnchor = memo(({ shape, activeAnchorIdx, hoverAnchorIdx, index, isConnected }: { shape: ShapeElement, activeAnchorIdx: any, hoverAnchorIdx: any, index: number, isConnected: boolean }) => {
+const AnimatedAnchor = memo(({
+  shape,
+  activeAnchorIdx,
+  hoverAnchorIdx,
+  index,
+  isConnected
+}: {
+  shape: ShapeElement,
+  activeAnchorIdx: SharedValue<number>,
+  hoverAnchorIdx: SharedValue<number>,
+  index: number,
+  isConnected: boolean
+}) => {
   const scale = useDerivedValue(() => {
     const activeIdx = activeAnchorIdx?.value ?? -1;
     const hoverIdx = hoverAnchorIdx?.value ?? -1;
@@ -33,9 +47,9 @@ const AnimatedAnchor = memo(({ shape, activeAnchorIdx, hoverAnchorIdx, index, is
   });
 
   return (
-    <AnimatedShapeElement 
-      shape={shape} 
-      isFocused={isConnected} 
+    <AnimatedShapeElement
+      shape={shape}
+      isFocused={isConnected}
       externalScale={scale}
     />
   );
@@ -44,10 +58,18 @@ const AnimatedAnchor = memo(({ shape, activeAnchorIdx, hoverAnchorIdx, index, is
 const QuestionMatchCanvas: React.FC<Props> = ({
   question,
   userInputs,
+  mode = 'edit',
+  connections: parentConnections,
+  reviewConnections,
   onConnectionsChange,
   offsetY = 0
 }) => {
-  const [connections, setConnections] = useState<{ from: number, to: number }[]>([]);
+  const [internalConnections, setInternalConnections] = useState<{ from: number, to: number }[]>(parentConnections || []);
+  const lastSyncedConnections = React.useRef<string>('');
+
+  // Ensure connections is always an array
+  const currentConnections = (mode === 'review' ? reviewConnections : internalConnections) || [];
+  const isReview = mode === 'review';
 
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
@@ -63,7 +85,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const anchorGroups = useSharedValue<string[]>([]);
 
   const anchorElements = useMemo(() => {
-    return (question.elements || []).filter(el => el.type === 'shape' && (el as ShapeElement).isAnchor) as ShapeElement[];
+    return getAnchorElements(question.elements);
   }, [question.elements]);
 
   useEffect(() => {
@@ -78,17 +100,61 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       anchorRs.value = [];
       anchorGroups.value = [];
     }
-    setConnections([]);
-  }, [anchorElements]);
+    // Chỉ khởi tạo lại khi câu hỏi thay đổi hoặc có sự thay đổi lớn từ bên ngoài (như Reset)
+    // Sử dụng một bản so sánh nhẹ nhàng hơn JSON.stringify nếu có thể
+    const parentLength = parentConnections?.length || 0;
+    const internalLength = internalConnections.length;
 
-  const handleConnect = React.useCallback((from: number, to: number) => {
-    setConnections(prev => {
-      const newConnections = prev.filter(c => c.from !== from && c.from !== to && c.to !== from && c.to !== to);
-      newConnections.push({ from, to });
-      if (onConnectionsChange) onConnectionsChange(newConnections);
+    if (parentLength !== internalLength || (parentLength > 0 && parentConnections !== internalConnections)) {
+      setInternalConnections(parentConnections || []);
+      lastSyncedConnections.current = JSON.stringify(parentConnections || []);
+    }
+  }, [question.id, parentConnections]); // Chỉ theo dõi ID và ref của parentConnections
+
+  const handleConnect = React.useCallback((fromIdx: number, toIdx: number) => {
+    if (isReview) return;
+    const fromEl = anchorElements[fromIdx];
+    const toEl = anchorElements[toIdx];
+    if (!fromEl || !toEl) return;
+
+    setInternalConnections(prev => {
+      const matchType = getMatchType(question.elements);
+      let newConnections = [...prev];
+
+      if (matchType === MatchType.single) {
+        newConnections = prev.filter(c =>
+          c.from !== fromEl.id && c.from !== toEl.id &&
+          c.to !== fromEl.id && c.to !== toEl.id
+        );
+      } else {
+        const isFromMaster = fromEl.group === 'master';
+        const isToMaster = toEl.group === 'master';
+        if ((isFromMaster && isToMaster) || (!isFromMaster && !isToMaster)) return prev;
+        const slaveId = isFromMaster ? toEl.id : fromEl.id;
+        newConnections = newConnections.filter(c => c.to !== slaveId && c.from !== slaveId);
+        if (newConnections.some(c => (c.from === fromEl.id && c.to === toEl.id) || (c.from === toEl.id && c.to === fromEl.id))) return prev;
+      }
+
+      newConnections.push({ from: fromEl.id, to: toEl.id });
       return newConnections;
     });
-  }, [onConnectionsChange]);
+  }, [question.elements, anchorElements, isReview]);
+
+  // Đồng bộ hóa kết nối ra bên ngoài thông qua useEffect
+  useEffect(() => {
+    if (isReview || !onConnectionsChange) return;
+
+    // Debounce hoặc chỉ đồng bộ khi dữ liệu thực sự khác biệt
+    const currentStr = JSON.stringify(internalConnections);
+    if (currentStr !== lastSyncedConnections.current) {
+      // Sử dụng requestAnimationFrame hoặc delay nhỏ để không làm nghẽn UI thread
+      const timeout = setTimeout(() => {
+        lastSyncedConnections.current = currentStr;
+        onConnectionsChange(internalConnections);
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+  }, [internalConnections, onConnectionsChange, isReview, question.id]);
 
   const dragPath = useDerivedValue(() => {
     const path = Skia.Path.Make();
@@ -100,6 +166,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   });
 
   const panGesture = useMemo(() => Gesture.Pan()
+    .enabled(!isReview)
     .onBegin(e => {
       'worklet';
       const xs = anchorXs.value;
@@ -141,7 +208,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
 
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
-        
+
         // KIỂM TRA NHÓM
         if (sourceGroup && groups[i] === sourceGroup) continue;
 
@@ -168,7 +235,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
 
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
-        
+
         // KIỂM TRA NHÓM
         if (sourceGroup && groups[i] === sourceGroup) continue;
 
@@ -186,38 +253,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
     }), [handleConnect, anchorElements]);
 
   const layers = useMemo(() => {
-    const allElements: any[] = [
-      ...(question.elements || []).map(el => {
-        const effectiveZIndex = el.zIndex ?? DEFAULT_Z_INDEX[el.type];
-        if (el.type === 'shape' && (el as ShapeElement).isAnchor) {
-          const anchorIdx = anchorElements.findIndex(a => a.id === el.id);
-          return { ...el, effectiveZIndex, anchorIdx };
-        }
-        return { ...el, effectiveZIndex };
-      }),
-      { type: 'user-connections', effectiveZIndex: DEFAULT_Z_INDEX.line }
-    ];
-
-    allElements.sort((a, b) => a.effectiveZIndex - b.effectiveZIndex);
-
-    const groupedLayers: RenderLayer[] = [];
-    allElements.forEach((el) => {
-      const zIndex = el.effectiveZIndex;
-      const lastLayer = groupedLayers[groupedLayers.length - 1];
-      const isCanvasType = el.type === 'shape' || el.type === 'line' || el.type === 'user-connections';
-
-      if (isCanvasType && lastLayer?.type === 'canvas' && lastLayer.zIndex === zIndex) {
-        lastLayer.elements.push(el);
-      } else if (isCanvasType) {
-        groupedLayers.push({ type: 'canvas', elements: [el], zIndex });
-      } else if (el.type === 'text') {
-        groupedLayers.push({ type: 'text', elements: [el], zIndex });
-      } else if (el.type === 'image') {
-        groupedLayers.push({ type: 'image', elements: [el], zIndex });
-      }
-    });
-
-    return groupedLayers;
+    return groupElementsIntoLayers(question.elements || [], anchorElements, true);
   }, [question.elements, anchorElements]);
 
   return (
@@ -225,109 +261,124 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       <GestureDetector gesture={panGesture}>
         <View style={StyleSheet.absoluteFill}>
           {layers.map((layer, layerIdx) => {
-          const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
+            const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
 
-          if (layer.type === 'canvas') {
-            return (
-              <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
-                <Canvas style={StyleSheet.absoluteFill}>
-                  {layer.elements.map((el) => {
-                    if (el.type === 'line') return <RenderLine key={`line-${el.id}`} line={el} />;
-                    if (el.type === 'shape') {
-                      if (el.isAnchor) {
-                        const isConnected = connections.some(c => c.from === el.anchorIdx || c.to === el.anchorIdx);
+            if (layer.type === 'canvas') {
+              return (
+                <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
+                  <Canvas style={StyleSheet.absoluteFill}>
+                    {layer.elements.map((el) => {
+                      if (el.type === 'line') {
+                        const lineEl = el as LineElement;
+                        return <RenderLine key={`line-${lineEl.id}`} line={lineEl} />;
+                      }
+                      if (el.type === 'shape') {
+                        const shape = el as ShapeElement & { anchorIdx?: number };
+                        if (shape.isAnchor) {
+                          const isConnected = Array.isArray(currentConnections) && currentConnections.some(c => c.from === shape.id || c.to === shape.id);
+                          return (
+                            <AnimatedAnchor
+                              key={`anchor-${shape.id}`}
+                              shape={shape}
+                              activeAnchorIdx={activeAnchorIdx}
+                              hoverAnchorIdx={hoverAnchorIdx}
+                              index={shape.anchorIdx ?? -1}
+                              isConnected={isConnected}
+                            />
+                          );
+                        }
+                        return <AnimatedShapeElement key={`shape-${el.id}`} shape={el} isFocused={false} />;
+                      }
+                      if (el.type === 'user-connections') {
+                        if (anchorElements.length === 0) return null;
                         return (
-                          <AnimatedAnchor
-                            key={`anchor-${el.id}`}
-                            shape={el}
-                            activeAnchorIdx={activeAnchorIdx}
-                            hoverAnchorIdx={hoverAnchorIdx}
-                            index={el.anchorIdx}
-                            isConnected={isConnected}
-                          />
+                          <Group key="user-conns-group">
+                            {Array.isArray(currentConnections) && currentConnections.map((c, i) => {
+                              const fromA = anchorElements.find(a => a.id === c.from);
+                              const toA = anchorElements.find(a => a.id === c.to);
+                              if (!fromA || !toA) return null;
+
+                              let lineColor: string = COLOR.primary;
+                              if (isReview) {
+                                const isCorrect = calcExpression(fromA.value || '') === calcExpression(toA.value || '');
+                                lineColor = isCorrect ? '#4CAF50' : '#F44336';
+                              }
+
+                              return (
+                                <Line
+                                  key={`conn-${i}`}
+                                  p1={{ x: fromA.position.x * SCALE, y: fromA.position.y * SCALE }}
+                                  p2={{ x: toA.position.x * SCALE, y: toA.position.y * SCALE }}
+                                  color={lineColor}
+                                  strokeWidth={6 * SCALE}
+                                  style="stroke"
+                                  strokeCap="round"
+                                >
+                                  <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
+                                </Line>
+                              );
+                            })}
+                            <Path path={dragPath} color={COLOR.primary} strokeWidth={6 * SCALE} style="stroke" strokeCap="round">
+                              <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
+                            </Path>
+                          </Group>
                         );
                       }
-                      return <AnimatedShapeElement key={`shape-${el.id}`} shape={el} isFocused={false} />;
-                    }
-                    if (el.type === 'user-connections') {
-                      if (anchorElements.length === 0) return null;
-                      return (
-                        <Group key="user-conns-group">
-                          {connections.map((c, i) => {
-                            const fromA = anchorElements[c.from];
-                            const toA = anchorElements[c.to];
-                            if (!fromA || !toA) return null;
-                            return (
-                              <Line
-                                key={`conn-${i}`}
-                                p1={{ x: fromA.position.x * SCALE, y: fromA.position.y * SCALE }}
-                                p2={{ x: toA.position.x * SCALE, y: toA.position.y * SCALE }}
-                                color={COLOR.primary}
-                                strokeWidth={6 * SCALE}
-                                style="stroke"
-                                strokeCap="round"
-                              >
-                                <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
-                              </Line>
-                            );
-                          })}
-                          <Path path={dragPath} color={COLOR.primary} strokeWidth={6 * SCALE} style="stroke" strokeCap="round">
-                            <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
-                          </Path>
-                        </Group>
-                      );
-                    }
-                    return null;
-                  })}
-                </Canvas>
-                {layer.elements.map(el => {
-                  if (el.type !== 'shape') return null;
-                  const shape = el as ShapeElement;
-                  const textToRender = shape.isInput ? (userInputs[shape.id] || '') : (shape.value || '');
-                  if (textToRender === '' && !shape.isInput) return null;
-                  return (
-                    <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
-                      <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
-                    </View>
-                  );
-                })}
-              </View>
-            );
-          }
-
-          if (layer.type === 'text') {
-            return (
-              <React.Fragment key={layerKey}>
-                {layer.elements.map(el => {
-                  const fs = (el.fontSize || 40) * SCALE;
-                  return (
-                    <View
-                      key={`text-${el.id}`}
-                      style={[styles.textContainer, { left: el.position.x * SCALE, top: el.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
-                      pointerEvents="none"
-                    >
-                      <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: fs, color: getColor(el.color), fontWeight: 'bold' }}>
-                          {el.content}
-                        </Text>
+                      return null;
+                    })}
+                  </Canvas>
+                  {layer.elements.map(el => {
+                    if (el.type !== 'shape') return null;
+                    const shape = el as ShapeElement;
+                    const textToRender = shape.isInput ? (userInputs[shape.id] || '') : (shape.value || '');
+                    if (textToRender === '' && !shape.isInput) return null;
+                    return (
+                      <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
+                        <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
                       </View>
-                    </View>
-                  );
-                })}
-              </React.Fragment>
-            );
-          }
+                    );
+                  })}
+                </View>
+              );
+            }
 
-          if (layer.type === 'image') {
-            return (
-              <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
-                {layer.elements.map(el => <OverlayImage key={`img-${el.id}`} imageEl={el} />)}
-              </View>
-            );
-          }
+            if (layer.type === 'text') {
+              return (
+                <React.Fragment key={layerKey}>
+                  {layer.elements.map(el => {
+                    const textEl = el as TextElement;
+                    const fs = (textEl.fontSize || 40) * SCALE;
+                    return (
+                      <View
+                        key={`text-${textEl.id}`}
+                        style={[styles.textContainer, { left: textEl.position.x * SCALE, top: textEl.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
+                        pointerEvents="none"
+                      >
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                          <Text style={{ fontSize: fs, color: getColor(textEl.color), fontWeight: 'bold' }}>
+                            {textEl.content}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            }
 
-          return null;
-        })}
+            if (layer.type === 'image') {
+              return (
+                <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
+                  {layer.elements.map(el => {
+                    const imgEl = el as ImageElement;
+                    return <OverlayImage key={`img-${imgEl.id}`} imageEl={imgEl} />;
+                  })}
+                </View>
+              );
+            }
+
+            return null;
+          })}
         </View>
       </GestureDetector>
     </View>

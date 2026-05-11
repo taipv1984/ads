@@ -1,6 +1,6 @@
-import { Question } from "../types/math.types";
+import { Question } from "../types/question.types";
 
-export const MATH_FILL_MOCKS: Question[] = [
+export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 1,
   //   type: "fill",
@@ -15,7 +15,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 4, type: "shape", shapeType: "square", position: { x: 300, y: 480 }, size: 120, isInput: false, value: "20", textColor: "blue", textSize: 50, borderWidth: 4 },
   //     { id: 5, type: "shape", shapeType: "square", position: { x: 700, y: 480 }, size: 120, isInput: false, value: "7", textColor: "blue", textSize: 50, borderWidth: 4 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   {
     id: 2,
@@ -39,7 +40,8 @@ export const MATH_FILL_MOCKS: Question[] = [
     ],
     validations: [
       { id: 1, formula: "#9 + #10 === 32" }
-    ]
+    ],
+    // score: 1
   },
   // {
   //   id: 3,
@@ -57,26 +59,24 @@ export const MATH_FILL_MOCKS: Question[] = [
   //   ],
   //   validations: [
   //     { id: 1, formula: "#14 + #15 === 46" }
-  //   ]
-  // },
-  // {
-  //   id: 4,
-  //   type: "fill",
-  //   category: "",
-  //   desc: "viet_so_thich_hop_2.jpg",
-  //   content: "Đúng ghi Đ, sai ghi S.",
-  //   imagePath: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
-  //   inputLength: 1,
-  //   elements: [
-  //     { id: 16, type: "text", position: { x: 200, y: 410 }, content: "a) Ba mươi tư viết là 34.", fontSize: 46 },
-  //     { id: 17, type: "shape", shapeType: "square", position: { x: 880, y: 410 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' },
-  //     { id: 171, type: "shape", shapeType: "square", position: { x: 100, y: 410 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ1", "S1"]' },
-  //     { id: 172, type: "shape", shapeType: "square", position: { x: 180, y: 1010 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ2", "S2", "Phạm Văn Tài xxx"]' },
-  //     { id: 173, type: "shape", shapeType: "square", position: { x: 350, y: 710 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["xxx", "yyy", "zzz"]' },
-  //     { id: 174, type: "shape", shapeType: "square", position: { x: 350, y: 110 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["xxx2", "yyy2", "zzz2"]' },
   //   ],
-  //   validations: []
+  //   score: 1
   // },
+  {
+    id: 4,
+    type: "fill",
+    category: "",
+    desc: "viet_so_thich_hop_2.jpg",
+    content: "Đúng ghi Đ, sai ghi S.",
+    // imagePath: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
+    inputLength: 1,
+    elements: [
+      { id: 16, type: "text", position: { x: 200, y: 410 }, content: "a) Ba mươi tư viết là 34.", fontSize: 46 },
+      { id: 17, type: "shape", shapeType: "square", position: { x: 800, y: 420 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' },
+    ],
+    validations: [],
+    score: 1
+  },
   // {
   //   id: 5,
   //   type: "fill",
@@ -88,7 +88,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 18, type: "text", position: { x: 180, y: 83 }, content: "b) Ba mươi tư viết là 304.", fontSize: 46 },
   //     { id: 19, type: "shape", shapeType: "square", position: { x: 800, y: 110 }, size: 100, isInput: true, value: "S", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 6,
@@ -106,7 +107,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 25, type: "shape", shapeType: "circle", position: { x: 760, y: 430 }, size: 100, isInput: true, value: "35", bgColor: "white", borderColor: "blue", borderWidth: 5, textSize: 42 },
   //     { id: 26, type: "shape", shapeType: "circle", position: { x: 880, y: 320 }, size: 100, isInput: false, value: "36", bgColor: "blue_light", textSize: 42 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 7,
@@ -122,7 +124,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 30, type: "shape", shapeType: "diamond", position: { x: 670, y: 120 }, size: 120, isInput: true, value: "18", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 44 },
   //     { id: 31, type: "shape", shapeType: "diamond", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "20", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 44 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 8,
@@ -138,7 +141,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 35, type: "shape", shapeType: "triangle", position: { x: 670, y: 120 }, size: 120, isInput: false, value: "70", bgColor: "blue_light", textSize: 44 },
   //     { id: 36, type: "shape", shapeType: "triangle", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "80", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 44 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 9,
@@ -158,7 +162,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 42, type: "shape", shapeType: "square", position: { x: 200, y: 560 }, size: 100, isInput: false, value: "1", textColor: "blue", borderColor: "black", borderWidth: 5, textSize: 50 },
   //     { id: 43, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 600, y: 585 }, width: 400, height: 150 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 10,
@@ -177,7 +182,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 48, type: "shape", shapeType: "square", position: { x: 200, y: 610 }, size: 100, isInput: true, value: "3", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 50 },
   //     { id: 49, type: "image", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Placeholder_LC_blue.png/640px-Placeholder_LC_blue.png", position: { x: 400, y: 660 }, width: 400, height: 200 }
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 11,
@@ -203,7 +209,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //   ],
   //   validations: [
   //     { id: 1, formula: "#58 + #59 === 32" }
-  //   ]
+  //   ],
+  //   score: 1
   // },
   // {
   //   type: "fill",
@@ -233,7 +240,8 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 315, type: "text", position: { x: 680, y: 382 }, content: "– 5", fontSize: 44 },
   //     { id: 316, type: "shape", shapeType: "circle", position: { x: 850, y: 432 }, size: 120, isInput: true, value: "84", bgColor: "white", borderColor: "black", borderWidth: 5, textSize: 44 },
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   // {
   //   id: 13,
@@ -279,52 +287,47 @@ export const MATH_FILL_MOCKS: Question[] = [
   //     { id: 427, type: "shape", shapeType: "triangle", position: { x: 750, y: 710 }, size: 100, isInput: true, value: "80", bgColor: "white", borderColor: "black", borderWidth: 3, textSize: 40 },
   //     { id: 428, type: "shape", shapeType: "triangle", position: { x: 900, y: 710 }, size: 100, isInput: true, value: "90", bgColor: "white", borderColor: "black", borderWidth: 3, textSize: 40 },
   //   ],
-  //   validations: []
+  //   validations: [],
+  //   score: 1
   // },
   {
     id: 14,
     type: "match",
     category: "",
     desc: "",
-    content: "Nối các hình có cùng số lượng hoặc giá trị. 1-n",
+    content: "Nối các hình có cùng số lượng hoặc giá trị. single",
     elements: [
       //left
-      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "1" },
-      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "1" },
-      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "1" },
+      { id: 1001, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "left" },
+      { id: 1002, type: "shape", shapeType: "circle", position: { x: 200, y: 450 }, size: 120, isAnchor: true, value: "10", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "left" },
+      { id: 1003, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "3", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "left" },
       //right
-      { id: 1004, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isAnchor: true, value: "10", bgColor: "green_light", textSize: 50, borderWidth: 5, group: "2" },
-      { id: 1005, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isAnchor: true, value: "3", bgColor: "orange_light", textSize: 50, borderWidth: 5, group: "2" },
-      { id: 1006, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "2" },
+      { id: 1004, type: "shape", shapeType: "square", position: { x: 800, y: 200 }, size: 120, isAnchor: true, value: "10", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "right" },
+      { id: 1005, type: "shape", shapeType: "square", position: { x: 800, y: 450 }, size: 120, isAnchor: true, value: "3", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "right" },
+      { id: 1006, type: "shape", shapeType: "square", position: { x: 800, y: 700 }, size: 120, isAnchor: true, value: "5", bgColor: "blue_light", textSize: 50, borderWidth: 5, group: "right" },
     ],
-    extraData: {
-      id: 1,
-      matchMode: '1-1'
-    }
+    score: 1
   },
   {
     id: 15,
     type: "match",
     category: "",
     desc: "",
-    content: "Nối các hình có cùng số lượng hoặc giá trị. 1-n",
+    content: "Nối các hình có cùng số lượng hoặc giá trị. multi",
     elements: [
       //top
       { id: 1007, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "6 - 2", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "top" },
-      { id: 1008, type: "shape", shapeType: "circle", position: { x: 400, y: 200 }, size: 120, isAnchor: true, value: "4 + 1", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "top" },
-      { id: 1009, type: "shape", shapeType: "circle", position: { x: 600, y: 200 }, size: 120, isAnchor: true, value: "8 - 4", bgColor: "orange_light", textSize: 40, borderWidth: 5, group: "top" },
+      { id: 1008, type: "shape", shapeType: "circle", position: { x: 400, y: 200 }, size: 120, isAnchor: true, value: "4 + 1", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "top" },
+      { id: 1009, type: "shape", shapeType: "circle", position: { x: 600, y: 200 }, size: 120, isAnchor: true, value: "8 - 4", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "top" },
       //master
       { id: 2001, type: "shape", shapeType: "square", position: { x: 400, y: 400 }, size: 120, isAnchor: true, value: "4", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "master" },
       { id: 2002, type: "shape", shapeType: "square", position: { x: 600, y: 400 }, size: 120, isAnchor: true, value: "5", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "master" },
       //bottom
-      { id: 1010, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "16 - 9", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "bottom" },
-      { id: 1011, type: "shape", shapeType: "circle", position: { x: 400, y: 700 }, size: 120, isAnchor: true, value: "4 + 11", bgColor: "green_light", textSize: 40, borderWidth: 5, group: "bottom" },
-      { id: 1012, type: "shape", shapeType: "circle", position: { x: 600, y: 700 }, size: 120, isAnchor: true, value: "8 - 14", bgColor: "orange_light", textSize: 40, borderWidth: 5, group: "bottom" },
+      { id: 1010, type: "shape", shapeType: "circle", position: { x: 200, y: 700 }, size: 120, isAnchor: true, value: "16 - 11", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "bottom" },
+      { id: 1011, type: "shape", shapeType: "circle", position: { x: 400, y: 700 }, size: 120, isAnchor: true, value: "4 + 11", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "bottom" },
+      { id: 1012, type: "shape", shapeType: "circle", position: { x: 600, y: 700 }, size: 120, isAnchor: true, value: "8 - 14", bgColor: "blue_light", textSize: 40, borderWidth: 5, group: "bottom" },
     ],
-    extraData: {
-      id: 2,
-      matchMode: '1-n'
-    }
+    score: 1
   },
 ];
 

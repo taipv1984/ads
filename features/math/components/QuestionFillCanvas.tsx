@@ -1,15 +1,13 @@
-import { Question, ShapeElement } from '@/services/types/math.types';
+import { Question, ShapeElement } from '@/services/types/question.types';
 import { Canvas } from '@shopify/react-native-skia';
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { getEffectiveZIndex, groupElementsIntoLayers } from '../utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
-  DEFAULT_Z_INDEX,
   getColor,
-  OverlayImage,
-  RenderLayer,
   RenderLine,
   SCALE
 } from './shared/BaseElements';
@@ -18,6 +16,7 @@ interface _Props {
   question: Question;
   userInputs: Record<number, string>;
   activeInputId: number | null;
+  mode?: 'edit' | 'review';
   onSelectInput: (id: number | null, absPos?: { x: number, y: number }) => void;
   offsetY?: number;
 }
@@ -26,135 +25,126 @@ const QuestionFillCanvas: React.FC<_Props> = ({
   question,
   userInputs,
   activeInputId,
+  mode = 'edit',
   onSelectInput,
   offsetY = 0
 }) => {
-  const tapGesture = useMemo(() => Gesture.Tap().onEnd((e) => {
-    let foundInputId: number | null = null;
-    let absolutePos: { x: number, y: number } | undefined = undefined;
+  const isReview = mode === 'review';
+  const tapGesture = useMemo(() => Gesture.Tap()
+    .enabled(!isReview)
+    .onEnd((e) => {
+      let foundInputId: number | null = null;
+      let absolutePos: { x: number, y: number } | undefined = undefined;
 
-    const sorted = [...question.elements].sort((a, b) => {
-      const az = a.zIndex ?? DEFAULT_Z_INDEX[a.type];
-      const bz = b.zIndex ?? DEFAULT_Z_INDEX[b.type];
-      return bz - az;
-    });
+      const sorted = [...(question.elements || [])].sort((a, b) => {
+        const az = getEffectiveZIndex(a);
+        const bz = getEffectiveZIndex(b);
+        return bz - az;
+      });
 
-    const adjustedY = e.y;
+      const adjustedY = e.y;
 
-    for (const el of sorted) {
-      if (el.type === 'shape' && (el as ShapeElement).isInput) {
-        const cx = el.position.x * SCALE;
-        const cy = el.position.y * SCALE;
-        const shape = el as ShapeElement;
-        const w = (shape.width || shape.size || 100) * SCALE;
-        const h = (shape.height || shape.size || 100) * SCALE;
-        const halfW = w / 2;
-        const halfH = h / 2;
+      for (const el of sorted) {
+        if (el.type === 'shape' && (el as ShapeElement).isInput) {
+          const cx = el.position.x * SCALE;
+          const cy = el.position.y * SCALE;
+          const shape = el as ShapeElement;
+          const w = (shape.width || shape.size || 100) * SCALE;
+          const h = (shape.height || shape.size || 100) * SCALE;
+          const halfW = w / 2;
+          const halfH = h / 2;
 
-        if (e.x >= cx - halfW && e.x <= cx + halfW &&
-          adjustedY >= cy - halfH && adjustedY <= cy + halfH) {
-          foundInputId = el.id;
-          absolutePos = {
-            x: e.absoluteX - (e.x - cx),
-            y: e.absoluteY - (e.y - cy)
-          };
-          break;
+          if (e.x >= cx - halfW && e.x <= cx + halfW &&
+            adjustedY >= cy - halfH && adjustedY <= cy + halfH) {
+            foundInputId = el.id;
+            absolutePos = {
+              x: e.absoluteX - (e.x - cx),
+              y: e.absoluteY - (e.y - cy)
+            };
+            break;
+          }
         }
       }
-    }
 
-    if (onSelectInput) {
-      onSelectInput(foundInputId, absolutePos);
-    }
-  }).runOnJS(true), [question, onSelectInput]);
+      if (onSelectInput) {
+        onSelectInput(foundInputId, absolutePos);
+      }
+    }).runOnJS(true), [question, onSelectInput]);
 
   const layers = useMemo(() => {
-    const allElements: any[] = question.elements.map(el => ({
-      ...el,
-      effectiveZIndex: el.zIndex ?? DEFAULT_Z_INDEX[el.type]
-    }));
-
-    allElements.sort((a, b) => a.effectiveZIndex - b.effectiveZIndex);
-
-    const groupedLayers: RenderLayer[] = [];
-    allElements.forEach((el) => {
-      const zIndex = el.effectiveZIndex;
-      const lastLayer = groupedLayers[groupedLayers.length - 1];
-      const isCanvasType = el.type === 'shape' || el.type === 'line';
-
-      if (isCanvasType && lastLayer?.type === 'canvas' && lastLayer.zIndex === zIndex) {
-        lastLayer.elements.push(el);
-      } else if (isCanvasType) {
-        groupedLayers.push({ type: 'canvas', elements: [el], zIndex });
-      } else if (el.type === 'text') {
-        groupedLayers.push({ type: 'text', elements: [el], zIndex });
-      } else if (el.type === 'image') {
-        groupedLayers.push({ type: 'image', elements: [el], zIndex });
-      }
-    });
-
-    return groupedLayers;
+    return groupElementsIntoLayers(question.elements || []);
   }, [question.elements]);
 
   return (
     <View style={[StyleSheet.absoluteFill, { top: offsetY }]}>
       <GestureDetector gesture={tapGesture}>
         <View style={StyleSheet.absoluteFill}>
-        {layers.map((layer, layerIdx) => {
-          const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
+          {layers.map((layer, layerIdx) => {
+            const layerKey = `layer-${layer.type}-${layer.zIndex}-${layerIdx}`;
 
-          if (layer.type === 'canvas') {
-            return (
-              <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
-                <Canvas style={StyleSheet.absoluteFill}>
-                  {layer.elements.map((el) => (
-                    el.type === 'line' ? (
-                      <RenderLine key={`line-${el.id}`} line={el} />
-                    ) : (
-                      <AnimatedShapeElement key={`shape-${el.id}`} shape={el} isFocused={el.id === activeInputId} />
-                    )
-                  ))}
-                </Canvas>
-                {layer.elements.map(el => {
-                  if (el.type !== 'shape') return null;
-                  const shape = el as ShapeElement;
-                  const textToRender = shape.isInput ? (userInputs[shape.id] || '') : (shape.value || '');
-                  if (textToRender === '' && !shape.isInput) return null;
-                  return (
-                    <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
-                      <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
-                    </View>
-                  );
-                })}
-              </View>
-            );
-          }
-
-          if (layer.type === 'text') {
-            return (
-              <React.Fragment key={layerKey}>
-                {layer.elements.map(el => {
-                  const fs = (el.fontSize || 40) * SCALE;
-                  return (
-                    <View
-                      key={`text-${el.id}`}
-                      style={[styles.textContainer, { left: el.position.x * SCALE, top: el.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
-                      pointerEvents="none"
-                    >
-                      <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <Text style={{ fontSize: fs, color: getColor(el.color), fontWeight: 'bold' }}>
-                          {el.content}
-                        </Text>
+            if (layer.type === 'canvas') {
+              return (
+                <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
+                  <Canvas style={StyleSheet.absoluteFill}>
+                    {layer.elements.map((el) => {
+                      if (el.type === 'line') {
+                        return <RenderLine key={`line-${el.id}`} line={el as any} />;
+                      }
+                      if (el.type === 'shape') {
+                        return (
+                          <AnimatedShapeElement
+                            key={`shape-${el.id}`}
+                            shape={el as any}
+                            isFocused={el.id === activeInputId}
+                            reviewStatus={isReview && (el as any).isInput ? (userInputs[el.id] === (el as any).value ? 'correct' : 'incorrect') : 'none'}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                  </Canvas>
+                  {layer.elements.map(el => {
+                    if (el.type !== 'shape') return null;
+                    const shape = el as ShapeElement;
+                    const textToRender = shape.isInput ? (userInputs[shape.id] || '') : (shape.value || '');
+                    if (textToRender === '' && !shape.isInput) return null;
+                    return (
+                      <View key={`overlay-${el.id}`} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex + 0.1 }]} pointerEvents="none">
+                        <AnimatedTextOverlay shape={shape} textToRender={textToRender} />
                       </View>
-                    </View>
-                  );
-                })}
-              </React.Fragment>
-            );
-          }
+                    );
+                  })}
+                </View>
+              );
+            }
 
-          return null;
-        })}
+            if (layer.type === 'text') {
+              return (
+                <React.Fragment key={layerKey}>
+                  {layer.elements.map(el => {
+                    if (el.type !== 'text') return null;
+                    const textEl = el as any; // Cast or use specific type
+                    const fs = (textEl.fontSize || 40) * SCALE;
+                    return (
+                      <View
+                        key={`text-${el.id}`}
+                        style={[styles.textContainer, { left: textEl.position.x * SCALE, top: textEl.position.y * SCALE - fs / 2, zIndex: layer.zIndex }]}
+                        pointerEvents="none"
+                      >
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                          <Text style={{ fontSize: fs, color: getColor(textEl.color), fontWeight: 'bold' }}>
+                            {textEl.content}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            }
+
+            return null;
+          })}
         </View>
       </GestureDetector>
     </View>

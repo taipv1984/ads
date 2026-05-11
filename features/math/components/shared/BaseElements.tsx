@@ -1,6 +1,6 @@
 import { COLOR } from '@/constants/theme';
 import { GAME_CONFIG } from '@/game_config';
-import { ImageElement, LineElement, ShapeElement } from '@/services/types/math.types';
+import { ImageElement, LineElement, QuestionElement, ShapeElement } from '@/services/types/question.types';
 import { Circle, Group, Line, Path, RoundedRect, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useState } from 'react';
 import { Dimensions, Image as RNImage, StyleSheet, View } from 'react-native';
@@ -26,13 +26,15 @@ export const DEFAULT_Z_INDEX: Record<string, number> = {
 
 export type RenderLayer = {
   type: 'canvas' | 'text' | 'image';
-  elements: any[];
+  elements: ((QuestionElement & { effectiveZIndex: number, anchorIdx?: number }) | { type: 'user-connections'; effectiveZIndex: number })[];
   zIndex: number;
 };
 
 export const getColor = (c?: string, fallback: string = 'black') => {
   'worklet';
-  return c ? ((COLOR as any)[c] || c) : fallback;
+  if (!c) return fallback;
+  if (c in COLOR) return (COLOR as Record<string, string>)[c];
+  return c;
 };
 
 export const createPath = (shape: ShapeElement) => {
@@ -58,7 +60,17 @@ export const createPath = (shape: ShapeElement) => {
 };
 
 // Memoized Sub-components
-export const AnimatedShapeElement = memo(({ shape, isFocused, externalScale }: { shape: ShapeElement, isFocused: SharedValue<boolean> | boolean, externalScale?: any }) => {
+export const AnimatedShapeElement = memo(({
+  shape,
+  isFocused,
+  externalScale,
+  reviewStatus = 'none'
+}: {
+  shape: ShapeElement,
+  isFocused: SharedValue<boolean> | boolean,
+  externalScale?: any,
+  reviewStatus?: 'correct' | 'incorrect' | 'none'
+}) => {
   const internalScale = useSharedValue(1);
 
   const isFocusedValue = useDerivedValue(() => {
@@ -90,6 +102,10 @@ export const AnimatedShapeElement = memo(({ shape, isFocused, externalScale }: {
 
   const strokeColor = useDerivedValue(() => {
     const focused = isFocusedValue.value;
+
+    if (reviewStatus === 'correct') return '#4CAF50';
+    if (reviewStatus === 'incorrect') return '#F44336';
+
     // Đối với Anchor, màu viền LUÔN LUÔN giữ nguyên theo dữ liệu (mặc định là đen)
     if (shape.isAnchor) {
       return getColor(shape.borderColor, 'black');

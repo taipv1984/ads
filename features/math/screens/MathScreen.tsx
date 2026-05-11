@@ -2,16 +2,17 @@ import BottomNavigation from '@/app/components/shared/BottomNavigation';
 import OptionPicker from '@/app/components/shared/OptionPicker';
 import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
-import { MATH_FILL_MOCKS } from '@/services/mocks/math.mock';
-import { ShapeElement } from '@/services/types/math.types';
-import QuestionCanvas from '../components/QuestionCanvas';
-import { SCALE } from '../components/shared/BaseElements';
+import { QUESTION_MOCKS } from '@/services/mocks/question.mock';
+import { ShapeElement } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { Alert, Dimensions, FlatList, Image as RNImage, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Dimensions, FlatList, Image as RNImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import QuestionItem from '../components/QuestionItem';
+import GradeConfirmModal from '../components/modal/SubmitExamConfirmModal';
+import { useMathQuiz } from '../context/MathQuizContext';
+import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from '../utils/math.util';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -40,100 +41,79 @@ const AutoHeightImage = ({ uri }: { uri: string }) => {
 
 const MathScreen: React.FC = () => {
   const router = useRouter();
+  const {
+    questions,
+    setQuestions,
+    userAnswers,
+    userConnections,
+    updateAnswer,
+    updateConnections,
+    submitQuiz
+  } = useMathQuiz();
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [allAnswers, setAllAnswers] = useState<Record<number, Record<number, string>>>({});
   const [activeInputId, setActiveInputId] = useState<number | null>(null);
   const [pickerPosition, setPickerPosition] = useState<{ x: number, y: number } | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [incompleteQuestions, setIncompleteQuestions] = useState<number[]>([]);
+
   const flatListRef = useRef<FlatList>(null);
 
-  const currentQuestion = MATH_FILL_MOCKS[currentIndex];
-  const userInputs = allAnswers[currentQuestion.id] || {};
+  // Initialize questions
+  React.useEffect(() => {
+    setQuestions(QUESTION_MOCKS);
+  }, []);
+
+  const currentQuestion = questions[currentIndex] || QUESTION_MOCKS[currentIndex];
+  const qInputs = userAnswers[currentQuestion.id] || {};
 
   const handleKeyPress = (key: string) => {
     if (activeInputId === null) return;
-    setAllAnswers(prev => {
-      const qAnswers = prev[currentQuestion.id] || {};
-      const currentVal = qAnswers[activeInputId] || '';
-      let newVal = currentVal + key;
-      const maxLength = currentQuestion.inputLength || 2;
-      if (newVal.length > maxLength) {
-        newVal = newVal.slice(1);
-      }
-      return {
-        ...prev,
-        [currentQuestion.id]: { ...qAnswers, [activeInputId]: newVal }
-      };
-    });
+    const currentVal = qInputs[activeInputId] || '';
+    let newVal = currentVal + key;
+    const maxLength = currentQuestion.inputLength || 2;
+    if (newVal.length > maxLength) {
+      newVal = newVal.slice(1);
+    }
+    updateAnswer(currentQuestion.id, activeInputId, newVal);
   };
 
   const handleDelete = () => {
     if (activeInputId === null) return;
-    setAllAnswers(prev => {
-      const qAnswers = prev[currentQuestion.id] || {};
-      const currentVal = qAnswers[activeInputId] || '';
-      return {
-        ...prev,
-        [currentQuestion.id]: { ...qAnswers, [activeInputId]: currentVal.slice(0, -1) }
-      };
-    });
+    const currentVal = qInputs[activeInputId] || '';
+    updateAnswer(currentQuestion.id, activeInputId, currentVal.slice(0, -1));
   };
 
   const handleCheck = () => {
     setActiveInputId(null);
-    let isCorrect = true;
+    const incomplete = questions.reduce((acc, q, idx) => {
+      const completed = checkQuestionCompletion(
+        q,
+        userAnswers[q.id] || {},
+        userConnections[q.id] || []
+      );
+      if (!completed) acc.push(idx);
+      return acc;
+    }, [] as number[]);
 
-    for (const el of (currentQuestion.elements || [])) {
-      if (el.type === 'shape') {
-        const shape = el as ShapeElement;
-        if (shape.isInput && shape.value && shape.value.trim() !== '') {
-          const userVal = userInputs[shape.id] || '';
-          if (userVal !== shape.value) {
-            isCorrect = false;
-            break;
-          }
-        }
-      }
-    }
+    setIncompleteQuestions(incomplete);
+    setShowConfirmModal(true);
+  };
 
-    if (!isCorrect) {
-      Alert.alert('Chưa đúng', 'Hãy thử lại nhé!');
-      return;
-    }
+  const handleConfirmGrade = () => {
+    setShowConfirmModal(false);
+    submitQuiz(calcQuestionScore);
+    router.push('/math-result');
+  };
 
-    for (const rule of (currentQuestion.validations || [])) {
-      if (rule.formula) {
-        try {
-          let evalStr = rule.formula;
-          const matches = evalStr.match(/#(\d+)/g) || [];
-
-          for (const match of matches) {
-            const id = parseInt(match.substring(1));
-            const val = userInputs[id] || '';
-            evalStr = evalStr.replace(match, `Number("${val}")`);
-          }
-
-          const result = new Function(`return ${evalStr}`)();
-          if (!result) {
-            isCorrect = false;
-            break;
-          }
-        } catch (e) {
-          console.error('Validation error:', e);
-          isCorrect = false;
-          break;
-        }
-      }
-    }
-
-    if (isCorrect) {
-      Alert.alert('Tuyệt vời!', 'Bạn đã trả lời đúng.');
-    } else {
-      Alert.alert('Chưa đúng', 'Hãy thử lại nhé!');
-    }
+  const handleReviewIncomplete = (index: number) => {
+    setShowConfirmModal(false);
+    setCurrentIndex(index);
+    flatListRef.current?.scrollToIndex({ index, animated: true });
   };
 
   const handleNext = () => {
-    if (currentIndex < MATH_FILL_MOCKS.length - 1) {
+    if (currentIndex < QUESTION_MOCKS.length - 1) {
       const nextIndex = currentIndex + 1;
       flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
     }
@@ -157,103 +137,35 @@ const MathScreen: React.FC = () => {
   }, [currentIndex]);
 
   // Hàm tính toán layout động cho Canvas dựa trên các phần tử
-  const getCanvasLayout = useCallback((elements: any[]) => {
-    let minY = Infinity;
-    let maxY = -Infinity;
-
-    elements.forEach(el => {
-      let elementTop: number | undefined = undefined;
-      let elementBottom: number | undefined = undefined;
-      if (el.type === 'shape') {
-        const h = el.height || el.size || 100;
-        elementTop = el.position.y - h / 2;
-        elementBottom = el.position.y + h / 2;
-      } else if (el.type === 'text') {
-        const h = el.fontSize || 40;
-        elementTop = el.position.y - h / 2;
-        elementBottom = el.position.y + h / 2;
-      } else if (el.type === 'image') {
-        elementTop = el.position.y - el.height / 2;
-        elementBottom = el.position.y + el.height / 2;
-      } else if (el.type === 'line') {
-        const sw = el.strokeWidth || 5;
-        // Thêm khoảng đệm cho mũi tên nếu có
-        const arrowBuffer = el.lineType === 'arrow' ? 40 : 0;
-        elementTop = Math.min(el.start.y, el.end.y) - sw - arrowBuffer;
-        elementBottom = Math.max(el.start.y, el.end.y) + sw + arrowBuffer;
-
-        if (el.controlPoints) {
-          el.controlPoints.forEach((p: any) => {
-            elementTop = Math.min(elementTop as number, p.y - sw);
-            elementBottom = Math.max(elementBottom as number, p.y + sw);
-          });
-        }
-      }
-      if (elementTop !== undefined) minY = Math.min(minY, elementTop);
-      if (elementBottom !== undefined) maxY = Math.max(maxY, elementBottom);
-    });
-
-    if (minY === Infinity) return { height: 300, offsetY: 0 };
-
-    // Chiều cao nội dung thực tế (không cần buffer lớn)
-    const contentHeight = (maxY - minY) * SCALE + SPACING.lg;
-    const padding = SPACING.md;
-
-    return {
-      height: contentHeight + padding * 2,
-      offsetY: padding - minY * SCALE
-    };
+  const getCanvasLayoutCallback = useCallback((elements: any[]) => {
+    return getCanvasLayout(elements);
   }, []);
 
-  const renderQuestionItem = ({ item, index }: { item: typeof MATH_FILL_MOCKS[0], index: number }) => {
-    const qInputs = allAnswers[item.id] || {};
-    const { height: canvasHeight, offsetY } = getCanvasLayout(item.elements || []);
+  const handleConnectionsChange = useCallback((id: number, conns: { from: number, to: number }[]) => {
+    updateConnections(id, conns);
+  }, [updateConnections]);
 
+  const renderQuestionItem = useCallback(({ item, index }: { item: any, index: number }) => {
     return (
-      <ScrollView
-        style={{ width: SCREEN_WIDTH }}
-        contentContainerStyle={{ paddingBottom: SPACING.lg }}
-      >
-        {/* Câu hỏi header */}
-        <Text style={styles.questionTitle}>
-          Câu {index + 1}: <Text style={styles.questionContentText}>{item.content}</Text>
-        </Text>
-
-        {item.imagePath && (
-          <View style={styles.imageWrapper}>
-            <AutoHeightImage uri={item.imagePath} />
-          </View>
-        )}
-
-        {typeof item.extraData === 'string' && (
-          <View style={styles.extraDataContainer}>
-            {(item.extraData as string).split('<br/>').map((line, i) => (
-              <Text key={i} style={styles.extraDataText}>{line.trim()}</Text>
-            ))}
-          </View>
-        )}
-
-        {/* Canvas hiển thị khi có elements */}
-        {item.elements && item.elements.length > 0 && (
-          <View style={[styles.canvasContainer, { height: canvasHeight }]}>
-            <QuestionCanvas
-              question={item}
-              userInputs={qInputs}
-              activeInputId={index === currentIndex ? activeInputId : null}
-              onSelectInput={(id, absPos) => {
-                setActiveInputId(id);
-                if (absPos) setPickerPosition(absPos);
-              }}
-              offsetY={offsetY}
-            />
-          </View>
-        )}
-      </ScrollView>
+      <QuestionItem
+        item={item}
+        index={index}
+        currentIndex={currentIndex}
+        userAnswers={userAnswers[item.id] || {}}
+        userConnections={userConnections[item.id] || []}
+        activeInputId={activeInputId}
+        onSelectInput={(id, absPos) => {
+          setActiveInputId(id);
+          if (absPos) setPickerPosition(absPos);
+        }}
+        onConnectionsChange={handleConnectionsChange}
+        AutoHeightImage={AutoHeightImage}
+      />
     );
-  };
+  }, [currentIndex, userAnswers, userConnections, activeInputId, handleConnectionsChange]);
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.root} edges={['top']}>
         {/* Header chuẩn với nút Check bên phải */}
         <View style={styles.header}>
@@ -272,7 +184,7 @@ const MathScreen: React.FC = () => {
         <View style={styles.body}>
           <FlatList
             ref={flatListRef}
-            data={MATH_FILL_MOCKS}
+            data={QUESTION_MOCKS}
             renderItem={renderQuestionItem}
             horizontal
             pagingEnabled
@@ -294,7 +206,7 @@ const MathScreen: React.FC = () => {
 
         <BottomNavigation
           currentIndex={currentIndex}
-          total={MATH_FILL_MOCKS.length}
+          total={QUESTION_MOCKS.length}
           onNext={handleNext}
           onPrev={handlePrev}
         />
@@ -319,10 +231,7 @@ const MathScreen: React.FC = () => {
                   shapeHeight={activeEl.height || activeEl.size || 100}
                   textSize={activeEl.textSize || 40}
                   onSelect={(val) => {
-                    setAllAnswers(prev => ({
-                      ...prev,
-                      [currentQuestion.id]: { ...(prev[currentQuestion.id] || {}), [activeInputId]: val }
-                    }));
+                    updateAnswer(currentQuestion.id, activeInputId, val);
                     setActiveInputId(null);
                     setPickerPosition(null);
                   }}
@@ -339,7 +248,16 @@ const MathScreen: React.FC = () => {
         }
         return null;
       })()}
-    </GestureHandlerRootView>
+      {/* Modal xác nhận chấm điểm */}
+      <GradeConfirmModal
+        visible={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmGrade}
+        onReview={handleReviewIncomplete}
+        incompleteQuestions={incompleteQuestions}
+        totalQuestions={questions.length}
+      />
+    </View>
   );
 };
 
@@ -416,19 +334,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(245, 246, 228, 1)',
     overflow: 'hidden',
   },
-  extraDataContainer: {
-    marginTop: 16,
-    padding: SPACING.md,
-    backgroundColor: '#FFF3E0',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#FF9800',
-  },
-  extraDataText: {
-    fontSize: 20,
-    color: '#555',
-    marginBottom: 4,
-  },
+
 });
 
 export default MathScreen;
