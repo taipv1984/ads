@@ -109,9 +109,11 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     fontSize: 16,
-    fontWeight: 'bold',
     fontStyle: 'italic',
     color: COLOR.text,
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'dashed',
+    fontWeight: 'bold',
   },
   cardContentWrapper: {
     paddingHorizontal: SPACING.md,

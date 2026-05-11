@@ -12,41 +12,12 @@ const OtherModes = () => {
 
       <TouchableOpacity 
         style={styles.card} 
-        onPress={() => router.push('/fraction-matching')}
+        onPress={() => router.push('/math')}
       >
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons name="brain" size={40} color={COLOR.primary} />
         </View>
         <Text style={styles.cardTitle}>Hại não</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.card, { marginTop: SPACING.md }]} 
-        onPress={() => router.push('/fraction-matching')}
-      >
-        <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="fraction-one-half" size={40} color={COLOR.secondary} />
-        </View>
-        <Text style={styles.cardTitle}>Nối Phân Số</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.card, { marginTop: SPACING.md }]} 
-        onPress={() => router.push('/equation-matching')}
-      >
-        <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="calculator-variant" size={40} color={COLOR.primary} />
-        </View>
-        <Text style={styles.cardTitle}>Nối Phép Tính</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.card, { marginTop: SPACING.md }]}
-        onPress={() => router.push('/math')}
-      >
-        <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="format-text-variant-outline" size={40} color={COLOR.secondary} />
-        </View>
-        <Text style={styles.cardTitle}>Điền Vào Chỗ Trống</Text>
       </TouchableOpacity>
     </View>
   );
