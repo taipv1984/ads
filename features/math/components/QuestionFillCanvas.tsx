@@ -3,7 +3,7 @@ import { Canvas } from '@shopify/react-native-skia';
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { getEffectiveZIndex, groupElementsIntoLayers } from '../utils/math.util';
+import { getEffectiveZIndex, groupElementsIntoLayers } from '../screens/utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,

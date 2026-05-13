@@ -1,8 +1,8 @@
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
 
 const OtherModes = () => {
   const router = useRouter();
@@ -10,8 +10,8 @@ const OtherModes = () => {
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>CHẾ ĐỘ CHƠI KHÁC</Text>
 
-      <TouchableOpacity 
-        style={styles.card} 
+      <TouchableOpacity
+        style={styles.card}
         onPress={() => router.push('/math')}
       >
         <View style={styles.iconContainer}>
@@ -33,9 +33,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: SIZE.md,
     color: '#888',
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontWeight: 'bold',
     marginBottom: SPACING.lg,
   },
   card: {
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: SIZE.lg,
     color: COLOR.text,
-    fontWeight: TYPOGRAPHY.weight.semiBold as any,
+    fontWeight: 'bold',
   },
 });

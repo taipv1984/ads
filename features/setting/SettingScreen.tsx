@@ -1,10 +1,10 @@
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
+import { useGlobalState } from '@/context/GlobalContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
-import { useGlobalState } from '@/context/GlobalContext';
 
 const SettingItem = ({ icon, title, description, value, onValueChange }: any) => (
   <View style={styles.settingItem}>
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: COLOR.white,
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
   },
   headerRight: {
     width: 44,
@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
   },
   userName: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
     color: COLOR.text,
   },
   editButton: {
@@ -216,12 +216,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingTitle: {
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
     color: COLOR.text,
   },
   settingDescription: {
-    fontSize: 12,
+    fontSize: SIZE.sm,
     color: COLOR.textSecondary,
     marginTop: 2,
   },
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
   },
   outlineButtonText: {
     color: COLOR.primary,
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.semiBold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
   },
   infoCard: {
     backgroundColor: COLOR.white,
@@ -258,14 +258,14 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
   },
   infoTitle: {
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
     color: COLOR.primary,
     textAlign: 'center',
     marginBottom: SPACING.md,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: SIZE.sm,
     color: COLOR.text,
     lineHeight: 20,
     textAlign: 'center',
@@ -287,12 +287,12 @@ const styles = StyleSheet.create({
   },
   tipNumberText: {
     color: COLOR.white,
-    fontSize: 12,
+    fontSize: SIZE.sm,
     fontWeight: 'bold',
   },
   tipText: {
     flex: 1,
-    fontSize: 14,
+    fontSize: SIZE.sm,
     color: COLOR.text,
     lineHeight: 20,
   },

@@ -8,6 +8,14 @@ export enum MatchType {
   multi = 'multi',
 }
 
+export enum ElementGroup {
+  top = 'top',
+  bottom = 'bottom',
+  left = 'left',
+  right = 'right',
+  master = 'master',
+}
+
 export interface BaseElement {
   id: number;
   type: 'shape' | 'line' | 'text' | 'image';
@@ -33,7 +41,7 @@ export interface ShapeElement extends BaseElement {
   textColor?: string;
   textSize?: number;
   textAlign?: 'left' | 'center' | 'right';
-  group?: string;
+  group?: 'top' | 'bottom' | 'left' | 'right' | 'master'; //ElementGroup
 }
 
 export interface LineElement extends BaseElement {

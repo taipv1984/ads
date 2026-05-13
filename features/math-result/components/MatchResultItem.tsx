@@ -1,6 +1,6 @@
-import { COLOR, SPACING } from '@/constants/theme';
+import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
-import { getCanvasLayout } from '@/features/math/utils/math.util';
+import { getCanvasLayout } from '@/features/math/screens/utils/math.util';
 import { Question } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -18,7 +18,7 @@ interface _Props {
   backgroundColor?: string;
 }
 
-const MatchResultItem = ({
+const MatchResultItem = React.memo(({
   question,
   index,
   userAnswers,
@@ -33,8 +33,8 @@ const MatchResultItem = ({
       <View style={styles.resultCardHeader}>
         <View style={styles.cardTitleContainer}>
           <Text style={styles.cardTitle}>Câu {index + 1} {question.title || ""}</Text>
-          <View style={[styles.badge, { backgroundColor: result.isCorrect ? '#E8F5E9' : '#FFEBEE' }]}>
-            <Text style={[styles.badgeText, { color: result.isCorrect ? '#4CAF50' : '#F44336' }]}>
+          <View style={[styles.badge, { backgroundColor: result.isCorrect ? COLOR.bgSuccess : COLOR.bgError }]}>
+            <Text style={[styles.badgeText, { color: result.isCorrect ? COLOR.success : COLOR.error }]}>
               {result.isCorrect ? "Chính xác" : "Chưa đúng"}
             </Text>
           </View>
@@ -70,7 +70,7 @@ const MatchResultItem = ({
       </View>
     </View>
   );
-};
+});
 
 export default MatchResultItem;
 
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   badgeText: {
-    fontSize: 12,
+    fontSize: SIZE.sm,
     fontWeight: 'bold',
   },
   cardTitleContainer: {
@@ -102,13 +102,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   cardTitle: {
-    fontSize: 15,
+    fontSize: SIZE.md,
     fontWeight: 'bold',
     color: COLOR.text,
     marginRight: 8,
   },
   scoreText: {
-    fontSize: 16,
+    fontSize: SIZE.md,
     fontStyle: 'italic',
     color: COLOR.text,
     textDecorationLine: 'underline',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xs,
   },
   cardContent: {
-    fontSize: 16,
+    fontSize: SIZE.md,
     color: COLOR.text,
     lineHeight: 22,
   },
@@ -134,14 +134,14 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xs,
   },
   explanationTitle: {
-    fontSize: 16,
+    fontSize: SIZE.md,
     fontWeight: 'bold',
     color: COLOR.text,
     marginBottom: 4,
   },
   explanationText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: SIZE.md,
+    color: COLOR.text,
     lineHeight: 22,
   },
 });

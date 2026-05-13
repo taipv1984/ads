@@ -1,4 +1,4 @@
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
     opacity: 0.35,
   },
   navBtnText: {
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
     color: COLOR.white,
     marginHorizontal: 4,
   },

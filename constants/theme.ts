@@ -1,8 +1,3 @@
-/**
- * SIMPLE UI CONFIG - Hệ thống quản lý giao diện tập trung
- * Giúp app nhất quán về màu sắc, khoảng cách và font chữ.
- */
-
 export const COLOR = {
   // Màu chính (Brand Colors)
   primary: '#FF814A', // Cam rực rỡ từ hình ảnh
@@ -11,21 +6,28 @@ export const COLOR = {
 
   // Trạng thái (Status Colors)
   success: '#34C759',
+  bgSuccess: '#E6F9EA',
   error: '#FF3B30',
+  bgError: '#FFEBEE',
   warning: '#FFCC00',
+  bgWarning: '#FFF3E0',
   info: '#007AFF',
   blue: '#007AFF',
-  blue_light: '#E6F2FF',
+  bgShape: '#E6F2FF',
+  blue_light: '#E6F2FF',//...
   green_light: '#E6F9EA',
+  star: '#FFD700',
+  connectLine: '#FF814A',
 
   // Nhóm màu trung tính (Neutral Colors)
-  background: '#FFF9F1', // Màu kem nền nhẹ kiểu cổ điển
-  surface: '#FFFFFF', // Trắng cho các card
-  text: '#333', // Xám đậm cho chữ
+  background: '#FFF9F1',
+  surface: '#FFFFFF',
+  text: '#111111',
   textSecondary: '#7A7A7A',
-  border: '#FF814A', // Viền cam nhạt
+  border: '#FF814A',
   white: '#FFFFFF',
-  black: '#000000',
+  black: '#111111',
+  grayLight: '#EEEEEE',
   transparent: 'transparent',
 
   // Overlay
@@ -47,64 +49,13 @@ export const SPACING = {
   buttonHeight: 48,
 } as const;
 
-export const TYPOGRAPHY = {
-  size: {
-    h1: 32,
-    h2: 24,
-    h3: 20,
-    body: 16,
-    subBody: 14,
-    caption: 12,
-  },
-  weight: {
-    bold: '700',
-    semiBold: '600',
-    medium: '500',
-    regular: '400',
-    light: '300',
-  },
-  lineHeight: {
-    tight: 1.2,
-    normal: 1.5,
-    relaxed: 1.8,
-  },
-  // Style Presets - Cho phép dùng ...TYPOGRAPHY.h1
-  h1: {
-    fontSize: 32,
-    fontWeight: '700',
-  },
-  h2: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  h3: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  body: {
-    fontSize: 16,
-    fontWeight: '400',
-  },
-  button: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  caption: {
-    fontSize: 12,
-    fontWeight: '400',
-  }
-} as const;
-
 export const SIZE = {
-  icon: {
-    sm: 16,
-    md: 24,
-    lg: 32,
-  },
-  image: {
-    thumbnail: 60,
-    avatar: 40,
-  }
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  thumbnail: 60,
+  avatar: 40,
 } as const;
 
 /**

@@ -1,13 +1,14 @@
 import { SPACING } from '@/constants/theme';
 import { SCORE_FEEDBACK } from '@/services/mocks/score-feedback.mock';
 import {
+  ElementGroup,
   MatchType,
   Question,
   QuestionElement,
   ShapeElement
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
-import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../components/shared/BaseElements';
+import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../../components/shared/BaseElements';
 
 /**
  * Lấy danh sách các điểm neo (anchors) từ danh sách các phần tử
@@ -24,7 +25,7 @@ export const getAnchorElements = (elements: QuestionElement[] = []): ShapeElemen
  */
 export const getMatchType = (elements: QuestionElement[] = []): MatchType => {
   const anchors = getAnchorElements(elements);
-  const hasMaster = anchors.some(a => a.group === 'master');
+  const hasMaster = anchors.some(a => a.group === ElementGroup.master);
   return hasMaster ? MatchType.multi : MatchType.single;
 };
 
@@ -202,8 +203,8 @@ export const getTotalMatchCorrect = (elements: QuestionElement[] = []): number =
   if (matchType === MatchType.single) {
     total = Math.ceil(anchors.length / 2);
   } else {
-    const masters = anchors.filter((a) => a.group === 'master');
-    const slaves = anchors.filter((a) => a.group !== 'master');
+    const masters = anchors.filter((a) => a.group === ElementGroup.master);
+    const slaves = anchors.filter((a) => a.group !== ElementGroup.master);
     masters.forEach((m) => {
       slaves.forEach((s) => {
         let masterValue = calcExpression(m.value || '');
@@ -249,92 +250,156 @@ export const checkQuestionCompletion = (
 };
 
 /**
+ * Tính điểm cho câu hỏi dạng match (nối) theo boi cua 0.25 (vd: 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2...)
+  finalScore = matchedCount * (questionScore / totalConnect)
+    neu notMatchCount = 0 thi lam tron finalScore len theo step la 0.25 
+    nguoc lai thi lam tron finalScore xuong theo step la 0.25
+  kiem tra tiep 
+    neu finalScore = questionScore=> return finalScore = questionScore- 0.25
+    neu finalScore = 0 => return finalScore = 0.25
+ */
+export const calcQuestionMatchScore = (
+  question: Question,
+  userConnections: { from: number; to: number }[]
+): number => {
+  const elements = question.elements || [];
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const totalMatchCorrect = getTotalMatchCorrect(elements);
+
+  if (userConnections.length === 0) return 0;
+
+  let matchedCount = 0;
+  let notMatchCount = 0;
+
+  userConnections.forEach((conn) => {
+    const fromEl = elements.find((el) => el.id === conn.from) as ShapeElement;
+    const toEl = elements.find((el) => el.id === conn.to) as ShapeElement;
+    if (fromEl && toEl) {
+      const fromVal = calcExpression(fromEl.value || '');
+      const toVal = calcExpression(toEl.value || '');
+      if (fromVal === toVal) {
+        matchedCount++;
+      } else {
+        notMatchCount++;
+      }
+    }
+  });
+
+  // Trường hợp đặc biệt (ko có connect nào đúng hoặc connect đúng hết)
+  if (matchedCount === 0) {
+    return 0;
+  }
+
+  if (matchedCount === totalMatchCorrect && notMatchCount === 0) {
+    return questionScore;
+  }
+
+  const totalConnect = totalMatchCorrect + notMatchCount;
+  if (totalConnect === 0) return 0;
+
+  let finalScore = matchedCount * (questionScore / totalConnect);
+
+  // Quy tắc làm tròn theo step 0.25
+  const step = 0.25;
+  if (notMatchCount === 0) {
+    // Làm tròn lên theo step 0.25
+    finalScore = Math.ceil(Math.round(finalScore * 100) / 100 / step) * step;
+  } else {
+    // Làm tròn xuống theo step 0.25
+    finalScore = Math.floor(Math.round(finalScore * 100) / 100 / step) * step;
+  }
+
+  // Đảm bảo không vượt quá biên (questionScore) hoặc thấp hơn step (0.25) 
+  // vì đã loại trừ trường hợp đúng hết và sai hết ở trên
+  if (finalScore >= questionScore) {
+    finalScore = questionScore - step;
+  }
+  if (finalScore <= 0) {
+    finalScore = step;
+  }
+
+  return finalScore;
+};
+
+/**
+ * Tính điểm cho câu hỏi dạng điền (fill)
+ */
+export const calcQuestionFillScore = (
+  question: Question,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  let isCorrect = true;
+  let totalCorrectCount = 0;
+  let totalRequiredCount = 0;
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const elements = question.elements || [];
+
+  // 1. Kiểm tra các ô Input
+  for (const el of elements) {
+    if (el.type === 'shape') {
+      const shape = el as ShapeElement;
+      if (shape.isInput && shape.value && shape.value.trim() !== '') {
+        totalRequiredCount++;
+        const userVal = userInputs[shape.id] || '';
+        if (userVal === shape.value) {
+          totalCorrectCount++;
+        } else {
+          isCorrect = false;
+        }
+      }
+    }
+  }
+
+  // 2. Kiểm tra các công thức validation bổ sung
+  for (const rule of question.validations || []) {
+    if (rule.formula) {
+      totalRequiredCount++;
+      if (validateFormula(rule.formula, userInputs)) {
+        totalCorrectCount++;
+      } else {
+        isCorrect = false;
+      }
+    }
+  }
+
+  const finalScore =
+    totalRequiredCount > 0 ? Math.round((totalCorrectCount / totalRequiredCount) * questionScore) : 0;
+
+  return { isCorrect, finalScore };
+};
+
+/**
  * Tính toán điểm số cho một câu hỏi dựa trên loại câu hỏi
  */
 export const calcQuestionScore = (
   question: Question,
   userInputs: Record<number, string>,
   userConnections: { from: number; to: number }[] = []
-): { isCorrect: boolean; correctCount: number; totalCount: number; finalScore: number } => {
-  let correctCount = 0;
-  let totalCorrect = 0;
+): { isCorrect: boolean; finalScore: number } => {
   let isCorrect = true;
-  const questionScore = question.score !== undefined ? question.score : 1;
-  const elements = question.elements || [];
+  let finalScore = 0;
 
   switch (question.type) {
-    case 'fill': {  //todo check...
-      // 1. Kiểm tra các ô Input
-      for (const el of elements) {
-        if (el.type === 'shape') {
-          const shape = el as ShapeElement;
-          if (shape.isInput && shape.value && shape.value.trim() !== '') {
-            totalCorrect++;
-            const userVal = userInputs[shape.id] || '';
-            if (userVal === shape.value) {
-              correctCount++;
-            } else {
-              isCorrect = false;
-            }
-          }
-        }
-      }
-
-      // 2. Kiểm tra các công thức validation bổ sung (dùng chung cho các loại)
-      for (const rule of question.validations || []) {
-        if (rule.formula) {
-          totalCorrect++;
-          if (validateFormula(rule.formula, userInputs)) {
-            correctCount++;
-          } else {
-            isCorrect = false;
-          }
-        }
-      }
+    case 'fill': {
+      const result = calcQuestionFillScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
       break;
     }
 
     case 'match': {
-      const totalPossible = getTotalMatchCorrect(elements);
-      totalCorrect += totalPossible;
-      console.log(`totalPossible = ${totalPossible}`);
-
-      // Tính số câu người dùng nối đúng
-      console.log(`userConnections = ${JSON.stringify(userConnections)}`);
-      let matchCorrect = 0;
-      userConnections.forEach((conn) => {
-        const fromEl = elements.find((el) => el.id === conn.from) as ShapeElement;
-        const toEl = elements.find((el) => el.id === conn.to) as ShapeElement;
-        if (fromEl && toEl) {
-          let fromVal = calcExpression(fromEl.value || '');
-          let toVal = calcExpression(toEl.value || '');
-          console.log(`fromVal = ${fromVal}, toVal = ${toVal}`);
-          if (fromVal === toVal) {
-            console.log(`Correct match: ${fromEl.id} === ${toEl.id}`);
-            matchCorrect++;
-          }
-        }
-      });
-      console.log(`matchCorrect = ${matchCorrect}`);
-
-      correctCount += matchCorrect;
-      if (matchCorrect < totalPossible) isCorrect = false;
+      finalScore = calcQuestionMatchScore(question, userConnections);
+      const questionScore = question.score !== undefined ? question.score : 1;
+      isCorrect = finalScore === questionScore;
       break;
     }
 
-    // Có thể thêm các case khác như 'quiz', 'color' ở đây
     default:
       break;
   }
 
-
-  const finalScore =
-    totalCorrect > 0 ? Math.round((correctCount / totalCorrect) * questionScore) : 0;
-
   return {
-    isCorrect: isCorrect && (totalCorrect === 0 || correctCount === totalCorrect),
-    correctCount,
-    totalCount: totalCorrect,
+    isCorrect,
     finalScore,
   };
 };

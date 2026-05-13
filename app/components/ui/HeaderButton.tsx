@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLOR, SHADOWS } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE } from '@/constants/theme';
 
 interface _Props {
   icon: any;
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: COLOR.white,
-    fontSize: 12,
+    fontSize: SIZE.sm,
     fontWeight: 'bold',
   },
 });

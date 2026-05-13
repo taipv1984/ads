@@ -1,11 +1,11 @@
 import { COLOR } from '@/constants/theme';
-import { ImageElement, LineElement, MatchType, Question, ShapeElement, TextElement } from '@/services/types/question.types';
-import { Canvas, Group, Line, Path, Shadow, Skia } from '@shopify/react-native-skia';
+import { ElementGroup, ImageElement, LineElement, MatchType, Question, ShapeElement, TextElement } from '@/services/types/question.types';
+import { Canvas, Group, Line, Path, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, SharedValue, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
-import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '../utils/math.util';
+import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '../screens/utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
@@ -70,6 +70,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   // Ensure connections is always an array
   const currentConnections = (mode === 'review' ? reviewConnections : internalConnections) || [];
   const isReview = mode === 'review';
+  const matchType = useMemo(() => getMatchType(question.elements || []), [question.elements]);
 
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
@@ -209,11 +210,20 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
 
-        // KIỂM TRA NHÓM
-        if (sourceGroup && groups[i] === sourceGroup) continue;
+        const targetGroup = groups[i];
+
+        // LOGIC KẾT NỐI TỔNG QUÁT (General Case)
+        if (matchType === MatchType.multi) {
+          // Trong chế độ multi, ít nhất một bên phải là master
+          if (sourceGroup !== ElementGroup.master && targetGroup !== ElementGroup.master) continue;
+        }
+
+        // Luôn ngăn nối cùng nhóm
+        if (sourceGroup && targetGroup === sourceGroup) continue;
 
         const dx = e.x - xs[i];
         const dy = adjY - ys[i];
+
         // Kiểm tra xem có đang "hover" qua điểm neo nào không
         if (Math.sqrt(dx * dx + dy * dy) <= rs[i] * 2) {
           targetFound = i;
@@ -236,8 +246,13 @@ const QuestionMatchCanvas: React.FC<Props> = ({
       for (let i = 0; i < xs.length; i++) {
         if (i === activeAnchorIdx.value) continue;
 
-        // KIỂM TRA NHÓM
-        if (sourceGroup && groups[i] === sourceGroup) continue;
+        const targetGroup = groups[i];
+
+        // LOGIC KẾT NỐI TỔNG QUÁT
+        if (matchType === MatchType.multi) {
+          if (sourceGroup !== ElementGroup.master && targetGroup !== ElementGroup.master) continue;
+        }
+        if (sourceGroup && targetGroup === sourceGroup) continue;
 
         const dx = e.x - xs[i];
         const dy = adjY - ys[i];
@@ -298,10 +313,10 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                               const toA = anchorElements.find(a => a.id === c.to);
                               if (!fromA || !toA) return null;
 
-                              let lineColor: string = COLOR.primary;
+                              let lineColor: string = COLOR.connectLine;
                               if (isReview) {
                                 const isCorrect = calcExpression(fromA.value || '') === calcExpression(toA.value || '');
-                                lineColor = isCorrect ? '#4CAF50' : '#F44336';
+                                lineColor = isCorrect ? COLOR.success : COLOR.error;
                               }
 
                               return (
@@ -313,14 +328,10 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                                   strokeWidth={6 * SCALE}
                                   style="stroke"
                                   strokeCap="round"
-                                >
-                                  <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
-                                </Line>
+                                />
                               );
                             })}
-                            <Path path={dragPath} color={COLOR.primary} strokeWidth={6 * SCALE} style="stroke" strokeCap="round">
-                              <Shadow dx={0} dy={0} blur={8} color="rgba(0,0,0,0.2)" />
-                            </Path>
+                            <Path path={dragPath} color={COLOR.connectLine} strokeWidth={6 * SCALE} style="stroke" strokeCap="round" />
                           </Group>
                         );
                       }

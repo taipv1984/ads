@@ -1,4 +1,4 @@
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -32,11 +32,11 @@ const SubmitExamConfirmModal: React.FC<_Props> = ({
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <View style={[styles.iconCircle, { backgroundColor: isComplete ? '#E8F5E9' : '#FFF3E0' }]}>
+            <View style={[styles.iconCircle, { backgroundColor: isComplete ? COLOR.bgSuccess : COLOR.bgWarning }]}>
               <Ionicons
                 name={isComplete ? "checkmark-circle" : "warning"}
                 size={40}
-                color={isComplete ? "#4CAF50" : "#FF9800"}
+                color={isComplete ? COLOR.success : COLOR.warning}
               />
             </View>
           </View>
@@ -48,14 +48,14 @@ const SubmitExamConfirmModal: React.FC<_Props> = ({
             <Text style={styles.description}>
               {isComplete
                 ? "Bạn hãy kiểm tra lại một lần nữa trước khi nộp bài nhé."
-                : `Bạn còn ${incompleteQuestions.length}/${totalQuestions} câu hỏi chưa làm xong.`
+                : `Bạn còn ${incompleteQuestions.length}/${totalQuestions} câu hỏi chưa làm xong`
               }
             </Text>
 
             {!isComplete && (
               <View style={styles.incompleteList}>
                 <Text style={styles.listText}>
-                  Các câu chưa xong: {incompleteQuestions.map(idx => `#${idx + 1}`).join(', ')}
+                  {"Các câu chưa xong\n"}{incompleteQuestions.map(idx => `#${idx + 1}`).join(', ')}
                 </Text>
               </View>
             )}
@@ -93,7 +93,7 @@ const SubmitExamConfirmModal: React.FC<_Props> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: COLOR.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: SPACING.lg,
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: 'white',
+    backgroundColor: COLOR.white,
     borderRadius: 24,
-    padding: SPACING.xl,
+    padding: SPACING.md,
     alignItems: 'center',
     ...SHADOWS.lg,
   },
@@ -119,30 +119,34 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.md,
   },
   title: {
-    ...TYPOGRAPHY.h2,
+    fontSize: SIZE.xl,
+    fontWeight: 'bold',
     color: COLOR.text,
     marginBottom: SPACING.sm,
     textAlign: 'center',
   },
   description: {
-    ...TYPOGRAPHY.body,
     color: COLOR.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
+    fontSize: SIZE.md,
+    fontStyle: 'italic',
   },
   incompleteList: {
     marginTop: SPACING.md,
-    padding: SPACING.sm,
-    backgroundColor: '#FFF8E1',
-    borderRadius: 8,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    backgroundColor: COLOR.bgWarning,
+    borderRadius: 10,
+    width: '100%',
   },
   listText: {
-    ...TYPOGRAPHY.caption,
-    color: '#F57C00',
-    fontWeight: 'bold',
+    fontSize: SIZE.md,
+    color: COLOR.error,
+    textAlign: 'center',
   },
   footer: {
     width: '100%',
@@ -152,18 +156,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: COLOR.primary,
     paddingVertical: SPACING.md,
-    borderRadius: 16,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    fontSize: SIZE.md,
     ...SHADOWS.md,
   },
   reviewButtonText: {
-    ...TYPOGRAPHY.button,
-    color: 'white',
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
+    color: COLOR.white,
   },
   submitButtonLarge: {
     flexDirection: 'row',
-    backgroundColor: '#4CAF50',
+    backgroundColor: COLOR.success,
     paddingVertical: SPACING.md,
     borderRadius: 16,
     justifyContent: 'center',
@@ -171,8 +177,9 @@ const styles = StyleSheet.create({
     ...SHADOWS.md,
   },
   submitButtonTextLarge: {
-    ...TYPOGRAPHY.button,
-    color: 'white',
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
+    color: COLOR.white,
   },
   submitButtonLink: {
     paddingVertical: SPACING.sm,
@@ -180,9 +187,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonTextLink: {
-    ...TYPOGRAPHY.body,
     color: COLOR.textSecondary,
     textDecorationLine: 'underline',
+    fontSize: SIZE.md,
+    paddingBottom: SPACING.sm
   },
   closeIcon: {
     position: 'absolute',

@@ -33,7 +33,7 @@ export type RenderLayer = {
 export const getColor = (c?: string, fallback: string = 'black') => {
   'worklet';
   if (!c) return fallback;
-  if (c in COLOR) return (COLOR as Record<string, string>)[c];
+  if (c in COLOR) return (COLOR as any)[c];
   return c;
 };
 
@@ -103,16 +103,16 @@ export const AnimatedShapeElement = memo(({
   const strokeColor = useDerivedValue(() => {
     const focused = isFocusedValue.value;
 
-    if (reviewStatus === 'correct') return '#4CAF50';
-    if (reviewStatus === 'incorrect') return '#F44336';
+    if (reviewStatus === 'correct') return COLOR.success;
+    if (reviewStatus === 'incorrect') return COLOR.error;
 
     // Đối với Anchor, màu viền LUÔN LUÔN giữ nguyên theo dữ liệu (mặc định là đen)
     if (shape.isAnchor) {
-      return getColor(shape.borderColor, 'black');
+      return getColor(shape.borderColor, COLOR.black);
     }
 
     // Đối với các ô nhập liệu (Fill), vẫn giữ màu cam khi focused
-    return focused ? '#FF9800' : getColor(shape.borderColor);
+    return focused ? COLOR.primary : getColor(shape.borderColor, COLOR.black);
   });
 
   const strokeWidth = useDerivedValue(() => {
@@ -124,7 +124,8 @@ export const AnimatedShapeElement = memo(({
 
     return focused ? 6 * SCALE : (shape.borderWidth ?? 4) * SCALE;
   });
-  const bgColor = getColor(shape.bgColor, 'white');
+  const defaultBgColor = shape.isInput ? COLOR.white : COLOR.bgShape;
+  const bgColor = getColor(shape.bgColor, defaultBgColor);
   const origin = { x: cx, y: cy };
 
   let content = null;
@@ -164,7 +165,7 @@ export const AnimatedShapeElement = memo(({
 export const RenderLine = memo(({ line }: { line: LineElement }) => {
   const p1 = { x: line.start.x * SCALE, y: line.start.y * SCALE };
   const p2 = { x: line.end.x * SCALE, y: line.end.y * SCALE };
-  const color = getColor(line.color);
+  const color = getColor(line.color, COLOR.black);
   const strokeWidth = (line.strokeWidth || 4) * SCALE;
 
   if (line.lineType === 'straight' || line.lineType === 'arrow') {

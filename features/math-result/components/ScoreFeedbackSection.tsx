@@ -1,5 +1,5 @@
-import { COLOR, SPACING } from '@/constants/theme';
-import { getScoreFeedback } from '@/features/math/utils/math.util';
+import { COLOR, SIZE, SPACING } from '@/constants/theme';
+import { getScoreFeedback } from '@/features/math/screens/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -35,7 +35,7 @@ const ScoreFeedbackSection = ({ score }: _Props) => {
             key={s}
             name={s <= starCount ? "star" : "star-outline"}
             size={36}
-            color={s <= starCount ? "#FFD700" : "#EEE"}
+            color={s <= starCount ? COLOR.star : COLOR.grayLight}
             style={styles.starIcon}
           />
         ))}
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   feedbackTitle: {
-    fontSize: 22,
+    fontSize: SIZE.lg,
     fontWeight: 'bold',
     color: COLOR.primary,
     textAlign: 'center',
     marginBottom: SPACING.sm,
   },
   feedbackMessage: {
-    fontSize: 16,
+    fontSize: SIZE.md,
     color: COLOR.text,
     textAlign: 'center',
     lineHeight: 20,

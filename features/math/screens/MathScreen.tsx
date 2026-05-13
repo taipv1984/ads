@@ -1,7 +1,7 @@
 import BottomNavigation from '@/app/components/shared/BottomNavigation';
 import OptionPicker from '@/app/components/shared/OptionPicker';
 import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { QUESTION_MOCKS } from '@/services/mocks/question.mock';
 import { ShapeElement } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import QuestionItem from '../components/QuestionItem';
 import GradeConfirmModal from '../components/modal/SubmitExamConfirmModal';
 import { useMathQuiz } from '../context/MathQuizContext';
-import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from '../utils/math.util';
+import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from './utils/math.util';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -101,8 +101,8 @@ const MathScreen: React.FC = () => {
   };
 
   const handleConfirmGrade = () => {
-    setShowConfirmModal(false);
     submitQuiz(calcQuestionScore);
+    setShowConfirmModal(false);
     router.push('/math-result');
   };
 
@@ -262,9 +262,13 @@ const MathScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    position: 'relative',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLOR.white,
   },
   root: {
     flex: 1,
@@ -290,8 +294,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: COLOR.white,
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
     marginLeft: SPACING.xs,
   },
   headerCheckButton: {
@@ -300,41 +304,9 @@ const styles = StyleSheet.create({
   },
   headerCheckText: {
     color: COLOR.white,
-    fontSize: 20,
+    fontSize: SIZE.lg,
     fontWeight: 'bold',
   },
-  body: {
-    flex: 1,
-    position: 'relative',
-  },
-  questionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#E65100', // Cam đậm
-    padding: SPACING.md
-  },
-  questionContentText: {
-    fontWeight: 'normal',
-    color: '#333',
-  },
-  imageWrapper: {
-    alignItems: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
-    paddingHorizontal: SPACING.md
-  },
-  headerImage: {
-    width: '100%',
-  },
-  canvasContainer: {
-    width: '100%',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#000',
-    backgroundColor: 'rgba(245, 246, 228, 1)',
-    overflow: 'hidden',
-  },
-
 });
 
 export default MathScreen;

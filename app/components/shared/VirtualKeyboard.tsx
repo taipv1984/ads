@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { COLOR, SHADOWS } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE } from '@/constants/theme';
 
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
   },
   keyText: {
-    fontSize: 26,
+    fontSize: SIZE.xl,
     fontWeight: '500',
     color: '#1A1D20',
   },
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
   },
   deleteKeyText: {
-    fontSize: 24,
+    fontSize: SIZE.xl,
     color: '#1A1D20',
   }
 });

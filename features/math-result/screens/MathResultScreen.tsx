@@ -1,10 +1,12 @@
-import { COLOR, SHADOWS, SPACING } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { useMathQuiz } from '@/features/math/context/MathQuizContext';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MatchResultItem from '../components/MatchResultItem';
+import ResultLoading from '../components/ResultLoading';
 import ScoreFeedbackSection from '../components/ScoreFeedbackSection';
 
 const MathResultScreen = () => {
@@ -12,19 +14,20 @@ const MathResultScreen = () => {
   const { questions, userAnswers, userConnections, results, resetQuiz } = useMathQuiz();
   const [filterMode, setFilterMode] = useState<'all' | 'correct' | 'incorrect'>('all');
 
-  const totalScore = Object.values(results).reduce((acc, curr) => acc + curr.finalScore, 0);
-  const maxScore = questions.reduce((acc, curr) => acc + (curr.score || 0), 0);
-  const correctCount = Object.values(results).filter(r => r.isCorrect).length;
-  const incorrectCount = questions.length - correctCount;
+  const { totalScore, maxScore, correctCount, incorrectCount } = useMemo(() => {
+    const total = Object.values(results).reduce((acc, curr) => acc + curr.finalScore, 0);
+    const max = questions.reduce((acc, curr) => acc + (curr.score || 0), 0);
+    const correct = Object.values(results).filter(r => r.isCorrect).length;
+    const incorrect = questions.length - correct;
+    return { totalScore: total, maxScore: max, correctCount: correct, incorrectCount: incorrect };
+  }, [questions, results]);
 
-  // Quy đổi điểm về hệ 10 để lấy feedback
-  const normalizedScore = maxScore > 0 ? (totalScore / maxScore) * 10 : 0;
+  const resultScore = useMemo(() => maxScore > 0 ? (totalScore / maxScore) * 10 : 0, [totalScore, maxScore]);
 
   const scoreColor = useMemo(() => {
-    if (normalizedScore < 5) return '#F44336'; // Đỏ
-    if (normalizedScore <= 8) return '#FF9800'; // Cam
-    return '#4CAF50'; // Xanh lá
-  }, [normalizedScore]);
+    if (resultScore < 5) return COLOR.error;
+    return COLOR.success;
+  }, [resultScore]);
 
   const filteredQuestions = useMemo(() => {
     return questions.filter(q => {
@@ -45,9 +48,10 @@ const MathResultScreen = () => {
     <View style={styles.root}>
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.header}>
-          <View style={styles.backButton} />
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={28} color={COLOR.white} />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Kết quả bài làm</Text>
-          <View style={styles.headerRight} />
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -56,7 +60,7 @@ const MathResultScreen = () => {
               <Text style={[styles.totalScore, { color: scoreColor }]}>{totalScore}</Text>
             </View>
 
-            <ScoreFeedbackSection score={normalizedScore} />
+            <ScoreFeedbackSection score={resultScore} />
           </View>
 
           <View style={styles.detailHeader}>
@@ -68,55 +72,60 @@ const MathResultScreen = () => {
               <TouchableOpacity
                 style={[
                   styles.filterButton,
-                  { backgroundColor: '#E8F5E9' },
-                  filterMode === 'correct' && { borderColor: '#4CAF50', borderWidth: 2 }
+                  { backgroundColor: COLOR.bgSuccess },
+                  filterMode === 'correct' && { borderColor: COLOR.success, borderWidth: 2 }
                 ]}
                 onPress={() => setFilterMode('correct')}
               >
                 <Text style={[
                   styles.filterButtonText,
-                  { color: '#4CAF50' },
-                  filterMode === 'correct' && { fontSize: 14 }
+                  { color: COLOR.success },
+                  filterMode === 'correct' && { fontSize: SIZE.sm }
                 ]}>Chính xác {correctCount}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[
                   styles.filterButton,
-                  { backgroundColor: '#FFEBEE' },
-                  filterMode === 'incorrect' && { borderColor: '#F44336', borderWidth: 2 }
+                  { backgroundColor: COLOR.bgError },
+                  filterMode === 'incorrect' && { borderColor: COLOR.error, borderWidth: 2 }
                 ]}
                 onPress={() => setFilterMode('incorrect')}
               >
                 <Text style={[
                   styles.filterButtonText,
-                  { color: '#F44336' },
-                  filterMode === 'incorrect' && { fontSize: 14 }
+                  { color: COLOR.error },
+                  filterMode === 'incorrect' && { fontSize: SIZE.sm }
                 ]}>Chưa đúng {incorrectCount}</Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          {filteredQuestions.map((q, idx) => {
-            const originalIndex = questions.findIndex(origQ => origQ.id === q.id);
-            const backgroundColor = idx % 2 === 0 ? '#ffffff' : '#F5F5F5';
-            
-            return (
-              <MatchResultItem
-                key={q.id}
-                question={q}
-                index={originalIndex}
-                userAnswers={userAnswers[q.id] || {}}
-                userConnections={userConnections[q.id] || []}
-                result={results[q.id] || { isCorrect: false, correctCount: 0, totalCount: 1, finalScore: 0 }}
-                backgroundColor={backgroundColor}
-              />
-            );
-          })}
+          <ResultLoading
+            trigger={filterMode}
+            delay={150}
+            loadingText="Đang lọc kết quả..."
+          >
+            {filteredQuestions.map((q, idx) => {
+              const originalIndex = questions.findIndex(origQ => origQ.id === q.id);
+              const backgroundColor = idx % 2 === 0 ? COLOR.white : COLOR.grayLight;
 
-          <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
-            <Text style={styles.finishButtonText}>Hoàn thành</Text>
-          </TouchableOpacity>
+              return (
+                <MatchResultItem
+                  key={q.id}
+                  question={q}
+                  index={originalIndex}
+                  userAnswers={userAnswers[q.id] || {}}
+                  userConnections={userConnections[q.id] || []}
+                  result={results[q.id] || { isCorrect: false, finalScore: 0 }}
+                  backgroundColor={backgroundColor}
+                />
+              );
+            })}
+            <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
+              <Text style={styles.finishButtonText}>Hoàn thành</Text>
+            </TouchableOpacity>
+          </ResultLoading>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -128,7 +137,7 @@ export default MathResultScreen;
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLOR.white,
   },
   container: {
     flex: 1,
@@ -138,22 +147,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.primary,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.md,
+    paddingHorizontal: SPACING.sm,
   },
   backButton: {
     width: 44,
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10,
   },
   headerTitle: {
+    flex: 1,
     color: COLOR.white,
-    fontSize: 20,
+    fontSize: SIZE.lg,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginRight: 44
   },
   headerRight: {
-    width: 44,
+    width: 0,
   },
   scrollContent: {
     paddingVertical: SPACING.md,
@@ -169,17 +181,17 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   scoreCircle: {
-    width: 120,
-    height: 120,
+    width: 130,
+    height: 130,
     borderRadius: 65,
-    borderWidth: 10,
+    borderWidth: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: SPACING.md,
-    backgroundColor: '#FFF',
+    backgroundColor: COLOR.white,
   },
   totalScore: {
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 'bold',
   },
   detailHeader: {
@@ -191,12 +203,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: SIZE.lg,
     fontWeight: 'bold',
-    color: '#000000',
+    color: COLOR.black,
   },
   activeSectionTitle: {
-    color: '#000000',
+    color: COLOR.black,
   },
   filterButtons: {
     flexDirection: 'row',
@@ -208,10 +220,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 16,
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: COLOR.transparent,
   },
   filterButtonText: {
-    fontSize: 14,
+    fontSize: SIZE.sm,
     fontWeight: 'bold',
   },
   finishButton: {
@@ -227,7 +239,7 @@ const styles = StyleSheet.create({
   },
   finishButtonText: {
     color: COLOR.white,
-    fontSize: 18,
+    fontSize: SIZE.lg,
     fontWeight: 'bold',
     includeFontPadding: false,
     textAlignVertical: 'center',

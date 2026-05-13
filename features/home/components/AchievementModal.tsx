@@ -1,3 +1,4 @@
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import {
@@ -10,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
 
 // --- Kiểu dữ liệu cho mỗi thành tích ---
 interface Achievement {
@@ -119,7 +119,7 @@ const AchievementModal = ({ visible, onClose }: _Props) => {
         <TouchableOpacity
           style={styles.modalContainer}
           activeOpacity={1}
-          onPress={() => {}}
+          onPress={() => { }}
         >
           {/* Nút đóng X */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -178,15 +178,15 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    fontSize: TYPOGRAPHY.size.h2,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.xl,
+    fontWeight: 'bold',
     color: COLOR.primary,
     letterSpacing: 1.5,
     marginBottom: SPACING.sm,
   },
   subtitle: {
     textAlign: 'center',
-    fontSize: TYPOGRAPHY.size.subBody,
+    fontSize: SIZE.md,
     color: COLOR.textSecondary,
     lineHeight: 20,
     marginBottom: SPACING.lg,
@@ -216,8 +216,8 @@ const styles = StyleSheet.create({
     marginRight: SPACING.sm,
   },
   itemTitle: {
-    fontSize: TYPOGRAPHY.size.body,
-    fontWeight: TYPOGRAPHY.weight.semiBold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
     color: COLOR.text,
     marginBottom: 4,
   },
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     color: COLOR.textSecondary,
   },
   itemSubtitle: {
-    fontSize: TYPOGRAPHY.size.caption,
+    fontSize: SIZE.sm,
     color: COLOR.textSecondary,
     lineHeight: 18,
   },
@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
   },
   claimButtonText: {
     color: COLOR.white,
-    fontSize: TYPOGRAPHY.size.subBody,
-    fontWeight: TYPOGRAPHY.weight.semiBold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
   },
   claimedBadge: {
     marginLeft: SPACING.xs,

@@ -3,8 +3,6 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 interface QuizResult {
   isCorrect: boolean;
-  correctCount: number;
-  totalCount: number;
   finalScore: number;
 }
 

@@ -1,5 +1,5 @@
 import HeaderButton from '@/app/components/ui/HeaderButton';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { useGlobalState } from '@/context/GlobalContext';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   coinText: {
-    fontSize: 16,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.md,
+    fontWeight: 'bold',
     color: COLOR.primary,
   },
   coinIcon: {

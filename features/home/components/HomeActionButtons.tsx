@@ -1,8 +1,8 @@
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
+import { useGlobalState as useGlobal } from '@/context/GlobalContext';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLOR, SHADOWS, SPACING, TYPOGRAPHY } from '@/constants/theme';
-import { useGlobalState as useGlobal } from '@/context/GlobalContext';
 
 const HomeActionButtons = () => {
   const { isPurchased } = useGlobal();
@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: COLOR.white,
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
   },
   secondaryButton: {
     flexDirection: 'row',
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: COLOR.primary,
-    fontSize: 20,
-    fontWeight: TYPOGRAPHY.weight.bold as any,
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
   },
   icon: {
     marginRight: 10,
