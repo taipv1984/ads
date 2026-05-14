@@ -196,7 +196,7 @@ export const validateFormula = (
 /**
  * Tra ve tong so cap match dung
  */
-export const getTotalMatchCorrect = (elements: QuestionElement[] = []): number => {
+export const getMatchCorrectTotal = (elements: QuestionElement[] = []): number => {
   const matchType = getMatchType(elements);
   const anchors = getAnchorElements(elements);
   let total = 0;
@@ -250,58 +250,44 @@ export const checkQuestionCompletion = (
 };
 
 /**
- * Tính điểm cho câu hỏi dạng match (nối) theo boi cua 0.25 (vd: 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2...)
-  finalScore = matchedCount * (questionScore / totalConnect)
-    neu notMatchCount = 0 thi lam tron finalScore len theo step la 0.25 
-    nguoc lai thi lam tron finalScore xuong theo step la 0.25
-  kiem tra tiep 
-    neu finalScore = questionScore=> return finalScore = questionScore- 0.25
-    neu finalScore = 0 => return finalScore = 0.25
+ * Tính điểm final cho câu hỏi theo boi cua 0.25 (vd: 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2...)
+ * questionScore: điểm tối đa của câu hỏi
+ * correctTotal: tổng số đáp án đúng của câu hỏi
+ * correctCount: số đáp án đúng của user
+ * incorrectCount: số đáp án sai của user
+ *  totalPossibility = correctTotal + incorrectCount (tổng khả năng đúng + sai)
+ *  finalScore = correctCount * (questionScore / totalPossibility)
+ *    neu incorrectCount = 0 thi lam tron finalScore len theo step la 0.25 
+ *    nguoc lai thi lam tron finalScore xuong theo step la 0.25
+ *  kiem tra tiep 
+ *    neu finalScore = questionScore=> return finalScore = questionScore- 0.25
+ *    neu finalScore = 0 => return finalScore = 0.25
  */
-export const calcQuestionMatchScore = (
-  question: Question,
-  userConnections: { from: number; to: number }[]
+export const calcFinalScore = (
+  questionScore: number,
+  correctTotal: number,
+  correctCount: number,
+  incorrectCount: number
 ): number => {
-  const elements = question.elements || [];
-  const questionScore = question.score !== undefined ? question.score : 1;
-  const totalMatchCorrect = getTotalMatchCorrect(elements);
-
-  if (userConnections.length === 0) return 0;
-
-  let matchedCount = 0;
-  let notMatchCount = 0;
-
-  userConnections.forEach((conn) => {
-    const fromEl = elements.find((el) => el.id === conn.from) as ShapeElement;
-    const toEl = elements.find((el) => el.id === conn.to) as ShapeElement;
-    if (fromEl && toEl) {
-      const fromVal = calcExpression(fromEl.value || '');
-      const toVal = calcExpression(toEl.value || '');
-      if (fromVal === toVal) {
-        matchedCount++;
-      } else {
-        notMatchCount++;
-      }
-    }
-  });
-
-  // Trường hợp đặc biệt (ko có connect nào đúng hoặc connect đúng hết)
-  if (matchedCount === 0) {
+  // Trường hợp đặc biệt 1: ko có đáp án nào đúng => 0 điểm
+  if (correctCount === 0) {
     return 0;
   }
 
-  if (matchedCount === totalMatchCorrect && notMatchCount === 0) {
+  // Trường hợp đặc biệt 2: đáp án đúng hết => questionScore điểm
+  if (correctCount === correctTotal && incorrectCount === 0) {
     return questionScore;
   }
 
-  const totalConnect = totalMatchCorrect + notMatchCount;
-  if (totalConnect === 0) return 0;
+  // Tổng khả năng đúng + sai
+  const totalPossibility = correctTotal + incorrectCount;
 
-  let finalScore = matchedCount * (questionScore / totalConnect);
+  //Tìm điểm thô
+  let finalScore = correctCount * (questionScore / totalPossibility);
 
   // Quy tắc làm tròn theo step 0.25
   const step = 0.25;
-  if (notMatchCount === 0) {
+  if (incorrectCount === 0) {
     // Làm tròn lên theo step 0.25
     finalScore = Math.ceil(Math.round(finalScore * 100) / 100 / step) * step;
   } else {
@@ -310,7 +296,6 @@ export const calcQuestionMatchScore = (
   }
 
   // Đảm bảo không vượt quá biên (questionScore) hoặc thấp hơn step (0.25) 
-  // vì đã loại trừ trường hợp đúng hết và sai hết ở trên
   if (finalScore >= questionScore) {
     finalScore = questionScore - step;
   }
@@ -321,8 +306,37 @@ export const calcQuestionMatchScore = (
   return finalScore;
 };
 
+export const calcQuestionMatchScore = (
+  question: Question,
+  userConnections: { from: number; to: number }[]
+): number => {
+  const elements = question.elements || [];
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const correctTotal = getMatchCorrectTotal(elements);
+  let correctCount = 0;
+  let incorrectCount = 0;
+
+  userConnections.forEach((conn) => {
+    const fromEl = elements.find((el) => el.id === conn.from) as ShapeElement;
+    const toEl = elements.find((el) => el.id === conn.to) as ShapeElement;
+    if (fromEl && toEl) {
+      const fromVal = calcExpression(fromEl.value || '');
+      const toVal = calcExpression(toEl.value || '');
+      if (fromVal === toVal) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+    }
+  });
+
+  let finalScore = calcFinalScore(questionScore, correctTotal, correctCount, incorrectCount);
+  return finalScore;
+};
+
 /**
  * Tính điểm cho câu hỏi dạng điền (fill)
+ * todo...
  */
 export const calcQuestionFillScore = (
   question: Question,
