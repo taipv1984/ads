@@ -1,5 +1,5 @@
-import { Product, CreateProductDTO, UpdateProductDTO, ProductFilter } from '@/services/types/product.type';
 import { initialProducts } from '@/services/mocks/product.mock';
+import { CreateProductDTO, Product, ProductFilter, UpdateProductDTO } from '@/services/types/product.type';
 
 // In-memory state for mock data
 let products: Product[] = [...initialProducts];
@@ -44,7 +44,7 @@ export const productMock = {
   updateProduct: async (id: string, dto: UpdateProductDTO): Promise<Product> => {
     const index = products.findIndex((p) => p.id === id);
     if (index === -1) throw new Error('Product not found');
-    
+
     products[index] = { ...products[index], ...dto };
     return products[index];
   },
