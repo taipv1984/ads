@@ -1,9 +1,11 @@
 import { SIZE, SPACING } from '@/constants/theme';
-import { Question } from '@/services/types/question.types';
+import { Question, QuestionType } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
+import QuestionSelectView from './QuestionSelectView';
+import { ViewMode } from '@/services/types/system.type';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -16,6 +18,7 @@ interface _Props {
   activeInputId: number | null;
   onSelectInput: (id: number | null, absPos?: { x: number, y: number }) => void;
   onConnectionsChange: (id: number, conns: { from: number, to: number }[]) => void;
+  updateAnswer: (questionId: number, shapeId: number, value: string) => void;
   AutoHeightImage: React.FC<{ uri: string }>;
 }
 
@@ -28,6 +31,7 @@ const QuestionItem: React.FC<_Props> = ({
   activeInputId,
   onSelectInput,
   onConnectionsChange,
+  updateAnswer,
   AutoHeightImage
 }) => {
   const { height: canvasHeight, offsetY } = getCanvasLayout(item.elements || []);
@@ -35,6 +39,38 @@ const QuestionItem: React.FC<_Props> = ({
   const handleConnectionsChangeLocal = useCallback((id: number, conns: { from: number, to: number }[]) => {
     onConnectionsChange(id, conns);
   }, [onConnectionsChange]);
+
+  const renderQuestionContent = () => {
+    switch (item.type) {
+      case QuestionType.fill:
+      case QuestionType.match:
+        return item.elements && item.elements.length > 0 ? (
+          <View style={[styles.canvasContainer, { height: canvasHeight }]}>
+            <QuestionCanvas
+              question={item}
+              userInputs={userAnswers}
+              connections={userConnections}
+              activeInputId={index === currentIndex ? activeInputId : null}
+              onSelectInput={onSelectInput}
+              onConnectionsChange={handleConnectionsChangeLocal}
+              offsetY={offsetY}
+              viewMode={ViewMode.edit}
+            />
+          </View>
+        ) : null;
+      case QuestionType.select:
+        return (
+          <QuestionSelectView
+            selects={item.selects || []}
+            userAnswers={userAnswers}
+            onAnswerChange={(selectId, val) => updateAnswer(item.id, selectId, val)}
+            viewMode={ViewMode.edit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <ScrollView
@@ -52,19 +88,7 @@ const QuestionItem: React.FC<_Props> = ({
         </View>
       )}
 
-      {item.elements && item.elements.length > 0 && (
-        <View style={[styles.canvasContainer, { height: canvasHeight }]}>
-          <QuestionCanvas
-            question={item}
-            userInputs={userAnswers}
-            connections={userConnections}
-            activeInputId={index === currentIndex ? activeInputId : null}
-            onSelectInput={onSelectInput}
-            onConnectionsChange={handleConnectionsChangeLocal}
-            offsetY={offsetY}
-          />
-        </View>
-      )}
+      {renderQuestionContent()}
     </ScrollView>
   );
 };

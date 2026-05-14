@@ -1,6 +1,8 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
-import { Question } from '@/services/types/question.types';
+import QuestionSelectView from '@/features/math/components/QuestionSelectView';
+import { Question, QuestionType } from '@/services/types/question.types';
+import { ViewMode } from '@/services/types/system.type';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -28,6 +30,49 @@ const MatchResultItem = React.memo(({
 }: _Props) => {
   const { height: canvasHeight, offsetY } = getCanvasLayout(question.elements || []);
 
+  const renderResultContent = () => {
+    switch (question.type) {
+      case QuestionType.fill:
+      case QuestionType.match:
+        return (
+          <>
+            <View style={[styles.canvasWrapper, { height: canvasHeight }]}>
+              <QuestionCanvas
+                question={question}
+                userInputs={userAnswers}
+                activeInputId={null}
+                reviewConnections={userConnections}
+                onSelectInput={() => { }}
+                offsetY={offsetY}
+                viewMode={ViewMode.review}
+              />
+            </View>
+            <View style={styles.explanationBox}>
+              <Text style={styles.explanationTitle}>
+                <Ionicons name="bulb-outline" size={16} color={COLOR.primary} /> Giải thích
+              </Text>
+              <Text style={styles.explanationText}>
+                {result.isCorrect //todo
+                  ? "Tuyệt vời! Bạn đã hoàn thành đúng yêu cầu của câu hỏi này."
+                  : "Bạn hãy xem lại các đường nối màu đỏ hoặc các ô số màu đỏ để biết lỗi sai nhé."}
+              </Text>
+            </View>
+          </>
+        );
+      case QuestionType.select:
+        return (
+          <QuestionSelectView
+            selects={question.selects || []}
+            userAnswers={userAnswers}
+            onAnswerChange={() => { }}
+            viewMode={ViewMode.review}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <View style={[styles.resultCard, { backgroundColor }]}>
       <View style={styles.resultCardHeader}>
@@ -49,28 +94,7 @@ const MatchResultItem = React.memo(({
         <Text style={styles.cardContent}>{question.content}</Text>
       </View>
 
-      <View style={[styles.canvasWrapper, { height: canvasHeight }]}>
-        <QuestionCanvas
-          question={question}
-          userInputs={userAnswers}
-          activeInputId={null}
-          mode="review"
-          reviewConnections={userConnections}
-          onSelectInput={() => { }}
-          offsetY={offsetY}
-        />
-      </View>
-
-      <View style={styles.explanationBox}>
-        <Text style={styles.explanationTitle}>
-          <Ionicons name="bulb-outline" size={16} color={COLOR.primary} /> Giải thích
-        </Text>
-        <Text style={styles.explanationText}>
-          {result.isCorrect
-            ? "Tuyệt vời! Bạn đã hoàn thành đúng yêu cầu của câu hỏi này."
-            : "Bạn hãy xem lại các đường nối màu đỏ hoặc các ô số màu đỏ để biết lỗi sai nhé."}
-        </Text>
-      </View>
+      {renderResultContent()}
     </View>
   );
 });

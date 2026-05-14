@@ -70,13 +70,28 @@ export interface ImageElement extends BaseElement {
   height: number;
 }
 
-export type QuestionType = 'fill' | 'match' | 'color' | 'quiz' | 'step';
-
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
 export interface QuestionValidation {
   id: number;
   formula: string; //'#9 + #10 === 32'
+}
+
+export interface QuestionSelect {
+  id: number;
+  group?: string;
+  options: string[];
+  answer: string | string[];
+  score?: number;
+}
+
+export enum QuestionType {
+  fill = 'fill',
+  match = 'match',
+  select = 'select',
+  color = 'color',
+  quiz = 'quiz',
+  step = 'step',
 }
 
 export interface Question {
@@ -88,6 +103,7 @@ export interface Question {
   imagePath?: string;
   elements?: QuestionElement[];
   validations?: QuestionValidation[];
+  selects?: QuestionSelect[];
   inputLength?: number;
   score?: number;
 }

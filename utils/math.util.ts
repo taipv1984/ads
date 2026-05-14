@@ -4,8 +4,7 @@ import {
   ElementGroup,
   MatchType,
   Question,
-  QuestionElement,
-  ShapeElement
+  QuestionElement, QuestionType, ShapeElement
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
 import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
@@ -229,7 +228,7 @@ export const checkQuestionCompletion = (
   const elements = question.elements || [];
 
   switch (question.type) {
-    case 'fill': {
+    case QuestionType.fill: {
       // Phải điền tất cả các ô input
       const inputShapes = elements.filter(
         (el) => el.type === 'shape' && (el as ShapeElement).isInput
@@ -238,9 +237,16 @@ export const checkQuestionCompletion = (
       return inputShapes.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
     }
 
-    case 'match': {
+    case QuestionType.match: {
       // Phải có ít nhất 1 kết nối
       return userConnections.length > 0;
+    }
+
+    case QuestionType.select: {
+      // Phải chọn ít nhất 1 option cho mỗi group
+      const selects = question.selects || [];
+      if (selects.length === 0) return true;
+      return selects.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
     }
 
     // Mặc định các loại khác có thể luôn là true hoặc xử lý riêng
@@ -383,6 +389,53 @@ export const calcQuestionFillScore = (
 };
 
 /**
+ * Tính điểm cho câu hỏi dạng chọn (select)
+ */
+export const calcQuestionSelectScore = (
+  question: Question,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  const selects = question.selects || [];
+  let totalScore = 0;
+  let allCorrect = true;
+
+  selects.forEach((s) => {
+    const userVal = userInputs[s.id] || '';
+    const correctAnswers = Array.isArray(s.answer) ? s.answer : [s.answer];
+    const userAnswers = userVal ? userVal.split(',') : [];
+
+    let correctCount = 0;
+    let incorrectCount = 0;
+
+    userAnswers.forEach((val) => {
+      if (correctAnswers.includes(val)) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+    });
+
+    // Điểm cho từng item trong selects
+    const selectScore = calcFinalScore(
+      s.score || 0,
+      correctAnswers.length,
+      correctCount,
+      incorrectCount
+    );
+    totalScore += selectScore;
+
+    // Kiểm tra xem đã chọn đủ và đúng chưa (để quyết định isCorrect của cả câu)
+    // Phải chọn đúng hết và không có cái nào sai
+    const hasMissing = correctAnswers.some(ans => !userAnswers.includes(ans));
+    if (hasMissing || incorrectCount > 0) {
+      allCorrect = false;
+    }
+  });
+
+  return { isCorrect: allCorrect, finalScore: totalScore };
+};
+
+/**
  * Tính toán điểm số cho một câu hỏi dựa trên loại câu hỏi
  */
 export const calcQuestionScore = (
@@ -394,17 +447,24 @@ export const calcQuestionScore = (
   let finalScore = 0;
 
   switch (question.type) {
-    case 'fill': {
+    case QuestionType.fill: {
       const result = calcQuestionFillScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;
     }
 
-    case 'match': {
+    case QuestionType.match: {
       finalScore = calcQuestionMatchScore(question, userConnections);
       const questionScore = question.score !== undefined ? question.score : 1;
       isCorrect = finalScore === questionScore;
+      break;
+    }
+
+    case QuestionType.select: {
+      const result = calcQuestionSelectScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
       break;
     }
 

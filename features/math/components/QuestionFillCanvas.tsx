@@ -1,9 +1,9 @@
 import { Question, ShapeElement } from '@/services/types/question.types';
+import { getEffectiveZIndex, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas } from '@shopify/react-native-skia';
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { getEffectiveZIndex, groupElementsIntoLayers } from '@/utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
@@ -11,12 +11,13 @@ import {
   RenderLine,
   SCALE
 } from './shared/BaseElements';
+import { ViewMode } from '@/services/types/system.type';
 
 interface _Props {
   question: Question;
   userInputs: Record<number, string>;
   activeInputId: number | null;
-  mode?: 'edit' | 'review';
+  viewMode?: ViewMode;
   onSelectInput: (id: number | null, absPos?: { x: number, y: number }) => void;
   offsetY?: number;
 }
@@ -25,11 +26,11 @@ const QuestionFillCanvas: React.FC<_Props> = ({
   question,
   userInputs,
   activeInputId,
-  mode = 'edit',
+  viewMode = ViewMode.edit,
   onSelectInput,
   offsetY = 0
 }) => {
-  const isReview = mode === 'review';
+  const isReview = viewMode === ViewMode.review;
   const tapGesture = useMemo(() => Gesture.Tap()
     .enabled(!isReview)
     .onEnd((e) => {

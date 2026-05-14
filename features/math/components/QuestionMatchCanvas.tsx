@@ -1,11 +1,12 @@
 import { COLOR } from '@/constants/theme';
 import { ElementGroup, ImageElement, LineElement, MatchType, Question, ShapeElement, TextElement } from '@/services/types/question.types';
+import { ViewMode } from '@/services/types/system.type';
+import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas, Group, Line, Path, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, SharedValue, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
-import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '@/utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
@@ -18,7 +19,7 @@ import {
 interface Props {
   question: Question;
   userInputs: Record<number, string>;
-  mode?: 'edit' | 'review';
+  viewMode?: ViewMode;
   connections?: { from: number, to: number }[]; // Thêm prop này để nhận dữ liệu hiện tại
   reviewConnections?: { from: number, to: number }[];
   onConnectionsChange?: (connections: { from: number, to: number }[]) => void;
@@ -58,7 +59,7 @@ const AnimatedAnchor = memo(({
 const QuestionMatchCanvas: React.FC<Props> = ({
   question,
   userInputs,
-  mode = 'edit',
+  viewMode = ViewMode.edit,
   connections: parentConnections,
   reviewConnections,
   onConnectionsChange,
@@ -68,8 +69,8 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const lastSyncedConnections = React.useRef<string>('');
 
   // Ensure connections is always an array
-  const currentConnections = (mode === 'review' ? reviewConnections : internalConnections) || [];
-  const isReview = mode === 'review';
+  const currentConnections = (viewMode === ViewMode.review ? reviewConnections : internalConnections) || [];
+  const isReview = viewMode === ViewMode.review;
   const matchType = useMemo(() => getMatchType(question.elements || []), [question.elements]);
 
   const startX = useSharedValue(0);
@@ -313,7 +314,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                               const toA = anchorElements.find(a => a.id === c.to);
                               if (!fromA || !toA) return null;
 
-                              let lineColor: string = COLOR.connectLine;
+                              let lineColor: string = COLOR.focus;
                               if (isReview) {
                                 const isCorrect = calcExpression(fromA.value || '') === calcExpression(toA.value || '');
                                 lineColor = isCorrect ? COLOR.success : COLOR.error;
@@ -331,7 +332,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                                 />
                               );
                             })}
-                            <Path path={dragPath} color={COLOR.connectLine} strokeWidth={6 * SCALE} style="stroke" strokeCap="round" />
+                            <Path path={dragPath} color={COLOR.focus} strokeWidth={6 * SCALE} style="stroke" strokeCap="round" />
                           </Group>
                         );
                       }

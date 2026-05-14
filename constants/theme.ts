@@ -14,17 +14,14 @@ export const COLOR = {
   info: '#007AFF',
   blue: '#007AFF',
   bgShape: '#E6F2FF',
-  blue_light: '#E6F2FF',//...
-  green_light: '#E6F9EA',
   star: '#FFD700',
-  connectLine: '#FF814A',
+  focus: '#FF814A',
 
   // Nhóm màu trung tính (Neutral Colors)
   background: '#FFF9F1',
   surface: '#FFFFFF',
   text: '#111111',
   textSecondary: '#7A7A7A',
-  border: '#FF814A',
   white: '#FFFFFF',
   black: '#111111',
   grayLight: '#EEEEEE',
