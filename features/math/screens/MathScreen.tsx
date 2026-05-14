@@ -9,10 +9,10 @@ import { useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Dimensions, FlatList, Image as RNImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from '@/utils/math.util';
 import QuestionItem from '../components/QuestionItem';
 import GradeConfirmModal from '../components/modal/SubmitExamConfirmModal';
 import { useMathQuiz } from '../context/MathQuizContext';
-import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from './utils/math.util';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

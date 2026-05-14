@@ -104,7 +104,6 @@ const MathResultScreen = () => {
           <ResultLoading
             trigger={filterMode}
             delay={150}
-            loadingText="Đang lọc kết quả..."
           >
             {filteredQuestions.map((q, idx) => {
               const originalIndex = questions.findIndex(origQ => origQ.id === q.id);

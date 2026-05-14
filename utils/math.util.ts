@@ -8,7 +8,7 @@ import {
   ShapeElement
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
-import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../../components/shared/BaseElements';
+import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
 
 /**
  * Lấy danh sách các điểm neo (anchors) từ danh sách các phần tử

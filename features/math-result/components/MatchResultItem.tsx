@@ -1,7 +1,7 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
-import { getCanvasLayout } from '@/features/math/screens/utils/math.util';
 import { Question } from '@/services/types/question.types';
+import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';

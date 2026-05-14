@@ -2,7 +2,7 @@ import { SIZE, SPACING } from '@/constants/theme';
 import { Question } from '@/services/types/question.types';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { getCanvasLayout } from '../screens/utils/math.util';
+import { getCanvasLayout } from '@/utils/math.util';
 import QuestionCanvas from './QuestionCanvas';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');

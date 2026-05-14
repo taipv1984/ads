@@ -1,5 +1,5 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
-import { getScoreFeedback } from '@/features/math/screens/utils/math.util';
+import { getScoreFeedback } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

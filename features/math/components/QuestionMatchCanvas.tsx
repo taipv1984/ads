@@ -5,7 +5,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, SharedValue, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
-import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '../screens/utils/math.util';
+import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '@/utils/math.util';
 import {
   AnimatedShapeElement,
   AnimatedTextOverlay,

@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { StorageUtil } from '@/utils/StorageUtil';
+import { StorageUtil } from '@/utils/storage.util';
 
 interface GlobalContextType {
   totalCoin: number;
