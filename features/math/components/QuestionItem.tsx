@@ -1,8 +1,8 @@
 import { SIZE, SPACING } from '@/constants/theme';
 import { Question } from '@/services/types/question.types';
+import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { getCanvasLayout } from '@/utils/math.util';
 import QuestionCanvas from './QuestionCanvas';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -71,7 +71,7 @@ const QuestionItem: React.FC<_Props> = ({
 
 const styles = StyleSheet.create({
   questionTitle: {
-    fontSize: SIZE.lg,
+    fontSize: SIZE.md,
     fontWeight: 'bold',
     padding: SPACING.md
   },

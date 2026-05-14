@@ -32,14 +32,17 @@ const MatchResultItem = React.memo(({
     <View style={[styles.resultCard, { backgroundColor }]}>
       <View style={styles.resultCardHeader}>
         <View style={styles.cardTitleContainer}>
-          <Text style={styles.cardTitle}>Câu {index + 1} {question.title || ""}</Text>
-          <View style={[styles.badge, { backgroundColor: result.isCorrect ? COLOR.bgSuccess : COLOR.bgError }]}>
-            <Text style={[styles.badgeText, { color: result.isCorrect ? COLOR.success : COLOR.error }]}>
-              {result.isCorrect ? "Chính xác" : "Chưa đúng"}
+          <View style={styles.questionLabel}>
+            <Text style={[styles.questionLabelText, { color: result.isCorrect ? COLOR.success : COLOR.error }]}>
+              Câu {index + 1}:
             </Text>
           </View>
+          {result.finalScore > 0 && (
+            <Text style={[styles.scoreText, { color: result.isCorrect ? COLOR.success : COLOR.error }]}>
+              {result.finalScore}đ
+            </Text>
+          )}
         </View>
-        {result.finalScore > 0 && <Text style={styles.scoreText}>{result.finalScore}đ</Text>}
       </View>
 
       <View style={styles.cardContentWrapper}>
@@ -85,34 +88,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     marginBottom: SPACING.sm,
   },
-  badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 5,
-    marginRight: 8,
+  questionLabel: {
+    flexDirection: 'row',
   },
-  badgeText: {
-    fontSize: SIZE.sm,
+  questionLabelText: {
+    fontSize: SIZE.md,
     fontWeight: 'bold',
   },
   cardTitleContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    flexWrap: 'wrap',
-  },
-  cardTitle: {
-    fontSize: SIZE.md,
-    fontWeight: 'bold',
-    color: COLOR.text,
-    marginRight: 8,
+    justifyContent: 'space-between',
   },
   scoreText: {
     fontSize: SIZE.md,
     fontStyle: 'italic',
-    color: COLOR.text,
     textDecorationLine: 'underline',
-    textDecorationStyle: 'dashed',
+    marginLeft: 12,
     fontWeight: 'bold',
   },
   cardContentWrapper: {

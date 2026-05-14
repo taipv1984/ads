@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     borderColor: COLOR.transparent,
   },
   filterButtonText: {
-    fontSize: SIZE.sm,
+    fontSize: SIZE.md,
     fontWeight: 'bold',
   },
   finishButton: {

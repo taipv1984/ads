@@ -83,7 +83,6 @@ export interface Question {
   id: number;
   category?: string;
   type: QuestionType;
-  title?: string;
   content: string;
   desc?: string;
   imagePath?: string;
