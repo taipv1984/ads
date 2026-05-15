@@ -1,3 +1,4 @@
+import { ViewMode } from '@/enums/math.enum';
 import { Question, ShapeElement } from '@/services/types/question.types';
 import { getEffectiveZIndex, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas } from '@shopify/react-native-skia';
@@ -11,7 +12,6 @@ import {
   RenderLine,
   SCALE
 } from './shared/BaseElements';
-import { ViewMode } from '@/services/types/system.type';
 
 interface _Props {
   question: Question;
@@ -26,11 +26,11 @@ const QuestionFillCanvas: React.FC<_Props> = ({
   question,
   userInputs,
   activeInputId,
-  viewMode = ViewMode.edit,
+  viewMode = ViewMode.EDIT,
   onSelectInput,
   offsetY = 0
 }) => {
-  const isReview = viewMode === ViewMode.review;
+  const isReview = viewMode === ViewMode.REVIEW;
   const tapGesture = useMemo(() => Gesture.Tap()
     .enabled(!isReview)
     .onEnd((e) => {

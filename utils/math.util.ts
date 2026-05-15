@@ -1,14 +1,12 @@
 import { SPACING } from '@/constants/theme';
+import { ElementGroup, QuestionType, ValueType } from '@/enums/math.enum';
 import { SCORE_FEEDBACK } from '@/services/mocks/score-feedback.mock';
 import {
-  ElementGroup,
-  MatchType,
   Question,
-  QuestionElement, QuestionType, ShapeElement
+  QuestionElement, ShapeElement
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
 import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
-
 /**
  * Lấy danh sách các điểm neo (anchors) từ danh sách các phần tử
  */
@@ -19,13 +17,13 @@ export const getAnchorElements = (elements: QuestionElement[] = []): ShapeElemen
 };
 
 /**
- * Xác định matchType ('single' hoặc 'multi') dựa vào shape.group
+ * Xác định valueType ('single' hoặc 'multi') dựa vào shape.group
  * Nếu có ít nhất 1 group='master' thì là 'multi', ngược lại là 'single'
  */
-export const getMatchType = (elements: QuestionElement[] = []): MatchType => {
+export const getMatchValueType = (elements: QuestionElement[] = []): ValueType => {
   const anchors = getAnchorElements(elements);
-  const hasMaster = anchors.some(a => a.group === ElementGroup.master);
-  return hasMaster ? MatchType.multi : MatchType.single;
+  const hasMaster = anchors.some(a => a.group === ElementGroup.MASTER);
+  return hasMaster ? ValueType.MULTI : ValueType.SINGLE;
 };
 
 /**
@@ -196,14 +194,14 @@ export const validateFormula = (
  * Tra ve tong so cap match dung
  */
 export const getMatchCorrectTotal = (elements: QuestionElement[] = []): number => {
-  const matchType = getMatchType(elements);
+  const valueType = getMatchValueType(elements);
   const anchors = getAnchorElements(elements);
   let total = 0;
-  if (matchType === MatchType.single) {
+  if (valueType === ValueType.SINGLE) {
     total = Math.ceil(anchors.length / 2);
   } else {
-    const masters = anchors.filter((a) => a.group === ElementGroup.master);
-    const slaves = anchors.filter((a) => a.group !== ElementGroup.master);
+    const masters = anchors.filter((a) => a.group === ElementGroup.MASTER);
+    const slaves = anchors.filter((a) => a.group !== ElementGroup.MASTER);
     masters.forEach((m) => {
       slaves.forEach((s) => {
         let masterValue = calcExpression(m.value || '');
@@ -228,7 +226,7 @@ export const checkQuestionCompletion = (
   const elements = question.elements || [];
 
   switch (question.type) {
-    case QuestionType.fill: {
+    case QuestionType.FILL: {
       // Phải điền tất cả các ô input
       const inputShapes = elements.filter(
         (el) => el.type === 'shape' && (el as ShapeElement).isInput
@@ -237,12 +235,12 @@ export const checkQuestionCompletion = (
       return inputShapes.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
     }
 
-    case QuestionType.match: {
+    case QuestionType.MATCH: {
       // Phải có ít nhất 1 kết nối
       return userConnections.length > 0;
     }
 
-    case QuestionType.select: {
+    case QuestionType.SELECT: {
       // Phải chọn ít nhất 1 option cho mỗi group
       const selects = question.selects || [];
       if (selects.length === 0) return true;
@@ -447,21 +445,21 @@ export const calcQuestionScore = (
   let finalScore = 0;
 
   switch (question.type) {
-    case QuestionType.fill: {
+    case QuestionType.FILL: {
       const result = calcQuestionFillScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;
     }
 
-    case QuestionType.match: {
+    case QuestionType.MATCH: {
       finalScore = calcQuestionMatchScore(question, userConnections);
       const questionScore = question.score !== undefined ? question.score : 1;
       isCorrect = finalScore === questionScore;
       break;
     }
 
-    case QuestionType.select: {
+    case QuestionType.SELECT: {
       const result = calcQuestionSelectScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;

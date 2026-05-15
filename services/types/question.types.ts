@@ -1,19 +1,8 @@
+import { QuestionType } from "@/enums/math.enum";
+
 export interface Point {
   x: number;
   y: number;
-}
-
-export enum MatchType {
-  single = 'single',
-  multi = 'multi',
-}
-
-export enum ElementGroup {
-  top = 'top',
-  bottom = 'bottom',
-  left = 'left',
-  right = 'right',
-  master = 'master',
 }
 
 export interface BaseElement {
@@ -85,14 +74,7 @@ export interface QuestionSelect {
   score?: number;
 }
 
-export enum QuestionType {
-  fill = 'fill',
-  match = 'match',
-  select = 'select',
-  color = 'color',
-  quiz = 'quiz',
-  step = 'step',
-}
+
 
 export interface Question {
   id: number;

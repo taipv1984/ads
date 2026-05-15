@@ -1,8 +1,8 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
+import { QuestionType, ViewMode } from '@/enums/math.enum';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
 import QuestionSelectView from '@/features/math/components/QuestionSelectView';
-import { Question, QuestionType } from '@/services/types/question.types';
-import { ViewMode } from '@/services/types/system.type';
+import { Question } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -32,8 +32,8 @@ const MatchResultItem = React.memo(({
 
   const renderResultContent = () => {
     switch (question.type) {
-      case QuestionType.fill:
-      case QuestionType.match:
+      case QuestionType.FILL:
+      case QuestionType.MATCH:
         return (
           <>
             <View style={[styles.canvasWrapper, { height: canvasHeight }]}>
@@ -44,7 +44,7 @@ const MatchResultItem = React.memo(({
                 reviewConnections={userConnections}
                 onSelectInput={() => { }}
                 offsetY={offsetY}
-                viewMode={ViewMode.review}
+                viewMode={ViewMode.REVIEW}
               />
             </View>
             <View style={styles.explanationBox}>
@@ -59,13 +59,13 @@ const MatchResultItem = React.memo(({
             </View>
           </>
         );
-      case QuestionType.select:
+      case QuestionType.SELECT:
         return (
           <QuestionSelectView
             selects={question.selects || []}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
-            viewMode={ViewMode.review}
+            viewMode={ViewMode.REVIEW}
           />
         );
       default:

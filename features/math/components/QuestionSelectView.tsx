@@ -1,6 +1,6 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
+import { ViewMode } from '@/enums/math.enum';
 import { QuestionSelect } from '@/services/types/question.types';
-import { ViewMode } from '@/services/types/system.type';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -15,9 +15,9 @@ const QuestionSelectView: React.FC<_Props> = ({
   selects,
   userAnswers,
   onAnswerChange,
-  viewMode = ViewMode.edit
+  viewMode = ViewMode.EDIT
 }) => {
-  const isReview = viewMode === ViewMode.review;
+  const isReview = viewMode === ViewMode.REVIEW;
 
   const handleToggleOption = (select: QuestionSelect, option: string) => {
     if (isReview) return;
@@ -103,7 +103,7 @@ const QuestionSelectView: React.FC<_Props> = ({
     );
 
     if (Array.isArray(select.answer)) {
-      // select_multi
+      // ValueType.MULTI
       const missing = correctAnswers.filter(ans => !userSelections.includes(ans));
       if (missing.length > 0) {
         return (
@@ -118,7 +118,7 @@ const QuestionSelectView: React.FC<_Props> = ({
         </Text>
       );
     } else {
-      // select_single
+      // ValueType.SINGLE
       return (
         <Text style={styles.explanationText}>
           Đáp án đúng là: <Text style={styles.boldText}>{select.answer}</Text>

@@ -1,10 +1,11 @@
-import { Question, QuestionType } from "../types/question.types";
+import { QuestionType } from "@/enums/math.enum";
+import { Question } from "../types/question.types";
 
 export const QUESTION_MOCKS: Question[] = [
   {
     id: 2,
     category: "",
-    type: QuestionType.fill,
+    type: QuestionType.FILL,
     desc: "viet_so_thich_hop_1.jpg",
     content: "Viết số thích hợp vào ô trống (theo mẫu).",
     inputLength: 2,
@@ -29,7 +30,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 3,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_1.jpg",
   //   content: "Viết số thích hợp vào ô trống (theo mẫu).",
   //   inputLength: 2,
@@ -47,7 +48,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   // {
   //   id: 4,
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   category: "",
   //   desc: "viet_so_thich_hop_2.jpg",
   //   content: "Đúng ghi Đ, sai ghi S.",
@@ -62,7 +63,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   // {
   //   id: 5,
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   category: "",
   //   desc: "viet_so_thich_hop_2.jpg",
   //   content: "Đúng ghi Đ, sai ghi S.",
@@ -77,7 +78,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 6,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_3.jpg",
   //   content: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -96,7 +97,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 7,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
   //   content: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -113,7 +114,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 8,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
   //   content: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -130,7 +131,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 9,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_5.jpg",
   //   content: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất (theo mẫu)",
   //   inputLength: 1,
@@ -151,7 +152,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 10,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_5.jpg",
   //   content: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
   //   inputLength: 1,
@@ -171,7 +172,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 11,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "ket_hop_id1_va_id2.jpg",
   //   content: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -196,7 +197,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   score: 1
   // },
   // {
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   id: 12,
   //   category: "",
   //   desc: "viet_so_thich_hop_8.jpg",
@@ -229,7 +230,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 13,
   //   category: "",
-  //   type: QuestionType.fill,
+  //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
   //   content: "#4 Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
@@ -275,7 +276,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   {
     id: 141,
-    type: QuestionType.match,
+    type: QuestionType.MATCH,
     category: "",
     desc: "",
     content: "Nối các hình có cùng số lượng hoặc giá trị. single",
@@ -293,7 +294,7 @@ export const QUESTION_MOCKS: Question[] = [
   },
   // {
   //   id: 151,
-  //   type: QuestionType.match,
+  //   type: QuestionType.MATCH,
   //   category: "",
   //   desc: "",
   //   content: "Nối các hình có cùng số lượng hoặc giá trị. multi",
@@ -316,7 +317,7 @@ export const QUESTION_MOCKS: Question[] = [
   //questionSelect
   {
     id: 301,
-    type: QuestionType.select,
+    type: QuestionType.SELECT,
     category: "",
     desc: "",
     content: "Khoang vào số lớn nhất",
@@ -328,13 +329,25 @@ export const QUESTION_MOCKS: Question[] = [
   },
   {
     id: 302,
-    type: QuestionType.select,
+    type: QuestionType.SELECT,
     category: "",
     desc: "",
     content: "Khoang vào các số chẵn",
     selects: [
       { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
       { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
+    ],
+    score: 1
+  },
+  {
+    id: 303,
+    type: QuestionType.SELECT,
+    category: "",
+    desc: "",
+    content: "Khoanh vào các số chẵn",
+    selects: [
+      { id: 3031, group: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
+      { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: ['80', '85', '90'], score: 0.5 },
     ],
     score: 1
   }

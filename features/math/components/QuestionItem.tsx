@@ -1,11 +1,11 @@
 import { SIZE, SPACING } from '@/constants/theme';
-import { Question, QuestionType } from '@/services/types/question.types';
+import { QuestionType, ViewMode } from '@/enums/math.enum';
+import { Question } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionSelectView from './QuestionSelectView';
-import { ViewMode } from '@/services/types/system.type';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -42,8 +42,8 @@ const QuestionItem: React.FC<_Props> = ({
 
   const renderQuestionContent = () => {
     switch (item.type) {
-      case QuestionType.fill:
-      case QuestionType.match:
+      case QuestionType.FILL:
+      case QuestionType.MATCH:
         return item.elements && item.elements.length > 0 ? (
           <View style={[styles.canvasContainer, { height: canvasHeight }]}>
             <QuestionCanvas
@@ -54,17 +54,17 @@ const QuestionItem: React.FC<_Props> = ({
               onSelectInput={onSelectInput}
               onConnectionsChange={handleConnectionsChangeLocal}
               offsetY={offsetY}
-              viewMode={ViewMode.edit}
+              viewMode={ViewMode.EDIT}
             />
           </View>
         ) : null;
-      case QuestionType.select:
+      case QuestionType.SELECT:
         return (
           <QuestionSelectView
             selects={item.selects || []}
             userAnswers={userAnswers}
             onAnswerChange={(selectId, val) => updateAnswer(item.id, selectId, val)}
-            viewMode={ViewMode.edit}
+            viewMode={ViewMode.EDIT}
           />
         );
       default:

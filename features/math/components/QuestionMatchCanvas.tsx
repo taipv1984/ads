@@ -1,7 +1,7 @@
 import { COLOR } from '@/constants/theme';
-import { ElementGroup, ImageElement, LineElement, MatchType, Question, ShapeElement, TextElement } from '@/services/types/question.types';
-import { ViewMode } from '@/services/types/system.type';
-import { calcExpression, getAnchorElements, getMatchType, groupElementsIntoLayers } from '@/utils/math.util';
+import { ElementGroup, ValueType, ViewMode } from '@/enums/math.enum';
+import { ImageElement, LineElement, Question, ShapeElement, TextElement } from '@/services/types/question.types';
+import { calcExpression, getAnchorElements, getMatchValueType, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas, Group, Line, Path, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -59,7 +59,7 @@ const AnimatedAnchor = memo(({
 const QuestionMatchCanvas: React.FC<Props> = ({
   question,
   userInputs,
-  viewMode = ViewMode.edit,
+  viewMode = ViewMode.EDIT,
   connections: parentConnections,
   reviewConnections,
   onConnectionsChange,
@@ -69,9 +69,9 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const lastSyncedConnections = React.useRef<string>('');
 
   // Ensure connections is always an array
-  const currentConnections = (viewMode === ViewMode.review ? reviewConnections : internalConnections) || [];
-  const isReview = viewMode === ViewMode.review;
-  const matchType = useMemo(() => getMatchType(question.elements || []), [question.elements]);
+  const currentConnections = (viewMode === ViewMode.REVIEW ? reviewConnections : internalConnections) || [];
+  const isReview = viewMode === ViewMode.REVIEW;
+  const valueType = useMemo(() => getMatchValueType(question.elements || []), [question.elements]);
 
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
@@ -120,10 +120,10 @@ const QuestionMatchCanvas: React.FC<Props> = ({
     if (!fromEl || !toEl) return;
 
     setInternalConnections(prev => {
-      const matchType = getMatchType(question.elements);
+      const valueType = getMatchValueType(question.elements);
       let newConnections = [...prev];
 
-      if (matchType === MatchType.single) {
+      if (valueType === ValueType.SINGLE) {
         newConnections = prev.filter(c =>
           c.from !== fromEl.id && c.from !== toEl.id &&
           c.to !== fromEl.id && c.to !== toEl.id
@@ -214,9 +214,9 @@ const QuestionMatchCanvas: React.FC<Props> = ({
         const targetGroup = groups[i];
 
         // LOGIC KẾT NỐI TỔNG QUÁT (General Case)
-        if (matchType === MatchType.multi) {
+        if (valueType === ValueType.MULTI) {
           // Trong chế độ multi, ít nhất một bên phải là master
-          if (sourceGroup !== ElementGroup.master && targetGroup !== ElementGroup.master) continue;
+          if (sourceGroup !== ElementGroup.MASTER && targetGroup !== ElementGroup.MASTER) continue;
         }
 
         // Luôn ngăn nối cùng nhóm
@@ -250,8 +250,8 @@ const QuestionMatchCanvas: React.FC<Props> = ({
         const targetGroup = groups[i];
 
         // LOGIC KẾT NỐI TỔNG QUÁT
-        if (matchType === MatchType.multi) {
-          if (sourceGroup !== ElementGroup.master && targetGroup !== ElementGroup.master) continue;
+        if (valueType === ValueType.MULTI) {
+          if (sourceGroup !== ElementGroup.MASTER && targetGroup !== ElementGroup.MASTER) continue;
         }
         if (sourceGroup && targetGroup === sourceGroup) continue;
 
