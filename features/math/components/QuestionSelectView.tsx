@@ -5,14 +5,14 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface _Props {
-  selects: QuestionSelect[];
+  questionSelects: QuestionSelect[];
   userAnswers: Record<number, string>;
   onAnswerChange: (selectId: number, value: string) => void;
   viewMode?: ViewMode;
 }
 
 const QuestionSelectView: React.FC<_Props> = ({
-  selects,
+  questionSelects,
   userAnswers,
   onAnswerChange,
   viewMode = ViewMode.EDIT
@@ -38,60 +38,63 @@ const QuestionSelectView: React.FC<_Props> = ({
     }
   };
 
-  const renderOption = (select: QuestionSelect, option: string) => {
-    const currentVal = userAnswers[select.id] || '';
+  const renderOption = (questionSelect: QuestionSelect, option: string) => {
+    const currentVal = userAnswers[questionSelect.id] || '';
     const selectedOptions = currentVal ? currentVal.split(',') : [];
     const isSelected = selectedOptions.includes(option);
 
-    const correctAnswers = Array.isArray(select.answer) ? select.answer : [select.answer];
+    const correctAnswers = Array.isArray(questionSelect.answer) ? questionSelect.answer : [questionSelect.answer];
     const isCorrect = correctAnswers.includes(option);
 
     const isLong = option.length > 2;
 
     const getOptionStyles = () => {
-      let bColor: string = COLOR.transparent;
-      let bGColor: string = COLOR.transparent;
+      let borderColor: string = COLOR.transparent;
+      let bgColor: string = COLOR.transparent;
 
       if (isReview) {
         if (isSelected) {
-          bColor = isCorrect ? COLOR.success : COLOR.error;
-          bGColor = isCorrect ? COLOR.bgSuccess : COLOR.bgError;
+          borderColor = isCorrect ? COLOR.success : COLOR.error;
+          bgColor = isCorrect ? COLOR.bgSuccess : COLOR.bgError;
         }
       } else if (isSelected) {
-        bColor = COLOR.focus;
+        borderColor = COLOR.focus;
       }
 
       return {
-        borderColor: bColor,
-        backgroundColor: bGColor
+        borderColor,
+        backgroundColor: bgColor
       };
     };
 
-    const dynamicStyles = getOptionStyles();
+    const optionStyles = getOptionStyles();
 
     return (
       <TouchableOpacity
         key={option}
         activeOpacity={0.7}
         disabled={isReview}
-        onPress={() => handleToggleOption(select, option)}
+        onPress={() => handleToggleOption(questionSelect, option)}
         style={[
           styles.optionContainer,
           isLong ? styles.rectOption : styles.circleOption,
-          dynamicStyles
+          optionStyles
         ]}
       >
-        <Text style={styles.optionText}>{option}</Text>
+        <Text style={[
+          styles.optionText,
+          (isReview && !isSelected && isCorrect) && { textDecorationLine: 'underline' }
+        ]}>{option}</Text>
       </TouchableOpacity>
     );
   };
 
-  const renderExplanation = (select: QuestionSelect) => {
+  const renderExplanation = (questionSelect: QuestionSelect) => {
     if (!isReview) return null;
 
-    const currentVal = userAnswers[select.id] || '';
+    const currentVal = userAnswers[questionSelect.id] || '';
     const userSelections = currentVal ? currentVal.split(',') : [];
-    const correctAnswers = Array.isArray(select.answer) ? select.answer : [select.answer];
+    const correctAnswers = Array.isArray(questionSelect.answer) ? questionSelect.answer : [questionSelect.answer];
 
     const isWrong = userSelections.some(val => !correctAnswers.includes(val));
     const isMissing = correctAnswers.some(ans => !userSelections.includes(ans));
@@ -102,26 +105,27 @@ const QuestionSelectView: React.FC<_Props> = ({
       </Text>
     );
 
-    if (Array.isArray(select.answer)) {
-      // ValueType.MULTI
+    if (Array.isArray(questionSelect.answer)) { // ValueType.MULTI
       const missing = correctAnswers.filter(ans => !userSelections.includes(ans));
+      const correctlySelected = correctAnswers.filter(ans => userSelections.includes(ans));
+      const wrongCount = userSelections.filter(val => !correctAnswers.includes(val)).length;
+
       if (missing.length > 0) {
         return (
           <Text style={styles.explanationText}>
-            Đáp án còn thiếu là: <Text style={styles.boldText}>{missing.join(', ')}</Text>
+            Đáp án đúng gồm: {correctlySelected.length > 0 && <><Text>{correctlySelected.join(', ')}</Text>, </>}<Text style={styles.boldText}>{missing.join(', ')}</Text>
           </Text>
         );
       }
       return (
         <Text style={styles.explanationText}>
-          Bạn đã chọn dư hoặc sai đáp án.
+          Bạn đã chọn thừa {wrongCount} đáp án.
         </Text>
       );
-    } else {
-      // ValueType.SINGLE
+    } else { // ValueType.SINGLE
       return (
         <Text style={styles.explanationText}>
-          Đáp án đúng là: <Text style={styles.boldText}>{select.answer}</Text>
+          Đáp án đúng là: <Text style={styles.boldText}>{questionSelect.answer}</Text>
         </Text>
       );
     }
@@ -129,17 +133,17 @@ const QuestionSelectView: React.FC<_Props> = ({
 
   return (
     <View style={styles.container}>
-      {selects.map((select) => (
-        <View key={select.id} style={styles.selectGroup}>
+      {questionSelects.map((questionSelect) => (
+        <View key={questionSelect.id} style={styles.selectGroup}>
           <View style={styles.row}>
-            {select.group ? (
-              <Text style={styles.groupText}>{select.group}) </Text>
+            {questionSelect.group ? (
+              <Text style={styles.groupText}>{questionSelect.group}) </Text>
             ) : null}
             <View style={styles.optionsList}>
-              {select.options.map(opt => renderOption(select, opt))}
+              {questionSelect.options.map(opt => renderOption(questionSelect, opt))}
             </View>
           </View>
-          {renderExplanation(select)}
+          {renderExplanation(questionSelect)}
         </View>
       ))}
     </View>
@@ -200,7 +204,6 @@ const styles = StyleSheet.create({
   correctText: {
     fontSize: SIZE.md,
     color: COLOR.success,
-    fontWeight: 'bold',
     marginTop: SPACING.xs,
   },
   boldText: {

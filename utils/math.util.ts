@@ -393,13 +393,13 @@ export const calcQuestionSelectScore = (
   question: Question,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
-  const selects = question.selects || [];
-  let totalScore = 0;
-  let allCorrect = true;
+  const questionSelects = question.selects || [];
+  let finalScore = 0;
+  let isCorrect = true;
 
-  selects.forEach((s) => {
-    const userVal = userInputs[s.id] || '';
-    const correctAnswers = Array.isArray(s.answer) ? s.answer : [s.answer];
+  questionSelects.forEach((group) => {
+    const userVal = userInputs[group.id] || '';
+    const correctAnswers = Array.isArray(group.answer) ? group.answer : [group.answer];
     const userAnswers = userVal ? userVal.split(',') : [];
 
     let correctCount = 0;
@@ -413,24 +413,24 @@ export const calcQuestionSelectScore = (
       }
     });
 
-    // Điểm cho từng item trong selects
-    const selectScore = calcFinalScore(
-      s.score || 0,
+    // Điểm cho từng group trong selects
+    const groupScore = calcFinalScore(
+      group.score || 0,
       correctAnswers.length,
       correctCount,
       incorrectCount
     );
-    totalScore += selectScore;
+    finalScore += groupScore;
 
     // Kiểm tra xem đã chọn đủ và đúng chưa (để quyết định isCorrect của cả câu)
     // Phải chọn đúng hết và không có cái nào sai
     const hasMissing = correctAnswers.some(ans => !userAnswers.includes(ans));
     if (hasMissing || incorrectCount > 0) {
-      allCorrect = false;
+      isCorrect = false;
     }
   });
 
-  return { isCorrect: allCorrect, finalScore: totalScore };
+  return { isCorrect, finalScore };
 };
 
 /**
@@ -473,6 +473,8 @@ export const calcQuestionScore = (
   return {
     isCorrect,
     finalScore,
+    //todo them giai thich
+    //todo dong bo hoa lai gia tri tra ve cua cac ham calcQuestion___Score
   };
 };
 

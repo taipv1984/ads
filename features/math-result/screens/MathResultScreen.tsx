@@ -79,8 +79,7 @@ const MathResultScreen = () => {
               >
                 <Text style={[
                   styles.filterButtonText,
-                  { color: COLOR.success },
-                  filterMode === 'correct' && { fontSize: SIZE.sm }
+                  { color: COLOR.success }
                 ]}>Chính xác {correctCount}</Text>
               </TouchableOpacity>
 
@@ -94,8 +93,7 @@ const MathResultScreen = () => {
               >
                 <Text style={[
                   styles.filterButtonText,
-                  { color: COLOR.error },
-                  filterMode === 'incorrect' && { fontSize: SIZE.sm }
+                  { color: COLOR.error }
                 ]}>Chưa đúng {incorrectCount}</Text>
               </TouchableOpacity>
             </View>
@@ -223,7 +221,6 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     fontSize: SIZE.md,
-    fontWeight: 'bold',
   },
   finishButton: {
     backgroundColor: COLOR.primary,

@@ -61,7 +61,7 @@ const QuestionItem: React.FC<_Props> = ({
       case QuestionType.SELECT:
         return (
           <QuestionSelectView
-            selects={item.selects || []}
+            questionSelects={item.selects || []}
             userAnswers={userAnswers}
             onAnswerChange={(selectId, val) => updateAnswer(item.id, selectId, val)}
             viewMode={ViewMode.EDIT}

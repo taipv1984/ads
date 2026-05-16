@@ -62,7 +62,7 @@ const MatchResultItem = React.memo(({
       case QuestionType.SELECT:
         return (
           <QuestionSelectView
-            selects={question.selects || []}
+            questionSelects={question.selects || []}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
             viewMode={ViewMode.REVIEW}
@@ -103,7 +103,6 @@ export default MatchResultItem;
 
 const styles = StyleSheet.create({
   resultCard: {
-    marginBottom: SPACING.sm,
     paddingTop: SPACING.md,
   },
   resultCardHeader: {
