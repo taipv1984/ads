@@ -133,19 +133,37 @@ const QuestionSelectView: React.FC<_Props> = ({
 
   return (
     <View style={styles.container}>
-      {questionSelects.map((questionSelect) => (
-        <View key={questionSelect.id} style={styles.selectGroup}>
-          <View style={styles.row}>
-            {questionSelect.group ? (
-              <Text style={styles.groupText}>{questionSelect.group}) </Text>
-            ) : null}
-            <View style={styles.optionsList}>
-              {questionSelect.options.map(opt => renderOption(questionSelect, opt))}
+      {questionSelects.map((questionSelect) => {
+        const isGroupShown = questionSelects.length > 1 && !!questionSelect.group;
+        const pullLeft = !!questionSelect.label || !isGroupShown;
+
+        return (
+          <View key={questionSelect.id} style={styles.selectGroup}>
+            <View style={questionSelect.label ? styles.labelLayout : styles.row}>
+              {questionSelect.label ? (
+                <View style={styles.row}>
+                  {isGroupShown ? (
+                    <Text style={styles.groupText}>{questionSelect.group}) </Text>
+                  ) : null}
+                  <Text style={styles.labelText}>{questionSelect.label}</Text>
+                </View>
+              ) : (
+                isGroupShown ? (
+                  <Text style={styles.groupText}>{questionSelect.group}) </Text>
+                ) : null
+              )}
+              <View style={[
+                styles.optionsList, 
+                questionSelect.label ? styles.optionsListWithLabel : null,
+                pullLeft && !questionSelect.label ? styles.optionsListPullLeft : null
+              ]}>
+                {questionSelect.options.map(opt => renderOption(questionSelect, opt))}
+              </View>
             </View>
+            {renderExplanation(questionSelect)}
           </View>
-          {renderExplanation(questionSelect)}
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 };
@@ -155,7 +173,6 @@ export default QuestionSelectView;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    marginTop: SPACING.sm,
   },
   selectGroup: {
     marginBottom: SPACING.md,
@@ -166,13 +183,27 @@ const styles = StyleSheet.create({
   },
   groupText: {
     fontSize: SIZE.md,
-    fontWeight: 'bold',
     marginRight: SPACING.xs,
+  },
+  labelLayout: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  labelText: {
+    fontSize: SIZE.md,
+    color: COLOR.black,
   },
   optionsList: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+  },
+  optionsListWithLabel: {
+    marginLeft: -SPACING.sm,
+    marginTop: SPACING.xs,
+  },
+  optionsListPullLeft: {
+    marginLeft: -SPACING.sm,
   },
   optionContainer: {
     borderWidth: 2,

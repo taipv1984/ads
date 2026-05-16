@@ -142,7 +142,7 @@ const MathScreen: React.FC = () => {
   const renderQuestionItem = useCallback(({ item, index }: { item: any, index: number }) => {
     return (
       <QuestionItem
-        item={item}
+        question={item}
         index={index}
         currentIndex={currentIndex}
         userAnswers={userAnswers[item.id] || {}}

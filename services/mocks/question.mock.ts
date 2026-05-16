@@ -7,7 +7,7 @@ export const QUESTION_MOCKS: Question[] = [
     category: "",
     type: QuestionType.FILL,
     desc: "viet_so_thich_hop_1.jpg",
-    content: "Viết số thích hợp vào ô trống (theo mẫu).",
+    label: "Viết số thích hợp vào ô trống (theo mẫu).",
     inputLength: 2,
     elements: [
       { id: 6, type: "shape", shapeType: "circle", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "32", textSize: 50, borderWidth: 4 },
@@ -279,7 +279,7 @@ export const QUESTION_MOCKS: Question[] = [
     type: QuestionType.MATCH,
     category: "",
     desc: "",
-    content: "Nối các hình có cùng số lượng hoặc giá trị. single",
+    label: "Nối các hình có cùng số lượng hoặc giá trị. single",
     elements: [
       //left
       { id: 1411, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "5", textSize: 50, borderWidth: 5, group: "left" },
@@ -320,33 +320,44 @@ export const QUESTION_MOCKS: Question[] = [
     type: QuestionType.SELECT,
     category: "",
     desc: "",
-    content: "Khoang vào số lớn nhất",
+    label: "Khoang vào số lớn nhất",
     selects: [
       { id: 3011, group: "a", options: ['72', '76', '70'], answer: '76', score: 0.5 },
       { id: 3012, group: "b", options: ['82', '77', '88'], answer: '88', score: 0.5 },
     ],
   },
+  // {
+  //   id: 302,
+  //   type: QuestionType.SELECT,
+  //   category: "",
+  //   desc: "",
+  //   content: "Khoang vào các số chẵn",
+  //   selects: [
+  //     { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
+  //     { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
+  //   ],
+  // },
+  // {
+  //   id: 303,
+  //   type: QuestionType.SELECT,
+  //   category: "",
+  //   desc: "",
+  //   content: "Khoanh vào các số chẵn",
+  //   selects: [
+  //     { id: 3031, group: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
+  //     { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: ['80', '85', '90'], score: 0.5 },
+  //   ],
+  // }
   {
-    id: 302,
+    id: 304,
     type: QuestionType.SELECT,
     category: "",
     desc: "",
-    content: "Khoang vào các số chẵn",
+    label: "",
     selects: [
-      { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
-      { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
+      { id: 3041, group: "a", label: "Khoanh vào số nhỏ nhất", options: ['72', '76', '70'], answer: '70', score: 0.5 },
+      { id: 3042, group: "b", label: "Khoanh vào số lớn nhất", options: ['82', '77', '88'], answer: '88', score: 0.5 },
     ],
   },
-  {
-    id: 303,
-    type: QuestionType.SELECT,
-    category: "",
-    desc: "",
-    content: "Khoanh vào các số chẵn",
-    selects: [
-      { id: 3031, group: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
-      { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: ['80', '85', '90'], score: 0.5 },
-    ],
-  }
 ];
 

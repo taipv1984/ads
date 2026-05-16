@@ -46,7 +46,7 @@ export interface LineElement extends BaseElement {
 export interface TextElement extends BaseElement {
   type: 'text';
   position: Point;
-  content: string;
+  label: string;
   fontSize?: number;
   color?: string;
 }
@@ -69,18 +69,17 @@ export interface QuestionValidation {
 export interface QuestionSelect {
   id: number;
   group?: string;
+  label?: string;
   options: string[];
   answer: string | string[];
   score?: number;
 }
 
-
-
 export interface Question {
   id: number;
   category?: string;
   type: QuestionType;
-  content: string;
+  label?: string;
   desc?: string;
   imagePath?: string;
   elements?: QuestionElement[];

@@ -90,9 +90,11 @@ const MatchResultItem = React.memo(({
         </View>
       </View>
 
-      <View style={styles.cardContentWrapper}>
-        <Text style={styles.cardContent}>{question.content}</Text>
-      </View>
+      {question.label && question.label !== "" && (
+        <View style={styles.cardContentWrapper}>
+          <Text style={styles.cardContent}>{question.label}</Text>
+        </View>
+      )}
 
       {renderResultContent()}
     </View>

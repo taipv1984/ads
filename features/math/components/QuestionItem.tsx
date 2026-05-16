@@ -1,4 +1,4 @@
-import { SIZE, SPACING } from '@/constants/theme';
+import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import { Question } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
@@ -10,7 +10,7 @@ import QuestionSelectView from './QuestionSelectView';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface _Props {
-  item: Question;
+  question: Question;
   index: number;
   currentIndex: number;
   userAnswers: Record<number, string>;
@@ -23,7 +23,7 @@ interface _Props {
 }
 
 const QuestionItem: React.FC<_Props> = ({
-  item,
+  question,
   index,
   currentIndex,
   userAnswers,
@@ -34,20 +34,20 @@ const QuestionItem: React.FC<_Props> = ({
   updateAnswer,
   AutoHeightImage
 }) => {
-  const { height: canvasHeight, offsetY } = getCanvasLayout(item.elements || []);
+  const { height: canvasHeight, offsetY } = getCanvasLayout(question.elements || []);
 
   const handleConnectionsChangeLocal = useCallback((id: number, conns: { from: number, to: number }[]) => {
     onConnectionsChange(id, conns);
   }, [onConnectionsChange]);
 
   const renderQuestionContent = () => {
-    switch (item.type) {
+    switch (question.type) {
       case QuestionType.FILL:
       case QuestionType.MATCH:
-        return item.elements && item.elements.length > 0 ? (
+        return question.elements && question.elements.length > 0 ? (
           <View style={[styles.canvasContainer, { height: canvasHeight }]}>
             <QuestionCanvas
-              question={item}
+              question={question}
               userInputs={userAnswers}
               connections={userConnections}
               activeInputId={index === currentIndex ? activeInputId : null}
@@ -61,9 +61,9 @@ const QuestionItem: React.FC<_Props> = ({
       case QuestionType.SELECT:
         return (
           <QuestionSelectView
-            questionSelects={item.selects || []}
+            questionSelects={question.selects || []}
             userAnswers={userAnswers}
-            onAnswerChange={(selectId, val) => updateAnswer(item.id, selectId, val)}
+            onAnswerChange={(selectId, val) => updateAnswer(question.id, selectId, val)}
             viewMode={ViewMode.EDIT}
           />
         );
@@ -79,12 +79,12 @@ const QuestionItem: React.FC<_Props> = ({
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.questionTitle}>
-        Câu {index + 1}: <Text style={styles.questionContentText}>{item.content}</Text>
+        Câu {index + 1}: {question.label && question.label != "" && <Text style={styles.questionContentText}>{question.label}</Text>}
       </Text>
 
-      {item.imagePath && (
+      {question.imagePath && (
         <View style={styles.imageWrapper}>
-          <AutoHeightImage uri={item.imagePath} />
+          <AutoHeightImage uri={question.imagePath} />
         </View>
       )}
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   questionContentText: {
     fontWeight: 'normal',
-    color: '#333',
+    color: COLOR.text,
   },
   imageWrapper: {
     alignItems: 'center',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 export default memo(QuestionItem, (prev, next) => {
   // Chỉ re-render nếu các dữ liệu thực sự thay đổi
   return (
-    prev.item.id === next.item.id &&
+    prev.question.id === next.question.id &&
     prev.currentIndex === next.currentIndex &&
     prev.activeInputId === next.activeInputId &&
     prev.userAnswers === next.userAnswers &&

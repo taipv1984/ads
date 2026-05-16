@@ -368,7 +368,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
                       >
                         <View style={{ flex: 1, justifyContent: 'center' }}>
                           <Text style={{ fontSize: fs, color: getColor(textEl.color), fontWeight: 'bold' }}>
-                            {textEl.content}
+                            {textEl.label}
                           </Text>
                         </View>
                       </View>
