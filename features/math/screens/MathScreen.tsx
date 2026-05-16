@@ -78,12 +78,6 @@ const MathScreen: React.FC = () => {
     updateAnswer(currentQuestion.id, activeInputId, newVal);
   };
 
-  const handleDelete = () => {
-    if (activeInputId === null) return;
-    const currentVal = qInputs[activeInputId] || '';
-    updateAnswer(currentQuestion.id, activeInputId, currentVal.slice(0, -1));
-  };
-
   const handleCheck = () => {
     setActiveInputId(null);
     const incomplete = questions.reduce((acc, q, idx) => {
@@ -213,7 +207,7 @@ const MathScreen: React.FC = () => {
         />
 
         {activeInputId !== null && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions) && (
-          <VirtualKeyboard onKeyPress={handleKeyPress} onDelete={handleDelete} />
+          <VirtualKeyboard onKeyPress={handleKeyPress} />
         )}
       </SafeAreaView>
 

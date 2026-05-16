@@ -1,30 +1,29 @@
+import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { COLOR, SHADOWS, SIZE } from '@/constants/theme';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
-const PADDING = 12;
-const GAP = 8;
-// We have 6 columns (5 numbers + 1 delete key column)
-// Total gaps = 5
-const KEY_WIDTH = (width - PADDING * 2 - GAP * 5) / 6;
-const KEY_HEIGHT = 56;
+const PADDING_H = 4;
+const PADDING_V = SPACING.sm;
+const GAP = SPACING.xs;
+// We have 9 columns
+const KEY_WIDTH = (width - PADDING_H * 2 - GAP * 8) / 9;
+const KEY_HEIGHT = 44;
 
 interface _Props {
   onKeyPress: (key: string) => void;
-  onDelete: () => void;
 }
 
-const VirtualKeyboard: React.FC<_Props> = ({ onKeyPress, onDelete }) => {
-  const row1 = ['0', '1', '2', '3', '4'];
-  const row2 = ['5', '6', '7', '8', '9'];
+const VirtualKeyboard: React.FC<_Props> = ({ onKeyPress }) => {
+  const row1 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const row2 = ['0', '+', '-', 'Đ', 'S', '>', '<', '=', '✓'];
 
   return (
-    <Animated.View 
-      entering={SlideInDown.duration(300)} 
-      exiting={SlideOutDown.duration(200)} 
+    <Animated.View
+      entering={SlideInDown.duration(300)}
+      exiting={SlideOutDown.duration(200)}
       style={styles.container}
     >
       <View style={styles.keysContainer}>
@@ -45,11 +44,6 @@ const VirtualKeyboard: React.FC<_Props> = ({ onKeyPress, onDelete }) => {
           ))}
         </View>
       </View>
-      
-      {/* Delete Key merged from col 6 of row 1 and row 2 */}
-      <TouchableOpacity style={styles.deleteKey} onPress={onDelete}>
-        <Text style={styles.deleteKeyText}>⌫</Text>
-      </TouchableOpacity>
     </Animated.View>
   );
 };
@@ -61,12 +55,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    backgroundColor: '#EAECEE',
-    padding: PADDING,
-    gap: GAP,
-    paddingBottom: PADDING, // Adjusted padding to balance top padding
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    backgroundColor: '#D5D8DC',
+    paddingVertical: PADDING_V,
+    paddingHorizontal: PADDING_H,
+    paddingBottom: PADDING_V,
     ...SHADOWS.medium,
     zIndex: 9999,
   },
@@ -84,26 +76,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+    borderRadius: 6,
     ...SHADOWS.small,
   },
   keyText: {
-    fontSize: SIZE.xl,
-    fontWeight: '500',
-    color: '#1A1D20',
-  },
-  deleteKey: {
-    width: KEY_WIDTH,
-    height: KEY_HEIGHT * 2 + GAP,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#D5D8DC',
-    borderRadius: 8,
-    ...SHADOWS.small,
-  },
-  deleteKeyText: {
-    fontSize: SIZE.xl,
-    color: '#1A1D20',
+    fontSize: SIZE.lg,
+    fontWeight: 'bold',
+    color: COLOR.black,
   }
 });
 
