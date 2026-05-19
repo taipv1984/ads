@@ -61,16 +61,16 @@ export interface ImageElement extends BaseElement {
 
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
-export type QuestionChild = QuestionSelect | QuestionSort;
+export type QuestionChild = QuestionChoice | QuestionSort;
 
 export interface QuestionValidation {
   id: number;
   formula: string; //'#9 + #10 === 32'
 }
 
-export interface QuestionSelect {
+export interface QuestionChoice {
   id: number;
-  type?: QuestionType.SELECT;
+  type?: QuestionType.CHOICE;
   group?: string;
   label?: string;
   options: string[];

@@ -1,9 +1,9 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
-import QuestionSelectView from '@/features/math/components/QuestionSelectView';
+import QuestionChoiceView from '@/features/math/components/QuestionChoiceView';
 import QuestionSortView from '@/features/math/components/QuestionSortView';
-import { Question, QuestionSelect, QuestionSort } from '@/services/types/question.types';
+import { Question, QuestionChoice, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -60,10 +60,10 @@ const MatchResultItem = React.memo(({
             </View>
           </>
         );
-      case QuestionType.SELECT:
+      case QuestionType.CHOICE:
         return (
-          <QuestionSelectView
-            questionSelects={(question.childs as QuestionSelect[]) || []}
+          <QuestionChoiceView
+            questionChoices={(question.childs as QuestionChoice[]) || []}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
             viewMode={ViewMode.REVIEW}

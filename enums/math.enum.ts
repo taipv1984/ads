@@ -6,7 +6,7 @@ export enum ViewMode {
 export enum QuestionType {
     FILL = 'fill',
     MATCH = 'match',
-    SELECT = 'select',
+    CHOICE = 'choice',
     SORT = 'sort',
     QUIZ = 'quiz',
     STEP = 'step',

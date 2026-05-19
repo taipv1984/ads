@@ -314,13 +314,13 @@ export const QUESTION_MOCKS: Question[] = [
   //   score: 1
   // },
 
-  //questionSelect
+  //questionChoice
   {
     id: 301,
-    type: QuestionType.SELECT,
+    type: QuestionType.CHOICE,
     category: "",
     desc: "",
-    label: "Khoanh vào số lớn nhất",
+    label: "Khoanh vào số lớn nhất (single choice)",
     childs: [
       { id: 3011, group: "a", options: ['72', '76', '70'], answer: '76', score: 0.5 },
       { id: 3012, group: "b", options: ['82', '77', '88'], answer: '88', score: 0.5 },
@@ -328,10 +328,10 @@ export const QUESTION_MOCKS: Question[] = [
   },
   {
     id: 302,
-    type: QuestionType.SELECT,
+    type: QuestionType.CHOICE,
     category: "",
     desc: "",
-    label: "Khoanh vào các số chẵn",
+    label: "Khoanh vào các số chẵn (multi choice)",
     childs: [
       { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
       { id: 3022, group: "b", options: ['82', '84', '89'], answer: '82,84', score: 0.5 },
@@ -339,7 +339,7 @@ export const QUESTION_MOCKS: Question[] = [
   },
   // {
   //   id: 303,
-  //   type: QuestionType.SELECT,
+  //   type: QuestionType.CHOICE,
   //   category: "",
   //   desc: "",
   //   label: "Khoanh vào các số chẵn",
@@ -350,7 +350,7 @@ export const QUESTION_MOCKS: Question[] = [
   // }
   // {
   //   id: 304,
-  //   type: QuestionType.SELECT,
+  //   type: QuestionType.CHOICE,
   //   category: "",
   //   desc: "",
   //   label: "",

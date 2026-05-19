@@ -10,7 +10,7 @@ import Sortable, { useItemContext } from 'react-native-sortables';
 interface _Props {
     questionSorts: QuestionSort[];
     userAnswers: Record<number, string>;
-    onAnswerChange: (selectId: number, value: string) => void;
+    onAnswerChange: (sortId: number, value: string) => void;
     viewMode?: ViewMode;
 }
 
@@ -102,8 +102,8 @@ const QuestionSortView: React.FC<_Props> = ({
         const currentVal = userAnswers[qSort.id] || qSort.options.join(',');
 
         // Find the index of the option in the current answer sequence
-        const selectedOptions = currentVal.split(',');
-        const currentIndex = selectedOptions.indexOf(option);
+        const sortOptions = currentVal.split(',');
+        const currentIndex = sortOptions.indexOf(option);
 
         // Find the index of the option in the correct answer sequence
         const correctAnswers = qSort.answer.split(',');
@@ -154,7 +154,7 @@ const QuestionSortView: React.FC<_Props> = ({
                 const isChanged = !!changedGroups[qSort.id];
 
                 return (
-                    <View key={qSort.id} style={styles.selectGroup}>
+                    <View key={qSort.id} style={styles.sortGroup}>
                         <View style={qSort.label ? styles.labelLayout : styles.row}>
                             {qSort.label ? (
                                 <View style={styles.row}>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: SPACING.md,
     },
-    selectGroup: {
+    sortGroup: {
         marginTop: SPACING.xs,
         marginBottom: SPACING.md
     },

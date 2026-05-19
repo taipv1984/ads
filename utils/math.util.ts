@@ -241,7 +241,7 @@ export const checkQuestionCompletion = (
     }
 
     // Phải chọn ít nhất 1 option cho mỗi group được chọn
-    case QuestionType.SELECT: {
+    case QuestionType.CHOICE: {
       const childs = question.childs || [];
       if (childs.length === 0) return true;
       return childs.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
@@ -398,9 +398,9 @@ export const calcQuestionFillScore = (
 };
 
 /**
- * Tính điểm cho câu hỏi dạng chọn (select)
+ * Tính điểm cho câu hỏi dạng chọn (choice)
  */
-export const calcQuestionSelectScore = (
+export const calcQuestionChoiceScore = (
   question: Question,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
@@ -488,8 +488,8 @@ export const calcQuestionScore = (
       isCorrect = finalScore === questionScore;
       break;
     }
-    case QuestionType.SELECT: {
-      const result = calcQuestionSelectScore(question, userInputs);
+    case QuestionType.CHOICE: {
+      const result = calcQuestionChoiceScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;
