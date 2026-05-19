@@ -24,7 +24,7 @@ const QuestionSelectView: React.FC<_Props> = ({
     if (isReview) return;
 
     const currentVal = userAnswers[qSelect.id] || '';
-    const isMulti = Array.isArray(qSelect.answer);
+    const isMulti = qSelect.answer.includes(',');
 
     if (isMulti) {
       let selectedOptions = currentVal ? currentVal.split(',') : [];
@@ -44,7 +44,7 @@ const QuestionSelectView: React.FC<_Props> = ({
     const selectedOptions = currentVal ? currentVal.split(',') : [];
     const isSelected = selectedOptions.includes(option);
 
-    const correctAnswers = Array.isArray(qSelect.answer) ? qSelect.answer : [qSelect.answer];
+    const correctAnswers = qSelect.answer.split(',');
     const isCorrect = correctAnswers.includes(option);
 
     const isLong = option.length > 2;
@@ -95,7 +95,7 @@ const QuestionSelectView: React.FC<_Props> = ({
 
     const currentVal = userAnswers[qSelect.id] || '';
     const userSelections = currentVal ? currentVal.split(',') : [];
-    const correctAnswers = Array.isArray(qSelect.answer) ? qSelect.answer : [qSelect.answer];
+    const correctAnswers = qSelect.answer.split(',');
 
     const isWrong = userSelections.some(val => !correctAnswers.includes(val));
     const isMissing = correctAnswers.some(ans => !userSelections.includes(ans));
@@ -106,7 +106,7 @@ const QuestionSelectView: React.FC<_Props> = ({
       </Text>
     );
 
-    if (Array.isArray(qSelect.answer)) { // ValueType.MULTI
+    if (qSelect.answer.includes(',')) { // ValueType.MULTI
       const missing = correctAnswers.filter(ans => !userSelections.includes(ans));
       const correctlySelected = correctAnswers.filter(ans => userSelections.includes(ans));
       const wrongCount = userSelections.filter(val => !correctAnswers.includes(val)).length;

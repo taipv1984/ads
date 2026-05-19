@@ -334,7 +334,7 @@ export const QUESTION_MOCKS: Question[] = [
     label: "Khoanh vào các số chẵn",
     childs: [
       { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
-      { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
+      { id: 3022, group: "b", options: ['82', '84', '89'], answer: '82,84', score: 0.5 },
     ],
   },
   // {
@@ -345,7 +345,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   label: "Khoanh vào các số chẵn",
   //   childs: [
   //     { id: 3031, group: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
-  //     { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: ['80', '85', '90'], score: 0.5 },
+  //     { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: '80,85,90', score: 0.5 },
   //   ],
   // }
   // {

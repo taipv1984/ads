@@ -106,7 +106,7 @@ const QuestionSortView: React.FC<_Props> = ({
         const currentIndex = selectedOptions.indexOf(option);
 
         // Find the index of the option in the correct answer sequence
-        const correctAnswers = Array.isArray(qSort.answer) ? qSort.answer : qSort.answer.split(',');
+        const correctAnswers = qSort.answer.split(',');
         const correctIndex = correctAnswers.indexOf(option);
 
         const isOptionCorrect = currentIndex === correctIndex;
@@ -138,7 +138,7 @@ const QuestionSortView: React.FC<_Props> = ({
 
         return (
             <Text style={styles.explanationText}>
-                Đáp án đúng là: <Text style={styles.boldText}>{Array.isArray(qSort.answer) ? qSort.answer.join(', ') : qSort.answer.split(',').join(', ')}</Text>
+                Đáp án đúng là: <Text style={styles.boldText}>{qSort.answer.split(',').join(', ')}</Text>
             </Text>
         );
     };
@@ -183,14 +183,12 @@ const QuestionSortView: React.FC<_Props> = ({
                                     onDragEnd={({ order }) => {
                                         const newOptions = order(items);
                                         const isChangedOrder = newOptions.join(',') !== items.join(',');
-
                                         if (isChangedOrder) {
                                             setChangedGroups(prev => ({
                                                 ...prev,
                                                 [qSort.id]: true
                                             }));
                                         }
-
                                         onAnswerChange(qSort.id, newOptions.join(','));
                                     }}
                                 >

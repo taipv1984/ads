@@ -74,7 +74,7 @@ export interface QuestionSelect {
   group?: string;
   label?: string;
   options: string[];
-  answer: string | string[];
+  answer: string;   //"123" for single choice or "1,2,3" for multi choice
   score?: number;
 }
 
@@ -84,7 +84,7 @@ export interface QuestionSort {
   group?: string;
   label?: string;
   options: string[];
-  answer: string;
+  answer: string;   //"1,2,3"
   score?: number;
 }
 

@@ -410,7 +410,7 @@ export const calcQuestionSelectScore = (
 
   childs.forEach((group) => {
     const userVal = userInputs[group.id] || '';
-    const correctAnswers = Array.isArray(group.answer) ? group.answer : [group.answer];
+    const correctAnswers = group.answer.split(',');
     const userAnswers = userVal ? userVal.split(',') : [];
 
     let correctCount = 0;
@@ -454,9 +454,7 @@ export const calcQuestionSortScore = (
 
   childs.forEach((group) => {
     const userVal = userInputs[group.id] || '';
-    const correctAnswersStr = Array.isArray(group.answer) ? group.answer.join(',') : group.answer;
-
-    if (userVal === correctAnswersStr) {
+    if (userVal === group.answer) {
       finalScore += group.score || 0;
     } else {
       isCorrect = false;
