@@ -7,7 +7,7 @@ export enum QuestionType {
     FILL = 'fill',
     MATCH = 'match',
     SELECT = 'select',
-    SOFT = 'soft',
+    SORT = 'sort',
     QUIZ = 'quiz',
     STEP = 'step',
 }

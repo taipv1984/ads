@@ -16,6 +16,7 @@ export const COLOR = {
   bgShape: '#E6F2FF',
   star: '#FFD700',
   focus: '#FF814A',
+  bgFocus: '#FFF0E8',
 
   // Nhóm màu trung tính (Neutral Colors)
   background: '#FFF9F1',

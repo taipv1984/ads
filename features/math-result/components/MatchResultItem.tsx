@@ -2,7 +2,8 @@ import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
 import QuestionSelectView from '@/features/math/components/QuestionSelectView';
-import { Question } from '@/services/types/question.types';
+import QuestionSortView from '@/features/math/components/QuestionSortView';
+import { Question, QuestionSelect, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -62,7 +63,16 @@ const MatchResultItem = React.memo(({
       case QuestionType.SELECT:
         return (
           <QuestionSelectView
-            questionSelects={question.selects || []}
+            questionSelects={(question.childs as QuestionSelect[]) || []}
+            userAnswers={userAnswers}
+            onAnswerChange={() => { }}
+            viewMode={ViewMode.REVIEW}
+          />
+        );
+      case QuestionType.SORT:
+        return (
+          <QuestionSortView
+            questionSorts={(question.childs as QuestionSort[]) || []}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
             viewMode={ViewMode.REVIEW}
@@ -79,7 +89,7 @@ const MatchResultItem = React.memo(({
         <View style={styles.cardTitleContainer}>
           <View style={styles.questionLabel}>
             <Text style={[styles.questionLabelText, { color: result.isCorrect ? COLOR.success : COLOR.error }]}>
-              Câu {index + 1}:
+              Câu {index + 1}
             </Text>
           </View>
           {result.finalScore > 0 && (

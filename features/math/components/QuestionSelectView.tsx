@@ -1,6 +1,7 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
 import { QuestionSelect } from '@/services/types/question.types';
+import { renderFormattedText } from '@/utils/render.util';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -19,11 +20,11 @@ const QuestionSelectView: React.FC<_Props> = ({
 }) => {
   const isReview = viewMode === ViewMode.REVIEW;
 
-  const handleToggleOption = (select: QuestionSelect, option: string) => {
+  const handleToggleOption = (qSelect: QuestionSelect, option: string) => {
     if (isReview) return;
 
-    const currentVal = userAnswers[select.id] || '';
-    const isMulti = Array.isArray(select.answer);
+    const currentVal = userAnswers[qSelect.id] || '';
+    const isMulti = Array.isArray(qSelect.answer);
 
     if (isMulti) {
       let selectedOptions = currentVal ? currentVal.split(',') : [];
@@ -32,18 +33,18 @@ const QuestionSelectView: React.FC<_Props> = ({
       } else {
         selectedOptions.push(option);
       }
-      onAnswerChange(select.id, selectedOptions.join(','));
+      onAnswerChange(qSelect.id, selectedOptions.join(','));
     } else {
-      onAnswerChange(select.id, option);
+      onAnswerChange(qSelect.id, option);
     }
   };
 
-  const renderOption = (questionSelect: QuestionSelect, option: string) => {
-    const currentVal = userAnswers[questionSelect.id] || '';
+  const renderOption = (qSelect: QuestionSelect, option: string) => {
+    const currentVal = userAnswers[qSelect.id] || '';
     const selectedOptions = currentVal ? currentVal.split(',') : [];
     const isSelected = selectedOptions.includes(option);
 
-    const correctAnswers = Array.isArray(questionSelect.answer) ? questionSelect.answer : [questionSelect.answer];
+    const correctAnswers = Array.isArray(qSelect.answer) ? qSelect.answer : [qSelect.answer];
     const isCorrect = correctAnswers.includes(option);
 
     const isLong = option.length > 2;
@@ -74,7 +75,7 @@ const QuestionSelectView: React.FC<_Props> = ({
         key={option}
         activeOpacity={0.7}
         disabled={isReview}
-        onPress={() => handleToggleOption(questionSelect, option)}
+        onPress={() => handleToggleOption(qSelect, option)}
         style={[
           styles.optionContainer,
           isLong ? styles.rectOption : styles.circleOption,
@@ -89,12 +90,12 @@ const QuestionSelectView: React.FC<_Props> = ({
     );
   };
 
-  const renderExplanation = (questionSelect: QuestionSelect) => {
+  const renderExplanation = (qSelect: QuestionSelect) => {
     if (!isReview) return null;
 
-    const currentVal = userAnswers[questionSelect.id] || '';
+    const currentVal = userAnswers[qSelect.id] || '';
     const userSelections = currentVal ? currentVal.split(',') : [];
-    const correctAnswers = Array.isArray(questionSelect.answer) ? questionSelect.answer : [questionSelect.answer];
+    const correctAnswers = Array.isArray(qSelect.answer) ? qSelect.answer : [qSelect.answer];
 
     const isWrong = userSelections.some(val => !correctAnswers.includes(val));
     const isMissing = correctAnswers.some(ans => !userSelections.includes(ans));
@@ -105,7 +106,7 @@ const QuestionSelectView: React.FC<_Props> = ({
       </Text>
     );
 
-    if (Array.isArray(questionSelect.answer)) { // ValueType.MULTI
+    if (Array.isArray(qSelect.answer)) { // ValueType.MULTI
       const missing = correctAnswers.filter(ans => !userSelections.includes(ans));
       const correctlySelected = correctAnswers.filter(ans => userSelections.includes(ans));
       const wrongCount = userSelections.filter(val => !correctAnswers.includes(val)).length;
@@ -125,7 +126,7 @@ const QuestionSelectView: React.FC<_Props> = ({
     } else { // ValueType.SINGLE
       return (
         <Text style={styles.explanationText}>
-          Đáp án đúng là: <Text style={styles.boldText}>{questionSelect.answer}</Text>
+          Đáp án đúng là: <Text style={styles.boldText}>{qSelect.answer}</Text>
         </Text>
       );
     }
@@ -133,34 +134,34 @@ const QuestionSelectView: React.FC<_Props> = ({
 
   return (
     <View style={styles.container}>
-      {questionSelects.map((questionSelect) => {
-        const isGroupShown = questionSelects.length > 1 && !!questionSelect.group;
-        const pullLeft = !!questionSelect.label || !isGroupShown;
+      {questionSelects.map((qSelect) => {
+        const isGroupShown = questionSelects.length > 1 && !!qSelect.group;
+        const pullLeft = !!qSelect.label || !isGroupShown;
 
         return (
-          <View key={questionSelect.id} style={styles.selectGroup}>
-            <View style={questionSelect.label ? styles.labelLayout : styles.row}>
-              {questionSelect.label ? (
+          <View key={qSelect.id} style={styles.selectGroup}>
+            <View style={qSelect.label ? styles.labelLayout : styles.row}>
+              {qSelect.label ? (
                 <View style={styles.row}>
                   {isGroupShown ? (
-                    <Text style={styles.groupText}>{questionSelect.group}) </Text>
+                    <Text style={styles.groupText}>{qSelect.group}) </Text>
                   ) : null}
-                  <Text style={styles.labelText}>{questionSelect.label}</Text>
+                  <Text style={styles.labelText}>{renderFormattedText(qSelect.label)}</Text>
                 </View>
               ) : (
                 isGroupShown ? (
-                  <Text style={styles.groupText}>{questionSelect.group}) </Text>
+                  <Text style={styles.groupText}>{qSelect.group}) </Text>
                 ) : null
               )}
               <View style={[
-                styles.optionsList, 
-                questionSelect.label ? styles.optionsListWithLabel : null,
-                pullLeft && !questionSelect.label ? styles.optionsListPullLeft : null
+                styles.optionsList,
+                qSelect.label ? styles.optionsListWithLabel : null,
+                pullLeft && !qSelect.label ? styles.optionsListPullLeft : null
               ]}>
-                {questionSelect.options.map(opt => renderOption(questionSelect, opt))}
+                {qSelect.options.map(opt => renderOption(qSelect, opt))}
               </View>
             </View>
-            {renderExplanation(questionSelect)}
+            {renderExplanation(qSelect)}
           </View>
         );
       })}

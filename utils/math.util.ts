@@ -216,7 +216,7 @@ export const getMatchCorrectTotal = (elements: QuestionElement[] = []): number =
 };
 
 /**
- * Kiểm tra xem một câu hỏi đã được hoàn thành hay chưa
+ * ***Kiểm tra xem một câu hỏi đã được hoàn thành hay chưa
  */
 export const checkQuestionCompletion = (
   question: Question,
@@ -226,8 +226,8 @@ export const checkQuestionCompletion = (
   const elements = question.elements || [];
 
   switch (question.type) {
+    // Phải điền tất cả các ô input
     case QuestionType.FILL: {
-      // Phải điền tất cả các ô input
       const inputShapes = elements.filter(
         (el) => el.type === 'shape' && (el as ShapeElement).isInput
       );
@@ -235,16 +235,27 @@ export const checkQuestionCompletion = (
       return inputShapes.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
     }
 
+    // Phải có ít nhất 1 kết nối
     case QuestionType.MATCH: {
-      // Phải có ít nhất 1 kết nối
       return userConnections.length > 0;
     }
 
+    // Phải chọn ít nhất 1 option cho mỗi group được chọn
     case QuestionType.SELECT: {
-      // Phải chọn ít nhất 1 option cho mỗi group
-      const selects = question.selects || [];
-      if (selects.length === 0) return true;
-      return selects.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
+      const childs = question.childs || [];
+      if (childs.length === 0) return true;
+      return childs.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
+    }
+
+    // Phải thay đổi vị trí các số cho mỗi group (isGroupChange=true)
+    case QuestionType.SORT: {
+      const childs = question.childs || [];
+      if (childs.length === 0) return true;
+      return childs.every((s) => {
+        const currentVal = userInputs[s.id];
+        const originalVal = s.options ? s.options.join(',') : '';
+        return currentVal && currentVal !== originalVal;
+      });
     }
 
     // Mặc định các loại khác có thể luôn là true hoặc xử lý riêng
@@ -393,11 +404,11 @@ export const calcQuestionSelectScore = (
   question: Question,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
-  const questionSelects = question.selects || [];
+  const childs = question.childs || [];
   let finalScore = 0;
   let isCorrect = true;
 
-  questionSelects.forEach((group) => {
+  childs.forEach((group) => {
     const userVal = userInputs[group.id] || '';
     const correctAnswers = Array.isArray(group.answer) ? group.answer : [group.answer];
     const userAnswers = userVal ? userVal.split(',') : [];
@@ -413,7 +424,7 @@ export const calcQuestionSelectScore = (
       }
     });
 
-    // Điểm cho từng group trong selects
+    // Điểm cho từng group trong childs
     const groupScore = calcFinalScore(
       group.score || 0,
       correctAnswers.length,
@@ -433,8 +444,30 @@ export const calcQuestionSelectScore = (
   return { isCorrect, finalScore };
 };
 
+export const calcQuestionSortScore = (
+  question: Question,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  const childs = question.childs || [];
+  let finalScore = 0;
+  let isCorrect = true;
+
+  childs.forEach((group) => {
+    const userVal = userInputs[group.id] || '';
+    const correctAnswersStr = Array.isArray(group.answer) ? group.answer.join(',') : group.answer;
+
+    if (userVal === correctAnswersStr) {
+      finalScore += group.score || 0;
+    } else {
+      isCorrect = false;
+    }
+  });
+
+  return { isCorrect, finalScore };
+};
+
 /**
- * Tính toán điểm số cho một câu hỏi dựa trên loại câu hỏi
+ * ***Tính toán điểm số cho một câu hỏi dựa trên loại câu hỏi
  */
 export const calcQuestionScore = (
   question: Question,
@@ -451,21 +484,24 @@ export const calcQuestionScore = (
       finalScore = result.finalScore;
       break;
     }
-
     case QuestionType.MATCH: {
       finalScore = calcQuestionMatchScore(question, userConnections);
       const questionScore = question.score !== undefined ? question.score : 1;
       isCorrect = finalScore === questionScore;
       break;
     }
-
     case QuestionType.SELECT: {
       const result = calcQuestionSelectScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;
     }
-
+    case QuestionType.SORT: {
+      const result = calcQuestionSortScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
+      break;
+    }
     default:
       break;
   }

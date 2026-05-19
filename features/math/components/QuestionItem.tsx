@@ -1,11 +1,12 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
-import { Question } from '@/services/types/question.types';
+import { Question, QuestionSelect, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionSelectView from './QuestionSelectView';
+import QuestionSortView from './QuestionSortView';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -61,7 +62,16 @@ const QuestionItem: React.FC<_Props> = ({
       case QuestionType.SELECT:
         return (
           <QuestionSelectView
-            questionSelects={question.selects || []}
+            questionSelects={(question.childs as QuestionSelect[]) || []}
+            userAnswers={userAnswers}
+            onAnswerChange={(selectId, val) => updateAnswer(question.id, selectId, val)}
+            viewMode={ViewMode.EDIT}
+          />
+        );
+      case QuestionType.SORT:
+        return (
+          <QuestionSortView
+            questionSorts={(question.childs as QuestionSort[]) || []}
             userAnswers={userAnswers}
             onAnswerChange={(selectId, val) => updateAnswer(question.id, selectId, val)}
             viewMode={ViewMode.EDIT}

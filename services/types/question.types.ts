@@ -61,6 +61,8 @@ export interface ImageElement extends BaseElement {
 
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
+export type QuestionChild = QuestionSelect | QuestionSort;
+
 export interface QuestionValidation {
   id: number;
   formula: string; //'#9 + #10 === 32'
@@ -68,10 +70,21 @@ export interface QuestionValidation {
 
 export interface QuestionSelect {
   id: number;
+  type?: QuestionType.SELECT;
   group?: string;
   label?: string;
   options: string[];
   answer: string | string[];
+  score?: number;
+}
+
+export interface QuestionSort {
+  id: number;
+  type?: QuestionType.SORT;
+  group?: string;
+  label?: string;
+  options: string[];
+  answer: string;
   score?: number;
 }
 
@@ -83,8 +96,8 @@ export interface Question {
   desc?: string;
   imagePath?: string;
   elements?: QuestionElement[];
+  childs?: QuestionChild[];
   validations?: QuestionValidation[];
-  selects?: QuestionSelect[];
   inputLength?: number;
   score?: number;
 }

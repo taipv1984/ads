@@ -32,7 +32,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_1.jpg",
-  //   content: "Viết số thích hợp vào ô trống (theo mẫu).",
+  //   label: "Viết số thích hợp vào ô trống (theo mẫu).",
   //   inputLength: 2,
   //   elements: [
   //     { id: 11, type: "shape", shapeType: "circle", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "46", textSize: 50 },
@@ -51,11 +51,11 @@ export const QUESTION_MOCKS: Question[] = [
   //   type: QuestionType.FILL,
   //   category: "",
   //   desc: "viet_so_thich_hop_2.jpg",
-  //   content: "Đúng ghi Đ, sai ghi S.",
+  //   label: "Đúng ghi Đ, sai ghi S.",
   //   // imagePath: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
   //   inputLength: 1,
   //   elements: [
-  //     { id: 16, type: "text", position: { x: 200, y: 410 }, content: "a) Ba mươi tư viết là 34.", fontSize: 46 },
+  //     { id: 16, type: "text", position: { x: 200, y: 410 }, label: "a) Ba mươi tư viết là 34.", fontSize: 46 },
   //     { id: 17, type: "shape", shapeType: "square", position: { x: 800, y: 420 }, size: 100, isInput: true, value: "Đ", bgColor: "white", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' },
   //   ],
   //   validations: [],
@@ -66,10 +66,10 @@ export const QUESTION_MOCKS: Question[] = [
   //   type: QuestionType.FILL,
   //   category: "",
   //   desc: "viet_so_thich_hop_2.jpg",
-  //   content: "Đúng ghi Đ, sai ghi S.",
+  //   label: "Đúng ghi Đ, sai ghi S.",
   //   inputLength: 1,
   //   elements: [
-  //     { id: 18, type: "text", position: { x: 180, y: 83 }, content: "b) Ba mươi tư viết là 304.", fontSize: 46 },
+  //     { id: 18, type: "text", position: { x: 180, y: 83 }, label: "b) Ba mươi tư viết là 304.", fontSize: 46 },
   //     { id: 19, type: "shape", shapeType: "square", position: { x: 800, y: 110 }, size: 100, isInput: true, value: "S", bgColor: "white", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' }
   //   ],
   //   validations: [],
@@ -80,7 +80,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_3.jpg",
-  //   content: "Viết số thích hợp vào ô trống.",
+  //   label: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     { id: 20, type: "line", lineType: "curve", start: { x: 150, y: 360 }, end: { x: 850, y: 360 }, controlPoints: [{ x: 350, y: 60 }, { x: 650, y: 660 }], strokeWidth: 6 },
@@ -99,7 +99,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
-  //   content: "Viết số thích hợp vào ô trống.",
+  //   label: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     { id: 27, type: "shape", shapeType: "diamond", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "12", textSize: 44 },
@@ -116,7 +116,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
-  //   content: "Viết số thích hợp vào ô trống.",
+  //   label: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     { id: 32, type: "shape", shapeType: "triangle", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "40", textSize: 44 },
@@ -133,10 +133,10 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_5.jpg",
-  //   content: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất (theo mẫu)",
+  //   label: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất (theo mẫu)",
   //   inputLength: 1,
   //   elements: [
-  //     { id: 37, type: "text", position: { x: 100, y: 80 }, content: "Mẫu:", fontSize: 40 },
+  //     { id: 37, type: "text", position: { x: 100, y: 80 }, label: "Mẫu:", fontSize: 40 },
   //     { id: 38, type: "shape", shapeType: "square", position: { x: 200, y: 160 }, size: 100, isInput: false, value: "2", borderWidth: 5, textSize: 50, zIndex: 1 },
   //     { id: 39, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 200, y: 185 }, width: 400, height: 150, zIndex: 0 },
 
@@ -154,7 +154,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_5.jpg",
-  //   content: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
+  //   label: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
   //   inputLength: 1,
   //   elements: [
   //     { id: 44, type: "shape", shapeType: "square", position: { x: 200, y: 110 }, size: 100, isInput: true, value: "2", bgColor: "white", borderWidth: 5, textSize: 50 },
@@ -174,7 +174,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "ket_hop_id1_va_id2.jpg",
-  //   content: "Viết số thích hợp vào ô trống.",
+  //   label: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     // Bên trái
@@ -201,27 +201,27 @@ export const QUESTION_MOCKS: Question[] = [
   //   id: 12,
   //   category: "",
   //   desc: "viet_so_thich_hop_8.jpg",
-  //   content: "#8 Viết số thích hợp vào ô trống.",
+  //   label: "#8 Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     // Hàng a)
-  //     { id: 301, type: "text", position: { x: 80, y: 122 }, content: "a)", fontSize: 44 },
+  //     { id: 301, type: "text", position: { x: 80, y: 122 }, label: "a)", fontSize: 44 },
   //     { id: 302, type: "shape", shapeType: "square", position: { x: 220, y: 122 }, size: 100, isInput: false, value: "47", borderWidth: 5, textSize: 44 },
   //     { id: 303, type: "line", lineType: "arrow", start: { x: 270, y: 122 }, end: { x: 470, y: 122 }, strokeWidth: 5 },
-  //     { id: 304, type: "text", position: { x: 320, y: 82 }, content: "– 3", fontSize: 44 },
+  //     { id: 304, type: "text", position: { x: 320, y: 82 }, label: "– 3", fontSize: 44 },
   //     { id: 305, type: "shape", shapeType: "circle", position: { x: 530, y: 132 }, size: 120, isInput: true, value: "44", bgColor: "white", borderWidth: 5, textSize: 44 },
   //     { id: 306, type: "line", lineType: "arrow", start: { x: 590, y: 122 }, end: { x: 820, y: 122 }, strokeWidth: 5 },
-  //     { id: 307, type: "text", position: { x: 650, y: 82 }, content: "– 4", fontSize: 44 },
+  //     { id: 307, type: "text", position: { x: 650, y: 82 }, label: "– 4", fontSize: 44 },
   //     { id: 308, type: "shape", shapeType: "triangle", position: { x: 850, y: 132 }, size: 120, isInput: true, value: "40", bgColor: "white", borderWidth: 5, textSize: 44 },
 
   //     // Hàng b)
-  //     { id: 309, type: "text", position: { x: 80, y: 422 }, content: "b)", fontSize: 44 },
+  //     { id: 309, type: "text", position: { x: 80, y: 422 }, label: "b)", fontSize: 44 },
   //     { id: 310, type: "shape", shapeType: "square", position: { x: 220, y: 422 }, size: 100, isInput: false, value: "82", borderWidth: 5, textSize: 44 },
   //     { id: 311, type: "line", lineType: "arrow", start: { x: 280, y: 422 }, end: { x: 450, y: 422 }, strokeWidth: 5 },
-  //     { id: 312, type: "text", position: { x: 360, y: 382 }, content: "+ 7", fontSize: 44 },
+  //     { id: 312, type: "text", position: { x: 360, y: 382 }, label: "+ 7", fontSize: 44 },
   //     { id: 313, type: "shape", shapeType: "triangle", position: { x: 530, y: 432 }, size: 120, isInput: true, value: "89", bgColor: "white", borderWidth: 5, textSize: 44 },
   //     { id: 314, type: "line", lineType: "arrow", start: { x: 590, y: 422 }, end: { x: 770, y: 422 }, strokeWidth: 5 },
-  //     { id: 315, type: "text", position: { x: 680, y: 382 }, content: "– 5", fontSize: 44 },
+  //     { id: 315, type: "text", position: { x: 680, y: 382 }, label: "– 5", fontSize: 44 },
   //     { id: 316, type: "shape", shapeType: "circle", position: { x: 850, y: 432 }, size: 120, isInput: true, value: "84", bgColor: "white", borderWidth: 5, textSize: 44 },
   //   ],
   //   validations: [],
@@ -232,11 +232,11 @@ export const QUESTION_MOCKS: Question[] = [
   //   category: "",
   //   type: QuestionType.FILL,
   //   desc: "viet_so_thich_hop_4.jpg",
-  //   content: "#4 Viết số thích hợp vào ô trống.",
+  //   label: "#4 Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     // Hàng a) Diamond (12, 14, 16, 18, 20, 22)
-  //     { id: 401, type: "text", position: { x: 50, y: 80 }, content: "a)", fontSize: 40 },
+  //     { id: 401, type: "text", position: { x: 50, y: 80 }, label: "a)", fontSize: 40 },
   //     { id: 402, type: "shape", shapeType: "diamond", position: { x: 150, y: 110 }, size: 100, isInput: false, value: "12", textSize: 40 },
   //     { id: 403, type: "shape", shapeType: "diamond", position: { x: 300, y: 110 }, size: 100, isInput: false, value: "14", textSize: 40 },
   //     { id: 404, type: "shape", shapeType: "diamond", position: { x: 450, y: 110 }, size: 100, isInput: false, value: "16", textSize: 40 },
@@ -245,7 +245,7 @@ export const QUESTION_MOCKS: Question[] = [
   //     { id: 407, type: "shape", shapeType: "diamond", position: { x: 900, y: 110 }, size: 100, isInput: true, value: "22", bgColor: "white", borderWidth: 3, textSize: 40 },
 
   //     // Hàng b) Circle (21, 23, 25, 27, 29, 31)
-  //     { id: 408, type: "text", position: { x: 50, y: 280 }, content: "b)", fontSize: 40 },
+  //     { id: 408, type: "text", position: { x: 50, y: 280 }, label: "b)", fontSize: 40 },
   //     { id: 409, type: "shape", shapeType: "circle", position: { x: 150, y: 310 }, size: 100, isInput: false, value: "21", textSize: 40 },
   //     { id: 410, type: "shape", shapeType: "circle", position: { x: 300, y: 310 }, size: 100, isInput: false, value: "23", textSize: 40 },
   //     { id: 411, type: "shape", shapeType: "circle", position: { x: 450, y: 310 }, size: 100, isInput: true, value: "25", bgColor: "white", borderWidth: 3, textSize: 40 },
@@ -254,7 +254,7 @@ export const QUESTION_MOCKS: Question[] = [
   //     { id: 414, type: "shape", shapeType: "circle", position: { x: 900, y: 310 }, size: 100, isInput: true, value: "31", bgColor: "white", borderWidth: 3, textSize: 40 },
 
   //     // Hàng c) Square (50, 55, 60, 65, 70, 75)
-  //     { id: 415, type: "text", position: { x: 50, y: 480 }, content: "c)", fontSize: 40 },
+  //     { id: 415, type: "text", position: { x: 50, y: 480 }, label: "c)", fontSize: 40 },
   //     { id: 416, type: "shape", shapeType: "square", position: { x: 150, y: 510 }, size: 100, isInput: false, value: "50", textSize: 40 },
   //     { id: 417, type: "shape", shapeType: "square", position: { x: 300, y: 510 }, size: 100, isInput: false, value: "55", textSize: 40 },
   //     { id: 418, type: "shape", shapeType: "square", position: { x: 450, y: 510 }, size: 100, isInput: false, value: "60", textSize: 40 },
@@ -263,7 +263,7 @@ export const QUESTION_MOCKS: Question[] = [
   //     { id: 421, type: "shape", shapeType: "square", position: { x: 900, y: 510 }, size: 100, isInput: true, value: "75", bgColor: "white", borderWidth: 3, textSize: 40 },
 
   //     // Hàng d) Triangle (40, 50, 60, 70, 80, 90)
-  //     { id: 422, type: "text", position: { x: 50, y: 680 }, content: "d)", fontSize: 40 },
+  //     { id: 422, type: "text", position: { x: 50, y: 680 }, label: "d)", fontSize: 40 },
   //     { id: 423, type: "shape", shapeType: "triangle", position: { x: 150, y: 710 }, size: 100, isInput: false, value: "40", textSize: 40 },
   //     { id: 424, type: "shape", shapeType: "triangle", position: { x: 300, y: 710 }, size: 100, isInput: false, value: "50", textSize: 40 },
   //     { id: 425, type: "shape", shapeType: "triangle", position: { x: 450, y: 710 }, size: 100, isInput: true, value: "60", bgColor: "white", borderWidth: 3, textSize: 40 },
@@ -297,7 +297,7 @@ export const QUESTION_MOCKS: Question[] = [
   //   type: QuestionType.MATCH,
   //   category: "",
   //   desc: "",
-  //   content: "Nối các hình có cùng số lượng hoặc giá trị. multi",
+  //   label: "Nối các hình có cùng số lượng hoặc giá trị. multi",
   //   elements: [
   //     //top
   //     { id: 1511, type: "shape", shapeType: "circle", position: { x: 200, y: 200 }, size: 120, isAnchor: true, value: "6 - 2", textSize: 40, borderWidth: 5, group: "top" },
@@ -320,43 +320,66 @@ export const QUESTION_MOCKS: Question[] = [
     type: QuestionType.SELECT,
     category: "",
     desc: "",
-    label: "Khoang vào số lớn nhất",
-    selects: [
+    label: "Khoanh vào số lớn nhất",
+    childs: [
       { id: 3011, group: "a", options: ['72', '76', '70'], answer: '76', score: 0.5 },
       { id: 3012, group: "b", options: ['82', '77', '88'], answer: '88', score: 0.5 },
     ],
   },
-  // {
-  //   id: 302,
-  //   type: QuestionType.SELECT,
-  //   category: "",
-  //   desc: "",
-  //   content: "Khoang vào các số chẵn",
-  //   selects: [
-  //     { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
-  //     { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
-  //   ],
-  // },
+  {
+    id: 302,
+    type: QuestionType.SELECT,
+    category: "",
+    desc: "",
+    label: "Khoanh vào các số chẵn",
+    childs: [
+      { id: 3021, group: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
+      { id: 3022, group: "b", options: ['82', '84', '89'], answer: ['82', '84'], score: 0.5 },
+    ],
+  },
   // {
   //   id: 303,
   //   type: QuestionType.SELECT,
   //   category: "",
   //   desc: "",
-  //   content: "Khoanh vào các số chẵn",
-  //   selects: [
+  //   label: "Khoanh vào các số chẵn",
+  //   childs: [
   //     { id: 3031, group: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
   //     { id: 3032, group: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: ['80', '85', '90'], score: 0.5 },
   //   ],
   // }
+  // {
+  //   id: 304,
+  //   type: QuestionType.SELECT,
+  //   category: "",
+  //   desc: "",
+  //   label: "",
+  //   childs: [
+  //     { id: 3041, group: "a", label: "Khoanh vào số nhỏ nhất", options: ['72', '76', '70'], answer: '70', score: 0.5 },
+  //   ],
+  // },
+
+  //questionSort
   {
-    id: 304,
-    type: QuestionType.SELECT,
+    id: 401,
+    type: QuestionType.SORT,
     category: "",
     desc: "",
-    label: "",
-    selects: [
-      { id: 3041, group: "a", label: "Khoanh vào số nhỏ nhất", options: ['72', '76', '70'], answer: '70', score: 0.5 },
-      { id: 3042, group: "b", label: "Khoanh vào số lớn nhất", options: ['82', '77', '88'], answer: '88', score: 0.5 },
+    label: "Sắp xếp các số sau theo thứ tự tăng dần",
+    childs: [
+      { id: 4011, group: "a", options: ['72', '76', '70'], answer: '70,72,76', score: 0.5 },
+      { id: 4012, group: "b", options: ['82', '77', '88'], answer: '77,82,88', score: 0.5 },
+    ],
+  },
+  {
+    id: 402,
+    type: QuestionType.SORT,
+    category: "",
+    desc: "",
+    // label: "Sắp xếp các số sau theo thứ tự tăng dần",
+    childs: [
+      { id: 4021, group: "a", label: "Viết các số **72**, **76**, **70** theo thứ tự từ lớn đến bé", options: ['72', '76', '70'], answer: '70,72,76', score: 0.5 },
+      { id: 4022, group: "b", label: "Viết các số **82**, **77**, **88** theo thứ tự từ lớn đến bé", options: ['82', '77', '88'], answer: '77,82,88', score: 0.5 },
     ],
   },
 ];
