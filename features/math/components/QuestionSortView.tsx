@@ -1,6 +1,6 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
-import { QuestionSort } from '@/services/types/question.types';
+import { QuestionSortGroup, QuestionSort } from '@/services/types/question.types';
 import { renderFormattedText } from '@/utils/render.util';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -8,9 +8,9 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import Sortable, { useItemContext } from 'react-native-sortables';
 
 interface _Props {
-    questionSorts: QuestionSort[];
+    questionSort: QuestionSort;
     userAnswers: Record<number, string>;
-    onAnswerChange: (sortId: number, value: string) => void;
+    onAnswerChange: (groupIndex: number, value: string) => void;
     viewMode?: ViewMode;
 }
 
@@ -47,31 +47,20 @@ const SortableItem: React.FC<SortableItemProps> = ({ option, isReview, isOptionC
             bgColor = isGroupChanged ? COLOR.bgFocus : COLOR.grayLight;
         }
 
-        return {
-            borderColor,
-            borderWidth,
-            backgroundColor: bgColor,
-        };
+        return { borderColor, borderWidth, backgroundColor: bgColor };
     });
 
     return (
-        <Animated.View
-            style={[
-                styles.optionContainer,
-                isLong ? styles.rectOption : styles.circleOption,
-                animatedStyle,
-            ]}
-        >
-            <Text
-                style={[
-                    styles.optionText,
-                    !isReview && isGroupChanged && { color: COLOR.text },
-                    isReview && !isOptionCorrect && {
-                        textDecorationLine: 'line-through',
-                        color: COLOR.textSecondary
-                    }
-                ]}
-            >
+        <Animated.View style={[
+            styles.optionContainer,
+            isLong ? styles.rectOption : styles.circleOption,
+            animatedStyle,
+        ]}>
+            <Text style={[
+                styles.optionText,
+                !isReview && isGroupChanged && { color: COLOR.text },
+                isReview && !isOptionCorrect && { textDecorationLine: 'line-through', color: COLOR.textSecondary }
+            ]}>
                 {option}
             </Text>
         </Animated.View>
@@ -79,36 +68,31 @@ const SortableItem: React.FC<SortableItemProps> = ({ option, isReview, isOptionC
 };
 
 const QuestionSortView: React.FC<_Props> = ({
-    questionSorts,
+    questionSort,
     userAnswers,
     onAnswerChange,
     viewMode = ViewMode.EDIT
 }) => {
     const isReview = viewMode === ViewMode.REVIEW;
+    const multiGroup = questionSort.groups.length > 1;
 
-    // Track which groups have had their options reordered (isChange)
+    // Track which group indices have been reordered
     const [changedGroups, setChangedGroups] = React.useState<Record<number, boolean>>(() => {
         const initial: Record<number, boolean> = {};
-        questionSorts.forEach(qSort => {
-            const currentVal = userAnswers[qSort.id];
-            if (currentVal && currentVal !== qSort.options.join(',')) {
-                initial[qSort.id] = true;
+        questionSort.groups.forEach((g, i) => {
+            const currentVal = userAnswers[i];
+            if (currentVal && currentVal !== g.options.join(',')) {
+                initial[i] = true;
             }
         });
         return initial;
     });
 
-    const renderOption = (qSort: QuestionSort, option: string, isGroupChanged: boolean) => {
-        const currentVal = userAnswers[qSort.id] || qSort.options.join(',');
-
-        // Find the index of the option in the current answer sequence
+    const renderOption = (groupIndex: number, group: QuestionSortGroup, option: string) => {
+        const currentVal = userAnswers[groupIndex] || group.options.join(',');
         const sortOptions = currentVal.split(',');
         const currentIndex = sortOptions.indexOf(option);
-
-        // Find the index of the option in the correct answer sequence
-        const correctAnswers = qSort.answer.split(',');
-        const correctIndex = correctAnswers.indexOf(option);
-
+        const correctIndex = group.answer.split(',').indexOf(option);
         const isOptionCorrect = currentIndex === correctIndex;
         const isLong = option.length > 2;
 
@@ -119,59 +103,46 @@ const QuestionSortView: React.FC<_Props> = ({
                 isReview={isReview}
                 isOptionCorrect={isOptionCorrect}
                 isLong={isLong}
-                isGroupChanged={isGroupChanged}
+                isGroupChanged={!!changedGroups[groupIndex]}
             />
         );
     };
 
-    const renderExplanation = (qSort: QuestionSort) => {
+    const renderExplanation = (groupIndex: number, group: QuestionSortGroup) => {
         if (!isReview) return null;
-
-        const currentVal = userAnswers[qSort.id] || qSort.options.join(',');
-        const isCorrect = currentVal === qSort.answer;
-
-        if (isCorrect) return (
-            <Text style={styles.correctText}>
-                Chính xác
-            </Text>
-        );
-
+        const currentVal = userAnswers[groupIndex] || group.options.join(',');
+        const isCorrect = currentVal === group.answer;
+        if (isCorrect) return <Text style={styles.correctText}>Chính xác</Text>;
         return (
             <Text style={styles.explanationText}>
-                Đáp án đúng là: <Text style={styles.boldText}>{qSort.answer.split(',').join(', ')}</Text>
+                Đáp án đúng là: <Text style={styles.boldText}>{group.answer.split(',').join(', ')}</Text>
             </Text>
         );
     };
 
     return (
         <View style={styles.container}>
-            {questionSorts.map((qSort) => {
-                const isGroupShown = questionSorts.length > 1 && !!qSort.group;
-                const pullLeft = !!qSort.label || !isGroupShown;
-
-                const currentVal = userAnswers[qSort.id];
-                const items = currentVal ? currentVal.split(',') : qSort.options;
-                const isChanged = !!changedGroups[qSort.id];
+            {questionSort.groups.map((group, groupIndex) => {
+                const showKey = multiGroup && !!group.key;
+                const hasLabel = !!group.label;
+                const pullLeft = hasLabel || !showKey;
+                const currentVal = userAnswers[groupIndex];
+                const items = currentVal ? currentVal.split(',') : group.options;
 
                 return (
-                    <View key={qSort.id} style={styles.sortGroup}>
-                        <View style={qSort.label ? styles.labelLayout : styles.row}>
-                            {qSort.label ? (
+                    <View key={group.key} style={styles.sortGroup}>
+                        <View style={hasLabel ? styles.labelLayout : styles.row}>
+                            {hasLabel ? (
                                 <View style={styles.row}>
-                                    {isGroupShown ? (
-                                        <Text style={styles.groupText}>{qSort.group}) </Text>
-                                    ) : null}
-                                    <Text style={styles.labelText}>{renderFormattedText(qSort.label)}</Text>
+                                    {showKey && <Text style={styles.groupText}>{group.key})</Text>}
+                                    <Text style={styles.labelText}>{renderFormattedText(group.label!)}</Text>
                                 </View>
                             ) : (
-                                isGroupShown ? (
-                                    <Text style={styles.groupText}>{qSort.group}) </Text>
-                                ) : null
+                                showKey && <Text style={styles.groupText}>{group.key})</Text>
                             )}
-
                             <View style={[
-                                qSort.label ? styles.optionsListWithLabel : null,
-                                pullLeft && !qSort.label ? styles.optionsListPullLeft : null
+                                hasLabel ? styles.optionsListWithLabel : null,
+                                pullLeft && !hasLabel ? styles.optionsListPullLeft : null
                             ]}>
                                 <Sortable.Flex
                                     sortEnabled={!isReview}
@@ -182,21 +153,17 @@ const QuestionSortView: React.FC<_Props> = ({
                                     dropIndicatorStyle={styles.dropIndicator}
                                     onDragEnd={({ order }) => {
                                         const newOptions = order(items);
-                                        const isChangedOrder = newOptions.join(',') !== items.join(',');
-                                        if (isChangedOrder) {
-                                            setChangedGroups(prev => ({
-                                                ...prev,
-                                                [qSort.id]: true
-                                            }));
+                                        if (newOptions.join(',') !== items.join(',')) {
+                                            setChangedGroups(prev => ({ ...prev, [groupIndex]: true }));
                                         }
-                                        onAnswerChange(qSort.id, newOptions.join(','));
+                                        onAnswerChange(groupIndex, newOptions.join(','));
                                     }}
                                 >
-                                    {items.map(opt => renderOption(qSort, opt, isChanged))}
+                                    {items.map(opt => renderOption(groupIndex, group, opt))}
                                 </Sortable.Flex>
                             </View>
                         </View>
-                        {renderExplanation(qSort)}
+                        {renderExplanation(groupIndex, group)}
                     </View>
                 );
             })}

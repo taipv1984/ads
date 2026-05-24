@@ -3,7 +3,8 @@ import { ElementGroup, QuestionType, ValueType } from '@/enums/math.enum';
 import { SCORE_FEEDBACK } from '@/services/mocks/score-feedback.mock';
 import {
   Question,
-  QuestionElement, ShapeElement
+  QuestionChoice,
+  QuestionElement, QuestionSort, ShapeElement
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
 import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
@@ -223,11 +224,10 @@ export const checkQuestionCompletion = (
   userInputs: Record<number, string>,
   userConnections: { from: number; to: number }[] = []
 ): boolean => {
-  const elements = question.elements || [];
-
   switch (question.type) {
     // Phải điền tất cả các ô input
     case QuestionType.FILL: {
+      const elements = question.elements || [];
       const inputShapes = elements.filter(
         (el) => el.type === 'shape' && (el as ShapeElement).isInput
       );
@@ -240,25 +240,29 @@ export const checkQuestionCompletion = (
       return userConnections.length > 0;
     }
 
-    // Phải chọn ít nhất 1 option cho mỗi group được chọn
+    // Phải chọn ít nhất 1 option
     case QuestionType.CHOICE: {
-      const childs = question.childs || [];
-      if (childs.length === 0) return true;
-      return childs.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
+      const qChoice = question as QuestionChoice;
+      if (!qChoice.groups || qChoice.groups.length === 0) return true;
+      return qChoice.groups.every((_, idx) => !!(userInputs[idx] && userInputs[idx].trim() !== ''));
     }
 
-    // Phải thay đổi vị trí các số cho mỗi group (isGroupChange=true)
+    // Phải thay đổi vị trí các số (isGroupChange=true)
     case QuestionType.SORT: {
-      const childs = question.childs || [];
-      if (childs.length === 0) return true;
-      return childs.every((s) => {
-        const currentVal = userInputs[s.id];
-        const originalVal = s.options ? s.options.join(',') : '';
-        return currentVal && currentVal !== originalVal;
+      const qSort = question as QuestionSort;
+      if (!qSort.groups || qSort.groups.length === 0) return true;
+      return qSort.groups.every((group, idx) => {
+        const currentVal = userInputs[idx];
+        const originalVal = group.options.join(',');
+        return !!(currentVal && currentVal !== originalVal);
       });
     }
 
-    // Mặc định các loại khác có thể luôn là true hoặc xử lý riêng
+    // Phải chọn ít nhất 1 option
+    case QuestionType.QUIZ: {
+      return !!(userInputs[question.id] && userInputs[question.id].trim() !== '');
+    }
+
     default:
       return true;
   }
@@ -325,6 +329,7 @@ export const calcQuestionMatchScore = (
   question: Question,
   userConnections: { from: number; to: number }[]
 ): number => {
+  if (question.type !== QuestionType.MATCH) return 0;
   const elements = question.elements || [];
   const questionScore = question.score !== undefined ? question.score : 1;
   const correctTotal = getMatchCorrectTotal(elements);
@@ -357,6 +362,7 @@ export const calcQuestionFillScore = (
   question: Question,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
+  if (question.type !== QuestionType.FILL) return { isCorrect: false, finalScore: 0 };
   let isCorrect = true;
   let totalCorrectCount = 0;
   let totalRequiredCount = 0;
@@ -401,15 +407,16 @@ export const calcQuestionFillScore = (
  * Tính điểm cho câu hỏi dạng chọn (choice)
  */
 export const calcQuestionChoiceScore = (
-  question: Question,
+  question: QuestionChoice,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
-  const childs = question.childs || [];
-  let finalScore = 0;
-  let isCorrect = true;
+  if (question.type !== QuestionType.CHOICE) return { isCorrect: false, finalScore: 0 };
 
-  childs.forEach((group) => {
-    const userVal = userInputs[group.id] || '';
+  let isAllCorrect = true;
+  let totalScore = 0;
+
+  question.groups.forEach((group, groupIndex) => {
+    const userVal = userInputs[groupIndex] || '';
     const correctAnswers = group.answer.split(',');
     const userAnswers = userVal ? userVal.split(',') : [];
 
@@ -424,42 +431,79 @@ export const calcQuestionChoiceScore = (
       }
     });
 
-    // Điểm cho từng group trong childs
     const groupScore = calcFinalScore(
       group.score || 0,
       correctAnswers.length,
       correctCount,
       incorrectCount
     );
-    finalScore += groupScore;
 
-    // Kiểm tra xem đã chọn đủ và đúng chưa (để quyết định isCorrect của cả câu)
-    // Phải chọn đúng hết và không có cái nào sai
+    totalScore += groupScore;
+
     const hasMissing = correctAnswers.some(ans => !userAnswers.includes(ans));
     if (hasMissing || incorrectCount > 0) {
-      isCorrect = false;
+      isAllCorrect = false;
     }
   });
 
-  return { isCorrect, finalScore };
+  return { isCorrect: isAllCorrect, finalScore: totalScore };
 };
 
 export const calcQuestionSortScore = (
+  question: QuestionSort,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  if (question.type !== QuestionType.SORT) return { isCorrect: false, finalScore: 0 };
+
+  let isAllCorrect = true;
+  let totalScore = 0;
+
+  question.groups.forEach((group, groupIndex) => {
+    const userVal = userInputs[groupIndex] || '';
+    const isCorrect = userVal === group.answer;
+    
+    if (isCorrect) {
+      totalScore += (group.score || 0);
+    } else {
+      isAllCorrect = false;
+    }
+  });
+
+  return { isCorrect: isAllCorrect, finalScore: totalScore };
+};
+
+export const calcQuestionQuizScore = (
   question: Question,
   userInputs: Record<number, string>
 ): { isCorrect: boolean; finalScore: number } => {
-  const childs = question.childs || [];
-  let finalScore = 0;
-  let isCorrect = true;
+  if (question.type !== QuestionType.QUIZ) return { isCorrect: false, finalScore: 0 };
 
-  childs.forEach((group) => {
-    const userVal = userInputs[group.id] || '';
-    if (userVal === group.answer) {
-      finalScore += group.score || 0;
+  const userVal = userInputs[question.id] || '';
+  const correctAnswers = question.options
+    .map((opt, idx) => opt.isCorrect ? idx.toString() : null)
+    .filter(val => val !== null) as string[];
+  const userAnswers = userVal ? userVal.split(',') : [];
+
+  let correctCount = 0;
+  let incorrectCount = 0;
+
+  userAnswers.forEach((val) => {
+    if (correctAnswers.includes(val)) {
+      correctCount++;
     } else {
-      isCorrect = false;
+      incorrectCount++;
     }
   });
+
+  const finalScore = calcFinalScore(
+    question.score || 0,
+    correctAnswers.length,
+    correctCount,
+    incorrectCount
+  );
+
+  const hasMissing = correctAnswers.some(ans => !userAnswers.includes(ans));
+  const isCorrect = !hasMissing && incorrectCount === 0;
 
   return { isCorrect, finalScore };
 };
@@ -500,6 +544,12 @@ export const calcQuestionScore = (
       finalScore = result.finalScore;
       break;
     }
+    case QuestionType.QUIZ: {
+      const result = calcQuestionQuizScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
+      break;
+    }
     default:
       break;
   }
@@ -507,10 +557,8 @@ export const calcQuestionScore = (
   return {
     isCorrect,
     finalScore,
-    //todo them giai thich
-    //todo dong bo hoa lai gia tri tra ve cua cac ham calcQuestion___Score
   };
-};
+}
 
 /**
  * Lấy nhận xét dựa trên điểm số (thang điểm 10)

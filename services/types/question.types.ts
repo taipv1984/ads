@@ -1,4 +1,4 @@
-import { QuestionType } from "@/enums/math.enum";
+import { LabelFormat, QuestionType } from "@/enums/math.enum";
 
 export interface Point {
   x: number;
@@ -61,43 +61,72 @@ export interface ImageElement extends BaseElement {
 
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
-export type QuestionChild = QuestionChoice | QuestionSort;
+//new update
 
 export interface QuestionValidation {
   id: number;
   formula: string; //'#9 + #10 === 32'
 }
 
-export interface QuestionChoice {
+export interface BaseQuestion {
   id: number;
-  type?: QuestionType.CHOICE;
-  group?: string;
+  category?: string;
+  type: QuestionType;
+  question?: string;
+  image?: string;
+  score?: number; // optional total score for the question
+}
+
+export interface QuestionQuizOption {
+  value: string;
+  image?: string;
+  isCorrect?: boolean;
+}
+
+export interface QuestionQuiz extends BaseQuestion {
+  type: QuestionType.QUIZ;
+  labelFormat?: LabelFormat;
+  options: QuestionQuizOption[];
+  explain?: string;
+  explainImage?: string;
+}
+
+export interface QuestionChoiceGroup {
+  key: string;
   label?: string;
   options: string[];
   answer: string;   //"123" for single choice or "1,2,3" for multi choice
   score?: number;
 }
 
-export interface QuestionSort {
-  id: number;
-  type?: QuestionType.SORT;
-  group?: string;
+export interface QuestionChoice extends BaseQuestion {
+  type: QuestionType.CHOICE;
+  groups: QuestionChoiceGroup[];
+}
+
+export interface QuestionSortGroup {
+  key: string;
   label?: string;
   options: string[];
   answer: string;   //"1,2,3"
   score?: number;
 }
 
-export interface Question {
-  id: number;
-  category?: string;
-  type: QuestionType;
-  label?: string;
-  desc?: string;
-  imagePath?: string;
+export interface QuestionSort extends BaseQuestion {
+  type: QuestionType.SORT;
+  groups: QuestionSortGroup[];
+}
+
+export interface QuestionFill extends BaseQuestion {
+  type: QuestionType.FILL;
   elements?: QuestionElement[];
-  childs?: QuestionChild[];
   validations?: QuestionValidation[];
   inputLength?: number;
-  score?: number;
 }
+
+export interface QuestionMatch extends BaseQuestion {
+  type: QuestionType.MATCH;
+  elements?: QuestionElement[];
+}
+
+export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch;

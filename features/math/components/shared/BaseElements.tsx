@@ -287,12 +287,24 @@ export const AnimatedTextOverlay = memo(({ shape, textToRender }: { shape: Shape
 
 export const OverlayImage = memo(({ imageEl }: { imageEl: ImageElement }) => {
   const [hasError, setHasError] = useState(false);
+
+  const url = imageEl.url?.trim();
+
+  // 1. Nếu url của image không có thì không hiện (ko render gì cả)
+  if (!url) {
+    return null;
+  }
+
+  // 2. Nếu url không hợp lệ về mặt định dạng, hoặc xảy ra lỗi load thì hiển thị no-image.png
+  const hasInvalidFormat = !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:image/');
+  const shouldShowFallback = hasError || hasInvalidFormat;
+
   const cx = imageEl.position.x * SCALE;
   const cy = imageEl.position.y * SCALE;
   const w = imageEl.width * SCALE;
   const h = imageEl.height * SCALE;
 
-  let source = hasError ? require('@/assets/images/no-image.png') : { uri: imageEl.url };
+  const source = shouldShowFallback ? require('@/assets/images/no-image.png') : { uri: url };
 
   return (
     <View

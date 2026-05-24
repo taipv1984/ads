@@ -2,8 +2,9 @@ import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
 import QuestionChoiceView from '@/features/math/components/QuestionChoiceView';
+import QuestionQuizView from '@/features/math/components/QuestionQuizView';
 import QuestionSortView from '@/features/math/components/QuestionSortView';
-import { Question, QuestionChoice, QuestionSort } from '@/services/types/question.types';
+import { Question, QuestionChoice, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -29,7 +30,7 @@ const MatchResultItem = React.memo(({
   result,
   backgroundColor = COLOR.white
 }: _Props) => {
-  const { height: canvasHeight, offsetY } = getCanvasLayout(question.elements || []);
+  const { height: canvasHeight, offsetY } = getCanvasLayout('elements' in question ? question.elements || [] : []);
 
   const renderResultContent = () => {
     switch (question.type) {
@@ -63,7 +64,7 @@ const MatchResultItem = React.memo(({
       case QuestionType.CHOICE:
         return (
           <QuestionChoiceView
-            questionChoices={(question.childs as QuestionChoice[]) || []}
+            questionChoice={question as QuestionChoice}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
             viewMode={ViewMode.REVIEW}
@@ -72,7 +73,16 @@ const MatchResultItem = React.memo(({
       case QuestionType.SORT:
         return (
           <QuestionSortView
-            questionSorts={(question.childs as QuestionSort[]) || []}
+            questionSort={question as QuestionSort}
+            userAnswers={userAnswers}
+            onAnswerChange={() => { }}
+            viewMode={ViewMode.REVIEW}
+          />
+        );
+      case QuestionType.QUIZ:
+        return (
+          <QuestionQuizView
+            questionQuiz={question as QuestionQuiz}
             userAnswers={userAnswers}
             onAnswerChange={() => { }}
             viewMode={ViewMode.REVIEW}
@@ -100,9 +110,9 @@ const MatchResultItem = React.memo(({
         </View>
       </View>
 
-      {question.label && question.label !== "" && (
+      {question.question && question.question !== "" && (
         <View style={styles.cardContentWrapper}>
-          <Text style={styles.cardContent}>{question.label}</Text>
+          <Text style={styles.cardContent}>{question.question}</Text>
         </View>
       )}
 

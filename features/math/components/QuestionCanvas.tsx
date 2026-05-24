@@ -1,12 +1,12 @@
 import { QuestionType, ViewMode } from '@/enums/math.enum';
-import { Question } from '@/services/types/question.types';
+import { QuestionFill, QuestionMatch } from '@/services/types/question.types';
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import QuestionFillCanvas from './QuestionFillCanvas';
 import QuestionMatchCanvas from './QuestionMatchCanvas';
 
 interface _Props {
-  question: Question;
+  question: QuestionMatch | QuestionFill;
   userInputs: Record<number, string>;
   activeInputId: number | null;
   viewMode?: ViewMode;
@@ -24,11 +24,11 @@ const QuestionCanvas: React.FC<_Props> = (props) => {
     switch (question.type) {
       case QuestionType.MATCH:
         return <QuestionMatchCanvas
-          {...props}
+          {...props as any}
           onConnectionsChange={props.onConnectionsChange ? (conns) => props.onConnectionsChange!(question.id, conns) : undefined}
         />;
       case QuestionType.FILL:
-        return <QuestionFillCanvas {...props} />;
+        return <QuestionFillCanvas {...props as any} />;
       default:
         return null;
     }
@@ -44,7 +44,6 @@ const QuestionCanvas: React.FC<_Props> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#f2f2f2'
   }
 });
 

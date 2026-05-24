@@ -1,6 +1,6 @@
 import { COLOR } from '@/constants/theme';
-import { ElementGroup, ValueType, ViewMode } from '@/enums/math.enum';
-import { ImageElement, LineElement, Question, ShapeElement, TextElement } from '@/services/types/question.types';
+import { ElementGroup, QuestionType, ValueType, ViewMode } from '@/enums/math.enum';
+import { ImageElement, LineElement, Question, QuestionMatch, ShapeElement, TextElement } from '@/services/types/question.types';
 import { calcExpression, getAnchorElements, getMatchValueType, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas, Group, Line, Path, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
@@ -16,8 +16,8 @@ import {
   SCALE
 } from './shared/BaseElements';
 
-interface Props {
-  question: Question;
+interface _Props {
+  question: QuestionMatch;
   userInputs: Record<number, string>;
   viewMode?: ViewMode;
   connections?: { from: number, to: number }[]; // Thêm prop này để nhận dữ liệu hiện tại
@@ -56,7 +56,7 @@ const AnimatedAnchor = memo(({
   );
 });
 
-const QuestionMatchCanvas: React.FC<Props> = ({
+const QuestionMatchCanvas: React.FC<_Props> = ({
   question,
   userInputs,
   viewMode = ViewMode.EDIT,
@@ -87,7 +87,7 @@ const QuestionMatchCanvas: React.FC<Props> = ({
   const anchorGroups = useSharedValue<string[]>([]);
 
   const anchorElements = useMemo(() => {
-    return getAnchorElements(question.elements);
+      return getAnchorElements(question.elements);
   }, [question.elements]);
 
   useEffect(() => {

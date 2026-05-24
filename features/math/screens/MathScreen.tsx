@@ -2,6 +2,7 @@ import BottomNavigation from '@/app/components/shared/BottomNavigation';
 import OptionPicker from '@/app/components/shared/OptionPicker';
 import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
+import { QuestionType } from '@/enums/math.enum';
 import { QUESTION_MOCKS } from '@/services/mocks/question.mock';
 import { ShapeElement } from '@/services/types/question.types';
 import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from '@/utils/math.util';
@@ -71,7 +72,7 @@ const MathScreen: React.FC = () => {
     if (activeInputId === null) return;
     const currentVal = qInputs[activeInputId] || '';
     let newVal = currentVal + key;
-    const maxLength = currentQuestion.inputLength || 2;
+    const maxLength = ('inputLength' in currentQuestion && currentQuestion.inputLength) || 2;
     if (newVal.length > maxLength) {
       newVal = newVal.slice(1);
     }
@@ -206,14 +207,17 @@ const MathScreen: React.FC = () => {
           onPrev={handlePrev}
         />
 
-        {activeInputId !== null && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions) && (
-          <VirtualKeyboard onKeyPress={handleKeyPress} />
-        )}
+        {activeInputId !== null && ('type' in currentQuestion && currentQuestion.type === QuestionType.FILL)
+          && ('elements' in currentQuestion)
+          && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions) && (
+            <VirtualKeyboard onKeyPress={handleKeyPress} />
+          )}
       </SafeAreaView>
 
       {/* OptionsPicker được đưa ra root để dùng tọa độ tuyệt đối */}
       {activeInputId !== null && pickerPosition && (() => {
-        const activeEl = currentQuestion.elements?.find(el => el.id === activeInputId) as ShapeElement;
+        const elements = 'elements' in currentQuestion ? currentQuestion.elements : undefined;
+        const activeEl = elements?.find(el => el.id === activeInputId) as ShapeElement;
         if (activeEl?.valueOptions) {
           try {
             const options = JSON.parse(activeEl.valueOptions);

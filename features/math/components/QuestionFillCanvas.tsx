@@ -1,5 +1,5 @@
 import { ViewMode } from '@/enums/math.enum';
-import { Question, ShapeElement } from '@/services/types/question.types';
+import { ImageElement, Question, QuestionFill, ShapeElement } from '@/services/types/question.types';
 import { getEffectiveZIndex, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas } from '@shopify/react-native-skia';
 import React, { memo, useMemo } from 'react';
@@ -9,12 +9,13 @@ import {
   AnimatedShapeElement,
   AnimatedTextOverlay,
   getColor,
+  OverlayImage,
   RenderLine,
   SCALE
 } from './shared/BaseElements';
 
 interface _Props {
-  question: Question;
+  question: QuestionFill;
   userInputs: Record<number, string>;
   activeInputId: number | null;
   viewMode?: ViewMode;
@@ -141,6 +142,17 @@ const QuestionFillCanvas: React.FC<_Props> = ({
                     );
                   })}
                 </React.Fragment>
+              );
+            }
+
+            if (layer.type === 'image') {
+              return (
+                <View key={layerKey} style={[StyleSheet.absoluteFill, { zIndex: layer.zIndex }]} pointerEvents="none">
+                  {layer.elements.map(el => {
+                    const imgEl = el as ImageElement;
+                    return <OverlayImage key={`img-${imgEl.id}`} imageEl={imgEl} />;
+                  })}
+                </View>
               );
             }
 

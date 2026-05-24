@@ -24,3 +24,10 @@ export enum ValueType {
     SINGLE = 'single',
     MULTI = 'multi',
 }
+
+export enum LabelFormat {
+    HIDE = 'hide',
+    ALPHABET = 'alphabet',  //a, b, c, d...
+    NUMBER = 'number',      //1, 2, 3, 4...
+    INPUT = 'input',        //radio for single choice, checkbox for multi choice
+}

@@ -1,11 +1,12 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
-import { Question, QuestionChoice, QuestionSort } from '@/services/types/question.types';
+import { Question, QuestionChoice, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionChoiceView from './QuestionChoiceView';
+import QuestionQuizView from './QuestionQuizView';
 import QuestionSortView from './QuestionSortView';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -35,7 +36,7 @@ const QuestionItem: React.FC<_Props> = ({
   updateAnswer,
   AutoHeightImage
 }) => {
-  const { height: canvasHeight, offsetY } = getCanvasLayout(question.elements || []);
+  const { height: canvasHeight, offsetY } = getCanvasLayout('elements' in question ? question.elements || [] : []);
 
   const handleConnectionsChangeLocal = useCallback((id: number, conns: { from: number, to: number }[]) => {
     onConnectionsChange(id, conns);
@@ -62,7 +63,7 @@ const QuestionItem: React.FC<_Props> = ({
       case QuestionType.CHOICE:
         return (
           <QuestionChoiceView
-            questionChoices={(question.childs as QuestionChoice[]) || []}
+            questionChoice={question as QuestionChoice}
             userAnswers={userAnswers}
             onAnswerChange={(choiceId, val) => updateAnswer(question.id, choiceId, val)}
             viewMode={ViewMode.EDIT}
@@ -71,9 +72,18 @@ const QuestionItem: React.FC<_Props> = ({
       case QuestionType.SORT:
         return (
           <QuestionSortView
-            questionSorts={(question.childs as QuestionSort[]) || []}
+            questionSort={question as QuestionSort}
             userAnswers={userAnswers}
             onAnswerChange={(sortId, val) => updateAnswer(question.id, sortId, val)}
+            viewMode={ViewMode.EDIT}
+          />
+        );
+      case QuestionType.QUIZ:
+        return (
+          <QuestionQuizView
+            questionQuiz={question as QuestionQuiz}
+            userAnswers={userAnswers}
+            onAnswerChange={(quizId, val) => updateAnswer(question.id, quizId, val)}
             viewMode={ViewMode.EDIT}
           />
         );
@@ -89,12 +99,12 @@ const QuestionItem: React.FC<_Props> = ({
       showsVerticalScrollIndicator={false}
     >
       <Text style={styles.questionTitle}>
-        Câu {index + 1}: {question.label && question.label != "" && <Text style={styles.questionContentText}>{question.label}</Text>}
+        Câu {index + 1}: {question.question && question.question != "" && <Text style={styles.questionContentText}>{question.question}</Text>}
       </Text>
 
-      {question.imagePath && (
+      {question.image && (
         <View style={styles.imageWrapper}>
-          <AutoHeightImage uri={question.imagePath} />
+          <AutoHeightImage uri={question.image} />
         </View>
       )}
 
