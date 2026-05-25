@@ -1,3 +1,4 @@
+import { MarkdownView } from '@/app/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import { Question, QuestionChoice, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
@@ -98,9 +99,10 @@ const QuestionItem: React.FC<_Props> = ({
       contentContainerStyle={{ paddingBottom: SPACING.lg }}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.questionTitle}>
-        Câu {index + 1}: {question.question && question.question != "" && <Text style={styles.questionContentText}>{question.question}</Text>}
-      </Text>
+      <View style={styles.questionTitle}>
+        <Text style={styles.questionTitleText}>Câu {index + 1}:</Text>
+        {question.question && question.question != "" && <MarkdownView style={styles.questionContentText} text={question.question!} />}
+      </View>
 
       {question.image && (
         <View style={styles.imageWrapper}>
@@ -115,11 +117,18 @@ const QuestionItem: React.FC<_Props> = ({
 
 const styles = StyleSheet.create({
   questionTitle: {
+    padding: SPACING.md,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+  },
+  questionTitleText: {
     fontSize: SIZE.md,
     fontWeight: 'bold',
-    padding: SPACING.md
+    marginRight: 4,
   },
   questionContentText: {
+    fontSize: SIZE.md,
     fontWeight: 'normal',
     color: COLOR.text,
   },

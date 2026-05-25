@@ -1,4 +1,4 @@
-import { COLOR, SPACING } from '@/constants/theme';
+import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native';
 
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     marginTop: SPACING.md,
     color: COLOR.textSecondary,
     fontStyle: 'italic',
+    fontSize: SIZE.md
   },
 });
 

@@ -1,7 +1,7 @@
+import { MarkdownView } from '@/app/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
 import { QuestionChoice, QuestionChoiceGroup } from '@/services/types/question.types';
-import { renderFormattedText } from '@/utils/render.util';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -129,7 +129,7 @@ const QuestionChoiceView: React.FC<_Props> = ({
               {hasLabel ? (
                 <View style={styles.row}>
                   {showKey && <Text style={styles.groupText}>{group.key})</Text>}
-                  <Text style={styles.labelText}>{renderFormattedText(group.label!)}</Text>
+                  <MarkdownView style={styles.labelText} text={group.label!} />
                 </View>
               ) : (
                 showKey && <Text style={styles.groupText}>{group.key})</Text>
