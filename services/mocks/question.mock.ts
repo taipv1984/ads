@@ -4,8 +4,7 @@ import { Question } from "../types/question.types";
 export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 2,
-  //   category: "",
-  //   type: QuestionType.FILL,
+  //     //   type: QuestionType.FILL,
   //   question: "Viết số thích hợp vào ô trống (theo mẫu).",
   //   inputLength: 2,
   //   elements: [
@@ -29,7 +28,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 4,
     type: QuestionType.FILL,
-    category: "",
     question: "Đúng ghi Đ, sai ghi S.",
     // image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
     inputLength: 1,
@@ -44,8 +42,7 @@ export const QUESTION_MOCKS: Question[] = [
   },
   // {
   //   id: 6,
-  //   category: "",
-  //   type: QuestionType.FILL,
+  //     //   type: QuestionType.FILL,
   //   question: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
@@ -62,8 +59,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   // {
   //   id: 7,
-  //   category: "",
-  //   type: QuestionType.FILL,
+  //     //   type: QuestionType.FILL,
   //   question: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
@@ -78,8 +74,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   // {
   //   id: 8,
-  //   category: "",
-  //   type: QuestionType.FILL,
+  //     //   type: QuestionType.FILL,
   //   question: "Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
@@ -94,8 +89,7 @@ export const QUESTION_MOCKS: Question[] = [
   // },
   // {
   //   id: 10,
-  //   category: "",
-  //   type: QuestionType.FILL,
+  //     //   type: QuestionType.FILL,
   //   question: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
   //   inputLength: 1,
   //   elements: [
@@ -112,8 +106,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   type: QuestionType.FILL,
   //   id: 12,
-  //   category: "",
-  //   question: "#8 Viết số thích hợp vào ô trống.",
+  //     //   question: "#8 Viết số thích hợp vào ô trống.",
   //   inputLength: 2,
   //   elements: [
   //     // Hàng a)
@@ -142,7 +135,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 141,
     type: QuestionType.MATCH,
-    category: "",
     question: "Nối các hình có cùng số lượng hoặc giá trị. single",
     elements: [
       //left
@@ -159,7 +151,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 151,
     type: QuestionType.MATCH,
-    category: "",
     question: "Nối các hình có cùng số lượng hoặc giá trị. multi",
     elements: [
       //top
@@ -181,7 +172,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 301,
     type: QuestionType.CHOICE,
-    category: "",
     question: "Khoanh vào số lớn nhất (single choice)",
     groups: [
       { key: "a", options: ['72', '76', '70'], answer: '76', score: 0.5 },
@@ -191,7 +181,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 302,
     type: QuestionType.CHOICE,
-    category: "",
     question: "Khoanh vào các số chẵn (multi choice)",
     groups: [
       { key: "a", options: ['72', '75', '77'], answer: '72', score: 0.5 },
@@ -201,8 +190,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 303,
   //   type: QuestionType.CHOICE,
-  //   category: "",
-  //   question: "Khoanh vào các số chẵn",
+  //     //   question: "Khoanh vào các số chẵn",
   //   groups: [
   //     { key: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
   //     { key: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: '80,85,90', score: 0.5 },
@@ -211,8 +199,7 @@ export const QUESTION_MOCKS: Question[] = [
   // {
   //   id: 304,
   //   type: QuestionType.CHOICE,
-  //   category: "",
-  //   question: "Khoanh vào số nhỏ nhất",
+  //     //   question: "Khoanh vào số nhỏ nhất",
   //   groups: [
   //     { key: "a", options: ['72', '76', '70'], answer: '70', score: 0.5 },
   //   ],
@@ -222,8 +209,7 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 401,
     type: QuestionType.SORT,
-    category: "",
-    question: "Sắp xếp các số sau theo thứ tự tăng dần",
+    question: "Sắp xếp các số sau theo thứ tự tăng",
     groups: [
       { key: "a", options: ['72', '76', '70'], answer: '70,72,76', score: 0.5 },
       { key: "b", options: ['82', '77', '88'], answer: '77,82,88', score: 0.5 },
@@ -232,7 +218,7 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 402,
     type: QuestionType.SORT,
-    category: "",
+    question: "Sắp xếp?",
     groups: [
       { key: "a", label: "Viết các số **72**, **76**, **70** theo thứ tự từ lớn đến bé", options: ['72', '76', '70'], answer: '70,72,76', score: 0.5 },
       { key: "b", label: "Viết các số **82**, **77**, **88** theo thứ tự từ lớn đến bé", options: ['82', '77', '88'], answer: '77,82,88', score: 0.5 },
@@ -241,7 +227,6 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 501,
     type: QuestionType.QUIZ,
-    category: "",
     question: "Câu hỏi trắc nghiệm: Ai là người phát minh ra thuyết tương đối?",
     labelFormat: LabelFormat.INPUT,
     options: [
@@ -256,18 +241,19 @@ export const QUESTION_MOCKS: Question[] = [
   {
     id: 502,
     type: QuestionType.QUIZ,
-    category: "",
     question: "Hãy chọn các số nguyên tố trong các số sau đây:",
     labelFormat: LabelFormat.ALPHABET,
     options: [
-      // { value: "Isaac Newton", isCorrect: true },
-      { value: "4aa" },
+      { value: "2", isCorrect: true },
+      { value: "4" },
       { value: "5", isCorrect: true },
       { value: "9" }
     ],
     score: 1.0,
-    explain: "Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.",
-    explainImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Placeholder_LC_blue.png/640px-Placeholder_LC_blue.png"
+    // explain: "Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.",
+    // explain: "![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)"
+    explain: "Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.\n![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)",
+    // explain: "![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.",
   }
   //todo quiz with image  
 ];

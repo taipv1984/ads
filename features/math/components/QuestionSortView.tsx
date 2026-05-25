@@ -1,7 +1,7 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
-import { QuestionSortGroup, QuestionSort } from '@/services/types/question.types';
-import { renderFormattedText } from '@/utils/render.util';
+import { QuestionSort, QuestionSortGroup } from '@/services/types/question.types';
+import { MarkdownView } from '@/app/components/shared/MarkdownView';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
@@ -135,7 +135,7 @@ const QuestionSortView: React.FC<_Props> = ({
                             {hasLabel ? (
                                 <View style={styles.row}>
                                     {showKey && <Text style={styles.groupText}>{group.key})</Text>}
-                                    <Text style={styles.labelText}>{renderFormattedText(group.label!)}</Text>
+                                    <MarkdownView style={styles.labelText} text={group.label!} />
                                 </View>
                             ) : (
                                 showKey && <Text style={styles.groupText}>{group.key})</Text>
@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: SPACING.xs,
-        marginBottom: SPACING.xs,
         minWidth: 40,
         minHeight: 40,
         borderRadius: 6,

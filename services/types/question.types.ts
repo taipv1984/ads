@@ -88,7 +88,6 @@ export interface QuestionQuiz extends BaseQuestion {
   labelFormat?: LabelFormat;
   options: QuestionQuizOption[];
   explain?: string;
-  explainImage?: string;
 }
 
 export interface QuestionChoiceGroup {

@@ -4,6 +4,7 @@ import { QuestionQuiz, QuestionQuizOption } from '@/services/types/question.type
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MarkdownView } from '@/app/components/shared/MarkdownView';
 
 interface _Props {
   questionQuiz: QuestionQuiz;
@@ -142,7 +143,6 @@ const QuestionQuizView: React.FC<_Props> = ({
           <Text style={[
             styles.optionText,
             labelFormat === LabelFormat.INPUT ? styles.optionTextWithInput : null,
-            (isReview && !isChoice && isCorrect && labelFormat !== LabelFormat.INPUT) && { textDecorationLine: 'underline' }
           ]}>
             {option.value}
           </Text>
@@ -171,28 +171,19 @@ const QuestionQuizView: React.FC<_Props> = ({
     if (!isReview) return null;
 
     const hasExplain = question.explain && question.explain.trim() !== '';
-    const hasExplainImage = question.explainImage && question.explainImage.trim() !== '';
 
-    if (!hasExplain && !hasExplainImage) return null;
+    if (!hasExplain) return null;
 
     return (
       <View style={styles.explanationBox}>
         <Text style={styles.explanationTitle}>
-          <Ionicons name="bulb-outline" size={16} color={COLOR.primary} /> Giải thích
+          <Ionicons name="bulb-outline" size={16} color={COLOR.focus} /> Giải thích
         </Text>
         {hasExplain && (
-          <Text style={styles.explanationText}>
-            {question.explain}
-          </Text>
-        )}
-        {hasExplainImage && (
-          <View style={styles.explainImageWrapper}>
-            <Image
-              source={{ uri: question.explainImage }}
-              style={styles.explainImage}
-              resizeMode="contain"
-            />
-          </View>
+          <MarkdownView
+            text={question.explain!}
+            style={styles.explanationText}
+          />
         )}
       </View>
     );
@@ -274,36 +265,18 @@ const styles = StyleSheet.create({
     marginLeft: SPACING.xs,
   },
   explanationBox: {
-    marginTop: SPACING.xs,
-    padding: SPACING.md,
-    backgroundColor: 'rgba(255, 129, 74, 0.05)',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 129, 74, 0.1)',
+    marginTop: SPACING.sm,
   },
   explanationTitle: {
     fontSize: SIZE.md,
     fontWeight: 'bold',
-    color: COLOR.primary,
-    marginBottom: SPACING.xs,
+    fontStyle: 'italic',
+    color: COLOR.focus
   },
   explanationText: {
     fontSize: SIZE.md,
     color: COLOR.text,
     lineHeight: 22,
-  },
-  explainImageWrapper: {
-    marginTop: SPACING.sm,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#fff',
-    borderColor: '#eee',
-    borderWidth: 1,
-    padding: SPACING.xs,
-    alignItems: 'center',
-  },
-  explainImage: {
-    width: '100%',
-    height: 180,
+    fontStyle: 'italic',
   },
 });
