@@ -4,7 +4,7 @@ import { QuestionType, ViewMode } from '@/enums/math.enum';
 import { Question, QuestionChoice, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionChoiceView from './QuestionChoiceView';
 import QuestionQuizView from './QuestionQuizView';
@@ -100,8 +100,9 @@ const QuestionItem: React.FC<_Props> = ({
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.questionTitle}>
-        <Text style={styles.questionTitleText}>Câu {index + 1}:</Text>
-        {question.question && question.question != "" && <MarkdownView style={styles.questionContentText} text={question.question!} />}
+        {question.question && question.question != "" && (
+          <MarkdownView style={styles.questionContentText} text={"**Câu " + (index + 1) + ":**  " + question.question!} />
+        )}
       </View>
 
       {question.image && (
@@ -117,15 +118,10 @@ const QuestionItem: React.FC<_Props> = ({
 
 const styles = StyleSheet.create({
   questionTitle: {
-    padding: SPACING.md,
+    marginTop: SPACING.xs,
+    paddingHorizontal: SPACING.md,
     flexDirection: 'row',
-    flexWrap: 'wrap',
     alignItems: 'flex-start',
-  },
-  questionTitleText: {
-    fontSize: SIZE.md,
-    fontWeight: 'bold',
-    marginRight: 4,
   },
   questionContentText: {
     fontSize: SIZE.md,
