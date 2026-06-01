@@ -2,29 +2,29 @@ import { LabelFormat, QuestionType } from "@/enums/math.enum";
 import { Question } from "../types/question.types";
 
 export const QUESTION_MOCKS: Question[] = [
-  // {
-  //   id: 2,
-  //     //   type: QuestionType.FILL,
-  //   question: "Viết số thích hợp vào ô trống (theo mẫu).",
-  //   inputLength: 2,
-  //   elements: [
-  //     { id: 6, type: "shape", shapeType: "circle", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "32", textSize: 50, borderWidth: 4 },
-  //     { id: 7, type: "line", lineType: "straight", start: { x: 500, y: 180 }, end: { x: 300, y: 420 }, strokeWidth: 5 },
-  //     { id: 8, type: "line", lineType: "straight", start: { x: 500, y: 180 }, end: { x: 700, y: 420 }, strokeWidth: 5 },
-  //     {
-  //       id: 9, type: "shape", shapeType: "rect", position: { x: 300, y: 480 }, width: 200, height: 120, isInput: true, bgColor: "white", borderWidth: 5, textSize: 50,
-  //       textAlign: 'right'
-  //     },
-  //     {
-  //       id: 10, type: "shape", shapeType: "rect", position: { x: 700, y: 480 }, width: 200, height: 120, isInput: true, bgColor: "white", borderWidth: 5, textSize: 50,
-  //       textAlign: 'left'
-  //     }
-  //   ],
-  //   validations: [
-  //     { id: 1, formula: "#9 + #10 === 32" }
-  //   ],
-  //   score: 1
-  // },
+  {
+    id: 2,
+    type: QuestionType.FILL,
+    question: "Viết số thích hợp vào ô trống (theo mẫu).",
+    inputLength: 2,
+    elements: [
+      { id: 6, type: "shape", shapeType: "circle", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "32", textSize: 50, borderWidth: 4 },
+      { id: 7, type: "line", lineType: "straight", start: { x: 500, y: 180 }, end: { x: 300, y: 420 }, strokeWidth: 5 },
+      { id: 8, type: "line", lineType: "straight", start: { x: 500, y: 180 }, end: { x: 700, y: 420 }, strokeWidth: 5 },
+      {
+        id: 9, type: "shape", shapeType: "rect", position: { x: 300, y: 480 }, width: 200, height: 120, isInput: true, bgColor: "white", borderWidth: 5, textSize: 50,
+        textAlign: 'right'
+      },
+      {
+        id: 10, type: "shape", shapeType: "rect", position: { x: 700, y: 480 }, width: 200, height: 120, isInput: true, bgColor: "white", borderWidth: 5, textSize: 50,
+        textAlign: 'left'
+      }
+    ],
+    rules: [
+      { id: 1, formula: "#9 + #10 === 32" }
+    ],
+    score: 1
+  },
   {
     id: 4,
     type: QuestionType.FILL,
@@ -37,101 +37,101 @@ export const QUESTION_MOCKS: Question[] = [
       { id: 18, type: "text", position: { x: 180, y: 220 }, label: "b) Ba mươi tư viết là 304.", fontSize: 46 },
       { id: 19, type: "shape", shapeType: "square", position: { x: 800, y: 230 }, size: 100, isInput: true, value: "S", bgColor: "white", borderWidth: 5, textSize: 50, valueOptions: '["Đ", "S"]' }
     ],
-    validations: [],
+    rules: [],
     score: 1
   },
-  // {
-  //   id: 6,
-  //     //   type: QuestionType.FILL,
-  //   question: "Viết số thích hợp vào ô trống.",
-  //   inputLength: 2,
-  //   elements: [
-  //     { id: 20, type: "line", lineType: "curve", start: { x: 150, y: 360 }, end: { x: 850, y: 360 }, controlPoints: [{ x: 350, y: 60 }, { x: 650, y: 660 }], strokeWidth: 6 },
-  //     { id: 21, type: "shape", shapeType: "circle", position: { x: 150, y: 310 }, size: 100, isInput: false, value: "31", textSize: 42 },
-  //     { id: 22, type: "shape", shapeType: "circle", position: { x: 300, y: 270 }, size: 100, isInput: false, value: "32", textSize: 42 },
-  //     { id: 23, type: "shape", shapeType: "circle", position: { x: 450, y: 320 }, size: 100, isInput: false, value: "33", textSize: 42 },
-  //     { id: 24, type: "shape", shapeType: "circle", position: { x: 590, y: 410 }, size: 100, isInput: true, value: "34", bgColor: "white", borderWidth: 5, textSize: 42 },
-  //     { id: 25, type: "shape", shapeType: "circle", position: { x: 760, y: 430 }, size: 100, isInput: true, value: "35", bgColor: "white", borderWidth: 5, textSize: 42 },
-  //     { id: 26, type: "shape", shapeType: "circle", position: { x: 880, y: 320 }, size: 100, isInput: false, value: "36", textSize: 42 }
-  //   ],
-  //   validations: [],
-  //   score: 1
-  // },
-  // {
-  //   id: 7,
-  //     //   type: QuestionType.FILL,
-  //   question: "Viết số thích hợp vào ô trống.",
-  //   inputLength: 2,
-  //   elements: [
-  //     { id: 27, type: "shape", shapeType: "diamond", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "12", textSize: 44 },
-  //     { id: 28, type: "shape", shapeType: "diamond", position: { x: 330, y: 120 }, size: 120, isInput: false, value: "14", textSize: 44 },
-  //     { id: 29, type: "shape", shapeType: "diamond", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "16", textSize: 44 },
-  //     { id: 30, type: "shape", shapeType: "diamond", position: { x: 670, y: 120 }, size: 120, isInput: true, value: "18", bgColor: "white", borderWidth: 5, textSize: 44 },
-  //     { id: 31, type: "shape", shapeType: "diamond", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "20", bgColor: "white", borderWidth: 5, textSize: 44 }
-  //   ],
-  //   validations: [],
-  //   score: 1
-  // },
-  // {
-  //   id: 8,
-  //     //   type: QuestionType.FILL,
-  //   question: "Viết số thích hợp vào ô trống.",
-  //   inputLength: 2,
-  //   elements: [
-  //     { id: 32, type: "shape", shapeType: "triangle", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "40", textSize: 44 },
-  //     { id: 33, type: "shape", shapeType: "triangle", position: { x: 330, y: 120 }, size: 120, isInput: false, value: "50", textSize: 44 },
-  //     { id: 34, type: "shape", shapeType: "triangle", position: { x: 500, y: 120 }, size: 120, isInput: true, value: "60", bgColor: "white", borderWidth: 5, textSize: 44 },
-  //     { id: 35, type: "shape", shapeType: "triangle", position: { x: 670, y: 120 }, size: 120, isInput: false, value: "70", textSize: 44 },
-  //     { id: 36, type: "shape", shapeType: "triangle", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "80", bgColor: "white", borderWidth: 5, textSize: 44 }
-  //   ],
-  //   validations: [],
-  //   score: 1
-  // },
-  // {
-  //   id: 10,
-  //     //   type: QuestionType.FILL,
-  //   question: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
-  //   inputLength: 1,
-  //   elements: [
-  //     { id: 44, type: "shape", shapeType: "square", position: { x: 200, y: 110 }, size: 100, isInput: true, value: "2", bgColor: "white", borderWidth: 5, textSize: 50 },
-  //     { id: 45, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 400, y: 100 }, width: 400, height: 200 },
-  //     { id: 46, type: "shape", shapeType: "square", position: { x: 200, y: 360 }, size: 100, isInput: true, value: "1", bgColor: "white", borderWidth: 5, textSize: 50 },
-  //     { id: 47, type: "image", url: "https://upload.wikimedia.org/no-found.png", position: { x: 400, y: 400 }, width: 400, height: 200 },
-  //     { id: 48, type: "shape", shapeType: "square", position: { x: 200, y: 610 }, size: 100, isInput: true, value: "3", bgColor: "white", borderWidth: 5, textSize: 50 },
-  //     { id: 49, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 600, y: 660 }, width: 400, height: 200 }
-  //   ],
-  //   validations: [],
-  //   score: 1
-  // },
-  // {
-  //   type: QuestionType.FILL,
-  //   id: 12,
-  //     //   question: "#8 Viết số thích hợp vào ô trống.",
-  //   inputLength: 2,
-  //   elements: [
-  //     // Hàng a)
-  //     { id: 301, type: "text", position: { x: 80, y: 122 }, label: "a)", fontSize: 44 },
-  //     { id: 302, type: "shape", shapeType: "square", position: { x: 220, y: 122 }, size: 100, isInput: false, value: "47", borderWidth: 5, textSize: 44 },
-  //     { id: 303, type: "line", lineType: "arrow", start: { x: 270, y: 122 }, end: { x: 470, y: 122 }, strokeWidth: 5 },
-  //     { id: 304, type: "text", position: { x: 320, y: 82 }, label: "– 3", fontSize: 44 },
-  //     { id: 305, type: "shape", shapeType: "circle", position: { x: 530, y: 132 }, size: 120, isInput: true, value: "44", bgColor: "white", borderWidth: 5, textSize: 44 },
-  //     { id: 306, type: "line", lineType: "arrow", start: { x: 590, y: 122 }, end: { x: 820, y: 122 }, strokeWidth: 5 },
-  //     { id: 307, type: "text", position: { x: 650, y: 82 }, label: "– 4", fontSize: 44 },
-  //     { id: 308, type: "shape", shapeType: "triangle", position: { x: 850, y: 132 }, size: 120, isInput: true, value: "40", bgColor: "white", borderWidth: 5, textSize: 44 },
+  {
+    id: 6,
+    type: QuestionType.FILL,
+    question: "Viết số thích hợp vào ô trống.",
+    inputLength: 2,
+    elements: [
+      { id: 20, type: "line", lineType: "curve", start: { x: 150, y: 360 }, end: { x: 850, y: 360 }, controlPoints: [{ x: 350, y: 60 }, { x: 650, y: 660 }], strokeWidth: 6 },
+      { id: 21, type: "shape", shapeType: "circle", position: { x: 150, y: 310 }, size: 100, isInput: false, value: "31", textSize: 42 },
+      { id: 22, type: "shape", shapeType: "circle", position: { x: 300, y: 270 }, size: 100, isInput: false, value: "32", textSize: 42 },
+      { id: 23, type: "shape", shapeType: "circle", position: { x: 450, y: 320 }, size: 100, isInput: false, value: "33", textSize: 42 },
+      { id: 24, type: "shape", shapeType: "circle", position: { x: 590, y: 410 }, size: 100, isInput: true, value: "34", bgColor: "white", borderWidth: 5, textSize: 42 },
+      { id: 25, type: "shape", shapeType: "circle", position: { x: 760, y: 430 }, size: 100, isInput: true, value: "35", bgColor: "white", borderWidth: 5, textSize: 42 },
+      { id: 26, type: "shape", shapeType: "circle", position: { x: 880, y: 320 }, size: 100, isInput: false, value: "36", textSize: 42 }
+    ],
+    rules: [],
+    score: 1
+  },
+  {
+    id: 7,
+    type: QuestionType.FILL,
+    question: "Viết số thích hợp vào ô trống.",
+    inputLength: 2,
+    elements: [
+      { id: 27, type: "shape", shapeType: "diamond", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "12", textSize: 44 },
+      { id: 28, type: "shape", shapeType: "diamond", position: { x: 330, y: 120 }, size: 120, isInput: false, value: "14", textSize: 44 },
+      { id: 29, type: "shape", shapeType: "diamond", position: { x: 500, y: 120 }, size: 120, isInput: false, value: "16", textSize: 44 },
+      { id: 30, type: "shape", shapeType: "diamond", position: { x: 670, y: 120 }, size: 120, isInput: true, value: "18", bgColor: "white", borderWidth: 5, textSize: 44 },
+      { id: 31, type: "shape", shapeType: "diamond", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "20", bgColor: "white", borderWidth: 5, textSize: 44 }
+    ],
+    rules: [],
+    score: 1
+  },
+  {
+    id: 8,
+    type: QuestionType.FILL,
+    question: "Viết số thích hợp vào ô trống.",
+    inputLength: 2,
+    elements: [
+      { id: 32, type: "shape", shapeType: "triangle", position: { x: 160, y: 120 }, size: 120, isInput: false, value: "40", textSize: 44 },
+      { id: 33, type: "shape", shapeType: "triangle", position: { x: 330, y: 120 }, size: 120, isInput: false, value: "50", textSize: 44 },
+      { id: 34, type: "shape", shapeType: "triangle", position: { x: 500, y: 120 }, size: 120, isInput: true, value: "60", bgColor: "white", borderWidth: 5, textSize: 44 },
+      { id: 35, type: "shape", shapeType: "triangle", position: { x: 670, y: 120 }, size: 120, isInput: false, value: "70", textSize: 44 },
+      { id: 36, type: "shape", shapeType: "triangle", position: { x: 840, y: 120 }, size: 120, isInput: true, value: "80", bgColor: "white", borderWidth: 5, textSize: 44 }
+    ],
+    rules: [],
+    score: 1
+  },
+  {
+    id: 10,
+    type: QuestionType.FILL,
+    question: "Viết các số 1, 2, 3 vào ô trống theo thứ tự từ ngắn nhất đến dài nhất.",
+    inputLength: 1,
+    elements: [
+      { id: 44, type: "shape", shapeType: "square", position: { x: 200, y: 110 }, size: 100, isInput: true, value: "2", bgColor: "white", borderWidth: 5, textSize: 50 },
+      { id: 45, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 400, y: 100 }, width: 400, height: 200 },
+      { id: 46, type: "shape", shapeType: "square", position: { x: 200, y: 360 }, size: 100, isInput: true, value: "1", bgColor: "white", borderWidth: 5, textSize: 50 },
+      { id: 47, type: "image", url: "https://upload.wikimedia.org/no-found.png", position: { x: 400, y: 400 }, width: 400, height: 200 },
+      { id: 48, type: "shape", shapeType: "square", position: { x: 200, y: 610 }, size: 100, isInput: true, value: "3", bgColor: "white", borderWidth: 5, textSize: 50 },
+      { id: 49, type: "image", url: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png", position: { x: 600, y: 660 }, width: 400, height: 200 }
+    ],
+    rules: [],
+    score: 1
+  },
+  {
+    type: QuestionType.FILL,
+    id: 12,
+    question: "#8 Viết số thích hợp vào ô trống.",
+    inputLength: 2,
+    elements: [
+      // Hàng a)
+      { id: 301, type: "text", position: { x: 80, y: 122 }, label: "a)", fontSize: 44 },
+      { id: 302, type: "shape", shapeType: "square", position: { x: 220, y: 122 }, size: 100, isInput: false, value: "47", borderWidth: 5, textSize: 44 },
+      { id: 303, type: "line", lineType: "arrow", start: { x: 270, y: 122 }, end: { x: 470, y: 122 }, strokeWidth: 5 },
+      { id: 304, type: "text", position: { x: 320, y: 82 }, label: "– 3", fontSize: 44 },
+      { id: 305, type: "shape", shapeType: "circle", position: { x: 530, y: 132 }, size: 120, isInput: true, value: "44", bgColor: "white", borderWidth: 5, textSize: 44 },
+      { id: 306, type: "line", lineType: "arrow", start: { x: 590, y: 122 }, end: { x: 820, y: 122 }, strokeWidth: 5 },
+      { id: 307, type: "text", position: { x: 650, y: 82 }, label: "– 4", fontSize: 44 },
+      { id: 308, type: "shape", shapeType: "triangle", position: { x: 850, y: 132 }, size: 120, isInput: true, value: "40", bgColor: "white", borderWidth: 5, textSize: 44 },
 
-  //     // Hàng b)
-  //     { id: 309, type: "text", position: { x: 80, y: 422 }, label: "b)", fontSize: 44 },
-  //     { id: 310, type: "shape", shapeType: "square", position: { x: 220, y: 422 }, size: 100, isInput: false, value: "82", borderWidth: 5, textSize: 44 },
-  //     { id: 311, type: "line", lineType: "arrow", start: { x: 280, y: 422 }, end: { x: 450, y: 422 }, strokeWidth: 5 },
-  //     { id: 312, type: "text", position: { x: 360, y: 382 }, label: "+ 7", fontSize: 44 },
-  //     { id: 313, type: "shape", shapeType: "triangle", position: { x: 530, y: 432 }, size: 120, isInput: true, value: "89", bgColor: "white", borderWidth: 5, textSize: 44 },
-  //     { id: 314, type: "line", lineType: "arrow", start: { x: 590, y: 422 }, end: { x: 770, y: 422 }, strokeWidth: 5 },
-  //     { id: 315, type: "text", position: { x: 680, y: 382 }, label: "– 5", fontSize: 44 },
-  //     { id: 316, type: "shape", shapeType: "circle", position: { x: 850, y: 432 }, size: 120, isInput: true, value: "84", bgColor: "white", borderWidth: 5, textSize: 44 },
-  //   ],
-  //   validations: [],
-  //   score: 1
-  // },
+      // Hàng b)
+      { id: 309, type: "text", position: { x: 80, y: 422 }, label: "b)", fontSize: 44 },
+      { id: 310, type: "shape", shapeType: "square", position: { x: 220, y: 422 }, size: 100, isInput: false, value: "82", borderWidth: 5, textSize: 44 },
+      { id: 311, type: "line", lineType: "arrow", start: { x: 280, y: 422 }, end: { x: 450, y: 422 }, strokeWidth: 5 },
+      { id: 312, type: "text", position: { x: 360, y: 382 }, label: "+ 7", fontSize: 44 },
+      { id: 313, type: "shape", shapeType: "triangle", position: { x: 530, y: 432 }, size: 120, isInput: true, value: "89", bgColor: "white", borderWidth: 5, textSize: 44 },
+      { id: 314, type: "line", lineType: "arrow", start: { x: 590, y: 422 }, end: { x: 770, y: 422 }, strokeWidth: 5 },
+      { id: 315, type: "text", position: { x: 680, y: 382 }, label: "– 5", fontSize: 44 },
+      { id: 316, type: "shape", shapeType: "circle", position: { x: 850, y: 432 }, size: 120, isInput: true, value: "84", bgColor: "white", borderWidth: 5, textSize: 44 },
+    ],
+    rules: [],
+    score: 1
+  },
   {
     id: 141,
     type: QuestionType.MATCH,
@@ -187,23 +187,23 @@ export const QUESTION_MOCKS: Question[] = [
       { key: "b", options: ['82', '84', '89'], answer: '82,84', score: 0.5 },
     ],
   },
-  // {
-  //   id: 303,
-  //   type: QuestionType.CHOICE,
-  //     //   question: "Khoanh vào các số chẵn",
-  //   groups: [
-  //     { key: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
-  //     { key: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: '80,85,90', score: 0.5 },
-  //   ],
-  // },
-  // {
-  //   id: 304,
-  //   type: QuestionType.CHOICE,
-  //     //   question: "Khoanh vào số nhỏ nhất",
-  //   groups: [
-  //     { key: "a", options: ['72', '76', '70'], answer: '70', score: 0.5 },
-  //   ],
-  // },
+  {
+    id: 303,
+    type: QuestionType.CHOICE,
+    //   question: "Khoanh vào các số chẵn",
+    groups: [
+      { key: "a", options: ['Phạm Văn Tài', 'Võ Thị Nhi', 'Thành Tâm'], answer: 'Thành Tâm', score: 0.5 },
+      { key: "b", options: ['80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90'], answer: '80,85,90', score: 0.5 },
+    ],
+  },
+  {
+    id: 304,
+    type: QuestionType.CHOICE,
+    //   question: "Khoanh vào số nhỏ nhất",
+    groups: [
+      { key: "a", options: ['72', '76', '70'], answer: '70', score: 0.5 },
+    ],
+  },
 
   //questionSort
   {
@@ -254,7 +254,211 @@ export const QUESTION_MOCKS: Question[] = [
     // explain: "![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)"
     explain: "Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.\n![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)",
     // explain: "![image](https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png)Số 2 và số 5 chỉ chia hết cho 1 và chính nó, nên chúng là các số nguyên tố. Số 4 và số 9 có nhiều hơn 2 ước số.",
-  }
-  //todo quiz with image  
+  },
+
+  //questionForm
+  {
+    id: 61, //3 cols  -dat-tinh-roi-tinh-lop-1-phep-cong.png
+    type: QuestionType.FORM,
+    question: "Tính",
+    groups: [
+      {
+        label: "a)",
+        columns: [
+          {
+            rows: [
+              [
+                { type: "label", label: "35" },
+              ],
+              [
+                { type: "label", label: "+" },
+              ],
+              [
+                { type: "label", label: "4" },
+              ],
+              [
+                { type: "line" },
+              ],
+              [
+                { id: 611, type: "number", value: "39" },
+              ]
+            ],
+            style: {},
+          },
+          {
+            rows: [
+              [
+                { type: "label", label: "8" },
+              ],
+              [
+                { type: "label", label: "+" },
+              ],
+              [
+                { type: "label", label: "41" },
+              ],
+              [
+                { type: "line" },
+              ],
+              [
+                { id: 612, type: "number", value: "49" },
+              ]
+            ],
+            style: {},
+          },
+          {
+            rows: [
+              [
+                { type: "label", label: "46" },
+              ],
+              [
+                { type: "label", label: "+" },
+              ],
+              [
+                { type: "label", label: "320" },
+              ],
+              [
+                { type: "line" },
+              ],
+              [
+                { id: 613, type: "number", value: "78" },
+              ]
+            ],
+            style: {},
+          },
+        ],
+        style: {},
+      },
+    ],
+    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
+    inputLength: 2,
+    rules: []
+  },
+  {
+    id: 62, //2 cols + 2 label
+    type: QuestionType.FORM,
+    question: "Tính nhẩm",
+    groups: [
+      {
+        label: "a)",
+        columns: [
+          {
+            rows: [
+              [
+                { type: "label", label: "48 - 40 = " },
+                { id: 621, type: "number", value: "8" }
+              ],
+              [
+                { type: "label", label: "58 - 30 = " },
+                { id: 622, type: "number", value: "28" }
+              ]
+            ],
+            style: {},
+          },
+          {
+            rows: [
+              [
+                { type: "label", label: "69 - 60 = " },
+                { id: 623, type: "number", value: "9" }
+              ],
+              [
+                { type: "label", label: "79 - 50 = " },
+                { id: 624, type: "number", value: "29" }
+              ]
+            ],
+            style: {},
+          }
+        ]
+      },
+      {
+        label: "b)",
+        columns: [
+          {
+            rows: [
+              [
+                { type: "label", label: "37 - 4 = " },
+                { id: 625, type: "number", value: "33" }
+              ],
+              [
+                { type: "label", label: "37 - 7 = " },
+                { id: 626, type: "number", value: "30" }
+              ]
+            ],
+            style: {},
+          },
+          {
+            rows: [
+              [
+                { type: "label", label: "98 - 8 = " },
+                { id: 627, type: "number", value: "90" }
+              ],
+              [
+                { type: "label", label: "98 - 5 = " },
+                { id: 628, type: "number", value: "93" }
+              ]
+            ],
+            style: {},
+          }
+        ]
+      },
+    ],
+    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
+    inputLength: 2,
+    rules: []
+  },
+  {
+    id: 63, //2 cols
+    type: QuestionType.FORM,
+    question: "Điền số thích hợp vào chỗ chấm:",
+    groups: [
+      {
+        columns: [
+          {
+            rows: [
+              [
+                { type: "label", label: "92 - " },
+                { id: 631, type: "number", value: "10" },
+                { type: "label", label: " = 82" },
+              ],
+              [
+                { type: "label", label: "39 - " },
+                { id: 632, type: "number", value: "2" },
+                { type: "label", label: " = 37" }]
+            ]
+          },
+        ]
+      },
+    ],
+    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
+    inputLength: 2,
+    rules: []
+  },
+  {
+    id: 64, //1 col + select input
+    type: QuestionType.FORM,
+    question: "Điền dấu > < = vào ô trống",
+    groups: [
+      {
+        columns: [
+          {
+            rows: [
+              [
+                { type: "label", label: "57 - 7" },
+                { id: 641, type: "select", value: "<", valueOptions: '["<", ">", "="]' },
+                { type: "label", label: "57 - 4" },
+              ],
+              [
+                { type: "label", label: "70 - 50" },
+                { id: 642, type: "select", value: ">", valueOptions: '["<", ">", "="]' },
+                { type: "label", label: "50 - 30" },
+              ],
+            ]
+          }
+        ]
+      },
+    ],
+    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
+    inputLength: 2,
+    rules: []
+  },
 ];
 

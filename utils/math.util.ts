@@ -1,10 +1,13 @@
 import { SPACING } from '@/constants/theme';
-import { ElementGroup, QuestionType, ValueType } from '@/enums/math.enum';
+import { PositionGroup, QuestionType, ValueType } from '@/enums/math.enum';
 import { SCORE_FEEDBACK } from '@/services/mocks/score-feedback.mock';
 import {
+  BaseInput,
+  CheckboxInput,
   Question,
   QuestionChoice,
-  QuestionElement, QuestionSort, ShapeElement
+  QuestionElement, QuestionForm, QuestionInput, QuestionSort, RadioInput, SelectInput, ShapeElement,
+  TextInput
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
 import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
@@ -23,7 +26,7 @@ export const getAnchorElements = (elements: QuestionElement[] = []): ShapeElemen
  */
 export const getMatchValueType = (elements: QuestionElement[] = []): ValueType => {
   const anchors = getAnchorElements(elements);
-  const hasMaster = anchors.some(a => a.group === ElementGroup.MASTER);
+  const hasMaster = anchors.some(a => a.group === PositionGroup.MASTER);
   return hasMaster ? ValueType.MULTI : ValueType.SINGLE;
 };
 
@@ -103,15 +106,15 @@ export const getCanvasLayout = (elements: QuestionElement[]) => {
     let elementTop: number | undefined = undefined;
     let elementBottom: number | undefined = undefined;
 
-    if (el.type === 'shape') {
+    if (el.type === 'shape' && el.position) {
       const h = el.height || el.size || 100;
       elementTop = el.position.y - h / 2;
       elementBottom = el.position.y + h / 2;
-    } else if (el.type === 'text') {
+    } else if (el.type === 'text' && el.position) {
       const h = el.fontSize || 40;
       elementTop = el.position.y - h / 2;
       elementBottom = el.position.y + h / 2;
-    } else if (el.type === 'image') {
+    } else if (el.type === 'image' && el.position) {
       elementTop = el.position.y - el.height / 2;
       elementBottom = el.position.y + el.height / 2;
     } else if (el.type === 'line') {
@@ -167,7 +170,7 @@ export const calcExpression = (text: string): string => {
 };
 
 /**
- * Kiểm tra tính đúng đắn của công thức validation
+ * Kiểm tra tính đúng đắn của công thức co rule
  */
 export const validateFormula = (
   formula: string,
@@ -186,7 +189,7 @@ export const validateFormula = (
     // eslint-disable-next-line no-new-func
     return new Function(`return ${evalStr}`)();
   } catch (e) {
-    console.error('Validation error:', e);
+    console.error('formula error:', e);
     return false;
   }
 };
@@ -201,8 +204,8 @@ export const getMatchCorrectTotal = (elements: QuestionElement[] = []): number =
   if (valueType === ValueType.SINGLE) {
     total = Math.ceil(anchors.length / 2);
   } else {
-    const masters = anchors.filter((a) => a.group === ElementGroup.MASTER);
-    const slaves = anchors.filter((a) => a.group !== ElementGroup.MASTER);
+    const masters = anchors.filter((a) => a.group === PositionGroup.MASTER);
+    const slaves = anchors.filter((a) => a.group !== PositionGroup.MASTER);
     masters.forEach((m) => {
       slaves.forEach((s) => {
         let masterValue = calcExpression(m.value || '');
@@ -233,6 +236,25 @@ export const checkQuestionCompletion = (
       );
       if (inputShapes.length === 0) return true;
       return inputShapes.every((s) => userInputs[s.id] && userInputs[s.id].trim() !== '');
+    }
+
+    case QuestionType.FORM: {
+      const qForm = question as QuestionForm;
+      const allInputs: QuestionInput[] = [];
+      if (qForm.groups) {
+        qForm.groups.forEach(g => {
+          g.columns.forEach(c => {
+            c.rows.forEach(r => {
+              allInputs.push(...r);
+            });
+          });
+        });
+      }
+      const inputs = allInputs.filter(el =>
+        (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') && (el as BaseInput).id
+      ) as BaseInput[];
+      if (inputs.length === 0) return true;
+      return inputs.every(i => userInputs[i.id!] && userInputs[i.id!].trim() !== '');
     }
 
     // Phải có ít nhất 1 kết nối
@@ -385,8 +407,64 @@ export const calcQuestionFillScore = (
     }
   }
 
-  // 2. Kiểm tra các công thức validation bổ sung
-  for (const rule of question.validations || []) {
+  // 2. Kiểm tra các công thức co rule bổ sung
+  for (const rule of question.rules || []) {
+    if (rule.formula) {
+      totalRequiredCount++;
+      if (validateFormula(rule.formula, userInputs)) {
+        totalCorrectCount++;
+      } else {
+        isCorrect = false;
+      }
+    }
+  }
+
+  const finalScore =
+    totalRequiredCount > 0 ? Math.round((totalCorrectCount / totalRequiredCount) * questionScore) : 0;
+
+  return { isCorrect, finalScore };
+};
+
+export const calcQuestionFormScore = (
+  question: Question,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  if (question.type !== QuestionType.FORM) return { isCorrect: false, finalScore: 0 };
+  let isCorrect = true;
+  let totalCorrectCount = 0;
+  let totalRequiredCount = 0;
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const qForm = question as QuestionForm;
+
+  const allInputs: QuestionInput[] = [];
+  if (qForm.groups) {
+    qForm.groups.forEach(g => {
+      g.columns.forEach(c => {
+        c.rows.forEach(r => {
+          allInputs.push(...r);
+        });
+      });
+    });
+  }
+
+  // 1. Kiểm tra các ô Input có id và có value
+  for (const el of allInputs) {
+    if ((el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox')) {
+      const input = el as TextInput | SelectInput | RadioInput | CheckboxInput;
+      if (input.id && input.value && input.value.trim() !== '') {
+        totalRequiredCount++;
+        const userVal = userInputs[input.id] || '';
+        if (userVal === input.value) {
+          totalCorrectCount++;
+        } else {
+          isCorrect = false;
+        }
+      }
+    }
+  }
+
+  // 2. Kiểm tra các công thức co rule bổ sung
+  for (const rule of question.rules || []) {
     if (rule.formula) {
       totalRequiredCount++;
       if (validateFormula(rule.formula, userInputs)) {
@@ -461,7 +539,7 @@ export const calcQuestionSortScore = (
   question.groups.forEach((group, groupIndex) => {
     const userVal = userInputs[groupIndex] || '';
     const isCorrect = userVal === group.answer;
-    
+
     if (isCorrect) {
       totalScore += (group.score || 0);
     } else {
@@ -522,6 +600,12 @@ export const calcQuestionScore = (
   switch (question.type) {
     case QuestionType.FILL: {
       const result = calcQuestionFillScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
+      break;
+    }
+    case QuestionType.FORM: {
+      const result = calcQuestionFormScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;

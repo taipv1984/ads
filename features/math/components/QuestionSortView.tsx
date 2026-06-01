@@ -1,7 +1,7 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
 import { QuestionSort, QuestionSortGroup } from '@/services/types/question.types';
-import { MarkdownView } from '@/app/components/shared/MarkdownView';
+import { MarkdownView } from '@/components/shared/MarkdownView';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';

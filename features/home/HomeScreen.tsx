@@ -1,4 +1,4 @@
-import AdsBanner from '@/app/components/shared/AdsBanner';
+import AdsBanner from '@/components/shared/AdsBanner';
 import { COLOR } from '@/constants/theme';
 import { useGlobalState as useGlobal } from '@/context/GlobalContext';
 import { StatusBar } from 'expo-status-bar';

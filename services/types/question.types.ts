@@ -1,4 +1,5 @@
-import { LabelFormat, QuestionType } from "@/enums/math.enum";
+import { LabelFormat, QuestionType, TextInputStyle } from "@/enums/math.enum";
+import { ViewStyle } from "react-native";
 
 export interface Point {
   x: number;
@@ -30,7 +31,7 @@ export interface ShapeElement extends BaseElement {
   textColor?: string;
   textSize?: number;
   textAlign?: 'left' | 'center' | 'right';
-  group?: 'top' | 'bottom' | 'left' | 'right' | 'master'; //ElementGroup
+  group?: 'top' | 'bottom' | 'left' | 'right' | 'master'; //PositionGroup
 }
 
 export interface LineElement extends BaseElement {
@@ -61,9 +62,91 @@ export interface ImageElement extends BaseElement {
 
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
-//new update
+export interface BaseInput {
+  id: number;
+  type: 'number' | 'text' | 'select' | 'radio' | 'checkbox' | 'button';
+  width?: number;
+  height?: number;
+  zIndex?: number;
+}
 
-export interface QuestionValidation {
+export interface TextInput extends BaseInput {
+  type: 'number' | 'text';
+  value?: string;
+  style?: TextInputStyle;  //box*, dot, line, circle, blank
+  bgColor?: string;
+  borderColor?: string;
+  borderWidth?: number;
+  textColor?: string;
+  textAlign?: 'left' | 'center' | 'right';  //default is center
+}
+
+export interface SelectInput extends BaseInput {
+  type: 'select';
+  value?: string;
+  valueOptions?: string; //'["Đ", "S"]'
+}
+
+export interface RadioInput extends BaseInput {
+  type: 'radio';
+  value?: string;
+  label?: string;
+  textAlign?: 'left' | 'right';   //default is left
+}
+
+export interface CheckboxInput extends BaseInput {
+  type: 'checkbox';
+  value?: string;
+  label?: string;
+  textAlign?: 'left' | 'right';   //default is left
+}
+
+export interface ButtonInput extends BaseInput {
+  type: 'button';
+  value?: string;
+  label?: string;
+}
+
+export interface LabelView {
+  type: 'label';
+  label: string;
+  color?: string;
+}
+
+export interface ImageView {
+  type: 'image';
+  uri: string;
+  width?: number;
+  height?: number;
+}
+
+export interface LineView {
+  type: 'line';
+  color?: string;
+  strokeWidth?: number;
+}
+
+export interface BlankView {
+  type: 'blank';
+  height?: number;
+}
+
+export interface FormGroup {
+  label?: string;
+  columns: FormColumn[];
+  style?: ViewStyle;
+}
+
+export interface FormColumn {
+  rows: QuestionInput[][];
+  style?: ViewStyle;
+}
+
+export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
+  ButtonInput |
+  LabelView | ImageView | LineView | BlankView;
+
+export interface QuestionRule {
   id: number;
   formula: string; //'#9 + #10 === 32'
 }
@@ -119,7 +202,7 @@ export interface QuestionSort extends BaseQuestion {
 export interface QuestionFill extends BaseQuestion {
   type: QuestionType.FILL;
   elements?: QuestionElement[];
-  validations?: QuestionValidation[];
+  rules?: QuestionRule[];
   inputLength?: number;
 }
 
@@ -128,4 +211,11 @@ export interface QuestionMatch extends BaseQuestion {
   elements?: QuestionElement[];
 }
 
-export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch;
+export interface QuestionForm extends BaseQuestion {
+  type: QuestionType.FORM;
+  groups?: FormGroup[];
+  rules?: QuestionRule[];
+  inputLength?: number;
+}
+
+export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm;

@@ -1,4 +1,4 @@
-import HeaderButton from '@/app/components/ui/HeaderButton';
+import HeaderButton from '@/components/ui/HeaderButton';
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { useGlobalState } from '@/context/GlobalContext';
 import { useRouter } from 'expo-router';

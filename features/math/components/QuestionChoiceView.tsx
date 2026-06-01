@@ -1,4 +1,4 @@
-import { MarkdownView } from '@/app/components/shared/MarkdownView';
+import { MarkdownView } from '@/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { ViewMode } from '@/enums/math.enum';
 import { QuestionChoice, QuestionChoiceGroup } from '@/services/types/question.types';

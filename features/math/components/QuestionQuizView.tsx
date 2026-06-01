@@ -4,7 +4,7 @@ import { QuestionQuiz, QuestionQuizOption } from '@/services/types/question.type
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MarkdownView } from '@/app/components/shared/MarkdownView';
+import { MarkdownView } from '@/components/shared/MarkdownView';
 
 interface _Props {
   questionQuiz: QuestionQuiz;

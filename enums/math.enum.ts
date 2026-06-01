@@ -4,6 +4,7 @@ export enum ViewMode {
 }
 
 export enum QuestionType {
+    FORM = 'form',
     FILL = 'fill',
     MATCH = 'match',
     CHOICE = 'choice',
@@ -12,7 +13,7 @@ export enum QuestionType {
     STEP = 'step',
 }
 
-export enum ElementGroup {
+export enum PositionGroup {
     TOP = 'top',
     BOTTOM = 'bottom',
     LEFT = 'left',
@@ -25,9 +26,18 @@ export enum ValueType {
     MULTI = 'multi',
 }
 
+//todo later
 export enum LabelFormat {
     HIDE = 'hide',
     ALPHABET = 'alphabet',  //a, b, c, d...
     NUMBER = 'number',      //1, 2, 3, 4...
     INPUT = 'input',        //radio for single choice, checkbox for multi choice
+}
+
+export enum TextInputStyle {
+    BOX = 'box',        // [ ]  default
+    DOT = 'dot',        //......
+    LINE = 'line',      //______
+    CIRCLE = 'circle',  // ( )
+    BLANK = 'blank',    // blank space
 }

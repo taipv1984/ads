@@ -1,6 +1,6 @@
-import BottomNavigation from '@/app/components/shared/BottomNavigation';
-import OptionPicker from '@/app/components/shared/OptionPicker';
-import VirtualKeyboard from '@/app/components/shared/VirtualKeyboard';
+import OptionPicker from '@/components/math/OptionPicker';
+import BottomNavigation from '@/components/shared/BottomNavigation';
+import VirtualKeyboard from '@/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType } from '@/enums/math.enum';
 import { QUESTION_MOCKS } from '@/services/mocks/question.mock';
@@ -207,11 +207,34 @@ const MathScreen: React.FC = () => {
           onPrev={handlePrev}
         />
 
-        {activeInputId !== null && ('type' in currentQuestion && currentQuestion.type === QuestionType.FILL)
-          && ('elements' in currentQuestion)
-          && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions) && (
-            <VirtualKeyboard onKeyPress={handleKeyPress} />
-          )}
+        {activeInputId !== null && (
+          ('type' in currentQuestion && currentQuestion.type === QuestionType.FILL
+            && ('elements' in currentQuestion)
+            && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions))
+          || ('type' in currentQuestion && currentQuestion.type === QuestionType.FORM
+            && (() => {
+              const qForm = currentQuestion as any;
+              let foundInput: any = null;
+              if (qForm.groups) {
+                for (const g of qForm.groups) {
+                  for (const c of g.columns) {
+                    for (const r of c.rows) {
+                      const found = r.find((el: any) => el.id === activeInputId);
+                      if (found) {
+                        foundInput = found;
+                        break;
+                      }
+                    }
+                    if (foundInput) break;
+                  }
+                  if (foundInput) break;
+                }
+              }
+              return foundInput && foundInput.type === 'number';
+            })())
+        ) && (
+          <VirtualKeyboard onKeyPress={handleKeyPress} />
+        )}
       </SafeAreaView>
 
       {/* OptionsPicker được đưa ra root để dùng tọa độ tuyệt đối */}

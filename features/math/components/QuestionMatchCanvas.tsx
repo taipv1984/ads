@@ -1,6 +1,6 @@
 import { COLOR } from '@/constants/theme';
-import { ElementGroup, QuestionType, ValueType, ViewMode } from '@/enums/math.enum';
-import { ImageElement, LineElement, Question, QuestionMatch, ShapeElement, TextElement } from '@/services/types/question.types';
+import { PositionGroup, ValueType, ViewMode } from '@/enums/math.enum';
+import { ImageElement, LineElement, QuestionMatch, ShapeElement, TextElement } from '@/services/types/question.types';
 import { calcExpression, getAnchorElements, getMatchValueType, groupElementsIntoLayers } from '@/utils/math.util';
 import { Canvas, Group, Line, Path, Skia } from '@shopify/react-native-skia';
 import React, { memo, useEffect, useMemo, useState } from 'react';
@@ -87,7 +87,7 @@ const QuestionMatchCanvas: React.FC<_Props> = ({
   const anchorGroups = useSharedValue<string[]>([]);
 
   const anchorElements = useMemo(() => {
-      return getAnchorElements(question.elements);
+    return getAnchorElements(question.elements);
   }, [question.elements]);
 
   useEffect(() => {
@@ -216,7 +216,7 @@ const QuestionMatchCanvas: React.FC<_Props> = ({
         // LOGIC KẾT NỐI TỔNG QUÁT (General Case)
         if (valueType === ValueType.MULTI) {
           // Trong chế độ multi, ít nhất một bên phải là master
-          if (sourceGroup !== ElementGroup.MASTER && targetGroup !== ElementGroup.MASTER) continue;
+          if (sourceGroup !== PositionGroup.MASTER && targetGroup !== PositionGroup.MASTER) continue;
         }
 
         // Luôn ngăn nối cùng nhóm
@@ -251,7 +251,7 @@ const QuestionMatchCanvas: React.FC<_Props> = ({
 
         // LOGIC KẾT NỐI TỔNG QUÁT
         if (valueType === ValueType.MULTI) {
-          if (sourceGroup !== ElementGroup.MASTER && targetGroup !== ElementGroup.MASTER) continue;
+          if (sourceGroup !== PositionGroup.MASTER && targetGroup !== PositionGroup.MASTER) continue;
         }
         if (sourceGroup && targetGroup === sourceGroup) continue;
 
