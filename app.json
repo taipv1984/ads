@@ -8,6 +8,7 @@
     "scheme": "ads",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
+    "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true
     },
