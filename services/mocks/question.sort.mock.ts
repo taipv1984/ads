@@ -1,9 +1,10 @@
 import { QuestionType } from "@/enums/math.enum";
+import { uniqueID } from "@/utils/app.util";
 import { Question } from "../types/question.types";
 
 export const QUESTION_SORT_MOCKS: Question[] = [
     {
-        id: 401,
+        id: uniqueID(),
         type: QuestionType.SORT,
         question: "Sắp xếp các số sau theo thứ tự tăng",
         groups: [
@@ -12,7 +13,7 @@ export const QUESTION_SORT_MOCKS: Question[] = [
         ],
     },
     {
-        id: 402,
+        id: uniqueID(),
         type: QuestionType.SORT,
         question: "Sắp xếp?",
         groups: [

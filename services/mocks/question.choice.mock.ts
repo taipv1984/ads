@@ -1,9 +1,10 @@
 import { QuestionType } from "@/enums/math.enum";
+import { uniqueID } from "@/utils/app.util";
 import { Question } from "../types/question.types";
 
 export const QUESTION_CHOICE_MOCKS: Question[] = [
     {
-        id: 301,
+        id: uniqueID(),
         type: QuestionType.CHOICE,
         question: "Khoanh vào số lớn nhất (single choice)",
         groups: [
@@ -12,7 +13,7 @@ export const QUESTION_CHOICE_MOCKS: Question[] = [
         ],
     },
     {
-        id: 302,
+        id: uniqueID(),
         type: QuestionType.CHOICE,
         question: "Khoanh vào các số chẵn (multi choice)",
         groups: [
@@ -21,7 +22,7 @@ export const QUESTION_CHOICE_MOCKS: Question[] = [
         ],
     },
     {
-        id: 303,
+        id: uniqueID(),
         type: QuestionType.CHOICE,
         question: "Khoanh vào các số chẵn",
         groups: [
@@ -30,7 +31,7 @@ export const QUESTION_CHOICE_MOCKS: Question[] = [
         ],
     },
     {
-        id: 304,
+        id: uniqueID(),
         type: QuestionType.CHOICE,
         question: "Khoanh vào số nhỏ nhất",
         groups: [
@@ -38,6 +39,3 @@ export const QUESTION_CHOICE_MOCKS: Question[] = [
         ],
     },
 ];
-
-
-

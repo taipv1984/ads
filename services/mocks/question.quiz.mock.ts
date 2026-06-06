@@ -1,9 +1,10 @@
 import { LabelFormat, QuestionType } from "@/enums/math.enum";
+import { uniqueID } from "@/utils/app.util";
 import { Question } from "../types/question.types";
 
 export const QUESTION_QUIZ_MOCKS: Question[] = [
     {
-        id: 501,
+        id: uniqueID(),
         type: QuestionType.QUIZ,
         question: "Câu hỏi trắc nghiệm: Ai là người phát minh ra thuyết tương đối?",
         labelFormat: LabelFormat.INPUT,
@@ -17,7 +18,7 @@ export const QUESTION_QUIZ_MOCKS: Question[] = [
         explain: "Albert Einstein là người đã phát minh ra thuyết tương đối rộng và thuyết tương đối hẹp.",
     },
     {
-        id: 502,
+        id: uniqueID(),
         type: QuestionType.QUIZ,
         question: "Hãy chọn các số nguyên tố trong các số sau đây:",
         labelFormat: LabelFormat.ALPHABET,
