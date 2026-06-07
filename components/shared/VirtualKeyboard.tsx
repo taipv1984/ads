@@ -1,3 +1,4 @@
+import { MINUS, PLUS } from '@/constants/math.const';
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -18,7 +19,7 @@ interface _Props {
 
 const VirtualKeyboard: React.FC<_Props> = ({ onKeyPress }) => {
   const row1 = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  const row2 = ['0', '+', '-', 'Đ', 'S', '>', '<', '=', '✓'];
+  const row2 = ['0', PLUS, MINUS, 'Đ', 'S', '>', '<', '=', '✓'];
 
   return (
     <Animated.View

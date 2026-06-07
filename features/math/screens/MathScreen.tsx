@@ -219,7 +219,7 @@ const MathScreen: React.FC = () => {
                 for (const g of qForm.groups) {
                   for (const c of g.columns) {
                     for (const r of c.rows) {
-                      const found = r.find((el: any) => el.id === activeInputId);
+                      const found = r.inputs.find((el: any) => el.id === activeInputId);
                       if (found) {
                         foundInput = found;
                         break;

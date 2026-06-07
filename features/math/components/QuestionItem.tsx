@@ -7,9 +7,9 @@ import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionChoiceView from './QuestionChoiceView';
+import QuestionFormView from './QuestionFormView';
 import QuestionQuizView from './QuestionQuizView';
 import QuestionSortView from './QuestionSortView';
-import QuestionFormView from './QuestionFormView';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -130,10 +130,12 @@ const QuestionItem: React.FC<_Props> = ({
 
 const styles = StyleSheet.create({
   questionTitle: {
-    marginTop: SPACING.xs,
     paddingHorizontal: SPACING.md,
     flexDirection: 'row',
     alignItems: 'flex-start',
+    marginTop: SPACING.xs,
+    marginBottom: SPACING.sm,
+    // borderWidth: 1, //dev
   },
   questionContentText: {
     fontSize: SIZE.md,
@@ -142,10 +144,9 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     alignItems: 'center',
-    borderColor: '#000',
-    borderWidth: 1,
     paddingHorizontal: SPACING.md,
-    backgroundColor: 'white'
+    marginBottom: SPACING.sm,
+    // borderWidth: 1, //dev
   },
   canvasContainer: {
     width: '100%',

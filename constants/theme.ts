@@ -25,6 +25,7 @@ export const COLOR = {
   textSecondary: '#7A7A7A',
   white: '#FFFFFF',
   black: '#111111',
+  gray: '#7A7A7A',
   grayLight: '#EEEEEE',
   transparent: 'transparent',
 
@@ -35,10 +36,10 @@ export const COLOR = {
 export const SPACING = {
   xs: 4,
   sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
+  md: 12,
+  lg: 20,
+  xl: 24,
+  xxl: 32,
 
   // Các biến cố định cho Layout
   screenPadding: 16,
@@ -49,7 +50,7 @@ export const SPACING = {
 
 export const SIZE = {
   sm: 14,
-  md: 16,
+  md: 17,
   lg: 20,
   xl: 24,
   thumbnail: 60,

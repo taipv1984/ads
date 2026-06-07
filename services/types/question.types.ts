@@ -111,6 +111,9 @@ export interface LabelView {
   type: 'label';
   label: string;
   color?: string;
+  width?: number;
+  height?: number;
+  fontWeight?: 'bold';
 }
 
 export interface ImageView {
@@ -124,11 +127,7 @@ export interface LineView {
   type: 'line';
   color?: string;
   strokeWidth?: number;
-}
-
-export interface BlankView {
-  type: 'blank';
-  height?: number;
+  margin?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 }
 
 export interface FormGroup {
@@ -138,13 +137,19 @@ export interface FormGroup {
 }
 
 export interface FormColumn {
-  rows: QuestionInput[][];
+  rows: FormRow[];
   style?: ViewStyle;
 }
 
+export interface FormRow {
+  inputs: QuestionInput[];
+  style?: ViewStyle;
+}
+
+
 export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
   ButtonInput |
-  LabelView | ImageView | LineView | BlankView;
+  LabelView | ImageView | LineView;
 
 export interface QuestionRule {
   id: number;

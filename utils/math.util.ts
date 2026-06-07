@@ -245,7 +245,7 @@ export const checkQuestionCompletion = (
         qForm.groups.forEach(g => {
           g.columns.forEach(c => {
             c.rows.forEach(r => {
-              allInputs.push(...r);
+              allInputs.push(...r.inputs);
             });
           });
         });
@@ -441,7 +441,7 @@ export const calcQuestionFormScore = (
     qForm.groups.forEach(g => {
       g.columns.forEach(c => {
         c.rows.forEach(r => {
-          allInputs.push(...r);
+          allInputs.push(...r.inputs);
         });
       });
     });

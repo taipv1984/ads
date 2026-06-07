@@ -1,12 +1,21 @@
-import { MarkdownView } from '@/components/shared/MarkdownView';
+import { INPUT_HEIGHT } from '@/constants/math.const';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { TextInputStyle, ViewMode } from '@/enums/math.enum';
-import { BlankView, CheckboxInput, ImageView, LabelView, LineView, QuestionForm, QuestionInput, RadioInput, SelectInput, TextInput } from '@/services/types/question.types';
+import {
+  CheckboxInput, ImageView, LabelView, LineView, QuestionForm, QuestionInput,
+  RadioInput, SelectInput, TextInput
+} from '@/services/types/question.types';
+
 import { Ionicons } from '@expo/vector-icons';
 import React, { memo, useState } from 'react';
-import { Dimensions, Image, Modal, TextInput as RNTextInput, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions, Image, Modal, Platform,
+  TextInput as RNTextInput, ScrollView,
+  StatusBar,
+  StyleSheet, Text, TouchableOpacity, View
+} from 'react-native';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface _Props {
   questionForm: QuestionForm;
@@ -19,7 +28,6 @@ interface _Props {
 
 const getZIndex = (input: QuestionInput): number => {
   switch (input.type) {
-    case 'blank': return -3;
     case 'line': return -2;
     case 'image': return -1;
     case 'label': return 0;
@@ -93,6 +101,47 @@ const FormImageView: React.FC<{
   );
 };
 
+const SelectInputItem: React.FC<{
+  selInput: SelectInput;
+  userAnswers: Record<number, string>;
+  isReview: boolean;
+  isFocused: boolean;
+  commonStyle: any;
+  onSelectPress: (input: SelectInput, pos: { x: number, y: number, width: number, height: number }) => void;
+}> = memo(({ selInput, userAnswers, isReview, isFocused, commonStyle, onSelectPress }) => {
+  const val = selInput.id ? (userAnswers[selInput.id] || '') : '';
+  const inputWidth = selInput.width || 80;
+  const inputHeight = selInput.height || INPUT_HEIGHT;
+  const selectRef = React.useRef<any>(null);
+
+  const handlePress = () => {
+    selectRef.current?.measure((x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
+      onSelectPress(selInput, { x: pageX, y: pageY, width, height });
+    });
+  };
+
+  const borderColor = isFocused ? COLOR.focus : COLOR.gray;
+  const textColor = val ? COLOR.focus : COLOR.text;
+
+  return (
+    <TouchableOpacity
+      ref={selectRef}
+      activeOpacity={0.7}
+      disabled={isReview}
+      onPress={handlePress}
+      style={[
+        commonStyle,
+        { width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: borderColor, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.white, flexDirection: 'row' }
+      ]}
+    >
+      <Text style={{ fontSize: SIZE.md, color: textColor, flex: 1, textAlign: 'center', fontWeight: val ? 'bold' : 'normal' }}>
+        {val || '?'}
+      </Text>
+      <Ionicons name="caret-down" size={16} color={COLOR.textSecondary} style={{ paddingRight: 4 }} />
+    </TouchableOpacity>
+  );
+});
+
 const QuestionFormView: React.FC<_Props> = ({
   questionForm,
   userAnswers,
@@ -105,9 +154,12 @@ const QuestionFormView: React.FC<_Props> = ({
   const [selectModalVisible, setSelectModalVisible] = useState(false);
   const [currentSelectInput, setCurrentSelectInput] = useState<SelectInput | null>(null);
 
-  const handleSelectPress = (input: SelectInput) => {
+  const [selectPosition, setSelectPosition] = useState<{ x: number, y: number, width: number, height: number } | null>(null);
+
+  const handleSelectPress = (input: SelectInput, pos: { x: number, y: number, width: number, height: number }) => {
     if (isReview) return;
     setCurrentSelectInput(input);
+    setSelectPosition(pos);
     setSelectModalVisible(true);
   };
 
@@ -132,8 +184,23 @@ const QuestionFormView: React.FC<_Props> = ({
       case 'label': {
         const lbl = input as LabelView;
         content = (
-          <View style={commonStyle} key={key}>
-            <MarkdownView text={lbl.label} style={{ color: lbl.color || COLOR.text, fontSize: SIZE.md }} />
+          <View
+            style={[
+              commonStyle,
+              // { borderWidth: 1 },  //dev
+              // { height: INPUT_HEIGHT },//dev
+              {
+                ...(lbl.width !== undefined ? { width: lbl.width } : {}),
+                ...(lbl.height !== undefined ? { height: lbl.height } : {}),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }
+            ]}
+            key={key}
+          >
+            <Text style={[{ color: lbl.color || COLOR.text, fontSize: SIZE.md }, lbl.fontWeight === 'bold' ? { fontWeight: 'bold' } : {}]}>
+              {lbl.label}
+            </Text>
           </View>
         );
         break;
@@ -144,33 +211,47 @@ const QuestionFormView: React.FC<_Props> = ({
         const val = txtInput.id ? (userAnswers[txtInput.id] || '') : '';
         const isFocused = activeInputId === txtInput.id && !isReview;
 
-        let borderStyle: any = { borderWidth: 1, borderColor: COLOR.textSecondary, borderRadius: 4, backgroundColor: COLOR.white };
+        const borderBaseColor = COLOR.gray;
+
+        let borderStyle: any = { borderWidth: 1, borderColor: borderBaseColor, borderRadius: 4, backgroundColor: COLOR.white };
+        let innerBorderStyle: any = null;
+
+        const isBottomLine = txtInput.style === TextInputStyle.DOT || txtInput.style === TextInputStyle.LINE;
+
         if (txtInput.style === TextInputStyle.DOT) {
-          borderStyle = { borderBottomWidth: 2, borderStyle: 'dotted', borderColor: COLOR.textSecondary, backgroundColor: 'transparent' };
+          borderStyle = { backgroundColor: 'transparent' };
+          innerBorderStyle = { borderBottomWidth: 1, borderStyle: 'dotted', borderColor: borderBaseColor };
         } else if (txtInput.style === TextInputStyle.LINE) {
-          borderStyle = { borderBottomWidth: 1, borderStyle: 'solid', borderColor: COLOR.textSecondary, backgroundColor: 'transparent' };
+          borderStyle = { backgroundColor: 'transparent' };
+          innerBorderStyle = { borderBottomWidth: 1, borderStyle: 'solid', borderColor: borderBaseColor };
         } else if (txtInput.style === TextInputStyle.CIRCLE) {
-          borderStyle = { borderWidth: 1, borderColor: COLOR.textSecondary, borderRadius: 999, backgroundColor: COLOR.white };
+          borderStyle = { borderWidth: 1, borderColor: borderBaseColor, borderRadius: 999, backgroundColor: COLOR.white };
         } else if (txtInput.style === TextInputStyle.BLANK) {
           borderStyle = { borderWidth: 0, backgroundColor: 'transparent' };
         }
 
         if (isFocused) {
-          borderStyle.borderColor = COLOR.focus;
-          if (txtInput.style === TextInputStyle.BOX || txtInput.style === TextInputStyle.CIRCLE) {
-            borderStyle.backgroundColor = COLOR.bgFocus;
+          if (isBottomLine) {
+            innerBorderStyle.borderColor = COLOR.focus;
+          } else {
+            borderStyle.borderColor = COLOR.focus;
+            if (txtInput.style === TextInputStyle.BOX || txtInput.style === TextInputStyle.CIRCLE) {
+              borderStyle.backgroundColor = COLOR.bgFocus;
+            }
           }
         }
 
         // Apply review mode styling if applicable
         if (isReview && txtInput.id) {
-          // If we had a correct answer to compare, we would do it here. 
-          // Assuming userAnswers has the final submitted answer.
-          borderStyle.borderColor = COLOR.textSecondary;
+          if (isBottomLine) {
+            innerBorderStyle.borderColor = COLOR.textSecondary;
+          } else {
+            borderStyle.borderColor = COLOR.textSecondary;
+          }
         }
 
         const inputWidth = txtInput.width || Math.max(40, (questionForm.inputLength || 1) * 20);
-        const inputHeight = txtInput.height || 40;
+        const inputHeight = txtInput.height || INPUT_HEIGHT;
 
         if (txtInput.type === 'number') {
           content = (
@@ -182,37 +263,91 @@ const QuestionFormView: React.FC<_Props> = ({
               style={[
                 commonStyle,
                 borderStyle,
-                { width: inputWidth, height: inputHeight, justifyContent: 'center', alignItems: 'center' }
+                {
+                  width: inputWidth,
+                  height: inputHeight,
+                  justifyContent: 'center',
+                  alignItems: txtInput.textAlign === 'left' ? 'flex-start' : txtInput.textAlign === 'right' ? 'flex-end' : 'center',
+                  paddingHorizontal: isBottomLine ? 0 : (txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0),
+                }
               ]}
             >
-              <Text style={{
-                color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
-                fontSize: SIZE.md,
-                fontWeight: 'bold',
-                textAlign: txtInput.textAlign || 'center'
-              }}>
-                {val}
-              </Text>
+              {isBottomLine ? (
+                <View style={[innerBorderStyle, { width: '100%', height: 23, justifyContent: 'center' }]}>
+                  <Text style={{
+                    color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                    fontSize: SIZE.md,
+                    fontWeight: 'bold',
+                    textAlign: txtInput.textAlign || 'center',
+                  }}>
+                    {val}
+                  </Text>
+                </View>
+              ) : (
+                <Text style={{
+                  color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                  fontSize: SIZE.md,
+                  fontWeight: 'bold',
+                  textAlign: txtInput.textAlign || 'center',
+                }}>
+                  {val}
+                </Text>
+              )}
             </TouchableOpacity>
           );
         } else {
           content = (
-            <View key={key} style={[commonStyle, borderStyle, { width: inputWidth, height: inputHeight, justifyContent: 'center' }]}>
-              <RNTextInput
-                editable={!isReview}
-                value={val}
-                onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
-                onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
-                textAlign={txtInput.textAlign || 'center'}
-                style={{
-                  color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
-                  fontSize: SIZE.md,
-                  fontWeight: 'bold',
-                  flex: 1,
-                  padding: 0,
-                  margin: 0
-                }}
-              />
+            <View
+              key={key}
+              style={[
+                commonStyle,
+                borderStyle,
+                {
+                  width: inputWidth,
+                  height: inputHeight,
+                  justifyContent: 'center',
+                }
+              ]}
+            >
+              {isBottomLine ? (
+                <View style={[innerBorderStyle, { width: '100%', height: 23, justifyContent: 'center' }]}>
+                  <RNTextInput
+                    editable={!isReview}
+                    value={val}
+                    onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
+                    onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
+                    textAlign={txtInput.textAlign || 'center'}
+                    style={{
+                      color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                      fontSize: SIZE.md,
+                      fontWeight: 'bold',
+                      padding: 0,
+                      margin: 0,
+                      paddingHorizontal: isBottomLine ? 0 : (txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0),
+                      paddingTop: 0,
+                      paddingBottom: 0
+                    }}
+                  />
+                </View>
+              ) : (
+                <RNTextInput
+                  editable={!isReview}
+                  value={val}
+                  onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
+                  onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
+                  textAlign={txtInput.textAlign || 'center'}
+                  style={{
+                    color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                    fontSize: SIZE.md,
+                    fontWeight: 'bold',
+                    padding: 0,
+                    margin: 0,
+                    paddingHorizontal: txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
+                  }}
+                />
+              )}
             </View>
           );
         }
@@ -220,26 +355,17 @@ const QuestionFormView: React.FC<_Props> = ({
       }
       case 'select': {
         const selInput = input as SelectInput;
-        const val = selInput.id ? (userAnswers[selInput.id] || '') : '';
-        const inputWidth = selInput.width || 80;
-        const inputHeight = selInput.height || 40;
-
+        const isFocused = currentSelectInput?.id === selInput.id && selectModalVisible;
         content = (
-          <TouchableOpacity
+          <SelectInputItem
             key={key}
-            activeOpacity={0.7}
-            disabled={isReview}
-            onPress={() => handleSelectPress(selInput)}
-            style={[
-              commonStyle,
-              { width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: COLOR.textSecondary, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.white, flexDirection: 'row' }
-            ]}
-          >
-            <Text style={{ fontSize: SIZE.md, color: COLOR.text, flex: 1, textAlign: 'center' }}>
-              {val || 'Chọn'}
-            </Text>
-            <Ionicons name="chevron-down" size={16} color={COLOR.textSecondary} style={{ paddingRight: 4 }} />
-          </TouchableOpacity>
+            selInput={selInput}
+            userAnswers={userAnswers}
+            isReview={isReview}
+            isFocused={isFocused}
+            commonStyle={commonStyle}
+            onSelectPress={handleSelectPress}
+          />
         );
         break;
       }
@@ -292,16 +418,22 @@ const QuestionFormView: React.FC<_Props> = ({
       case 'line': {
         const lineInput = input as LineView;
         const strokeColor = lineInput.color || COLOR.black;
-        const strokeWidth = lineInput.strokeWidth || 2;
+        const strokeWidth = lineInput.strokeWidth || 1;
+        const marginValue = lineInput.margin ? SPACING[lineInput.margin] : 0;
         content = (
-          <View key={key} style={[commonStyle, { width: '100%', height: strokeWidth, backgroundColor: strokeColor, marginVertical: SPACING.xs }]} />
-        );
-        break;
-      }
-      case 'blank': {
-        const blankInput = input as BlankView;
-        content = (
-          <View key={key} style={[commonStyle, { width: '100%', height: blankInput.height || SPACING.md, backgroundColor: 'transparent' }]} />
+          <View
+            key={key}
+            style={[
+              commonStyle,
+              {
+                width: '100%',
+                paddingHorizontal: marginValue,
+                marginVertical: SPACING.xs,
+              }
+            ]}
+          >
+            <View style={{ height: strokeWidth, backgroundColor: strokeColor, width: '100%' }} />
+          </View>
         );
         break;
       }
@@ -317,31 +449,33 @@ const QuestionFormView: React.FC<_Props> = ({
     return (
       <View style={styles.groupsContainer}>
         {questionForm.groups.map((group, gIdx) => (
-          <View key={`group-${gIdx}`} style={[styles.groupWrapper, group.style]}>
+          <React.Fragment key={`group-${gIdx}`}>
             {group.label && (
               <View style={styles.groupLabelContainer}>
                 <Text style={styles.groupLabelText}>{group.label}</Text>
               </View>
             )}
-            <View style={styles.columnsContainer}>
-              {group.columns.map((col, cIdx) => (
-                <View key={`col-${cIdx}`} style={[styles.columnWrapper, col.style]}>
-                  {col.rows.map((row, rIdx) => (
-                    <View key={`row-${rIdx}`} style={styles.rowWrapper}>
-                      {row.map((input) => renderInput(input))}
-                    </View>
-                  ))}
-                </View>
-              ))}
+            <View style={[styles.groupWrapper, group.style]}>
+              <View style={styles.columnsContainer}>
+                {group.columns.map((col, cIdx) => (
+                  <View key={`col-${cIdx}`} style={[styles.columnWrapper, col.style]}>
+                    {col.rows.map((row, rIdx) => (
+                      <View key={`row-${rIdx}`} style={[styles.rowWrapper, row.style]}>
+                        {row.inputs.map((input) => renderInput(input))}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
+          </React.Fragment>
         ))}
       </View>
     );
   };
 
   const renderSelectModal = () => {
-    if (!currentSelectInput) return null;
+    if (!currentSelectInput || !selectPosition) return null;
 
     let options: string[] = [];
     if (currentSelectInput.valueOptions) {
@@ -352,43 +486,77 @@ const QuestionFormView: React.FC<_Props> = ({
       }
     }
 
+    const spaceBelow = SCREEN_HEIGHT - (selectPosition.y + selectPosition.height);
+    const spaceAbove = selectPosition.y;
+    const itemHeight = INPUT_HEIGHT;
+    const listHeight = Math.min(200, options.length * itemHeight);
+
+    // On Android, pageY includes the status bar, but Modal top 0 might be below the status bar, causing a gap.
+    const statusBarOffset = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
+    const adjustedY = selectPosition.y - statusBarOffset;
+
+    const dropdownMinWidth = 80;
+    const dropdownWidth = Math.max(dropdownMinWidth, selectPosition.width);
+    const dropdownLeft = selectPosition.x + (selectPosition.width / 2) - (dropdownWidth / 2);
+
+    let dropdownStyle: any = {
+      position: 'absolute',
+      left: dropdownLeft,
+      width: dropdownWidth,
+      backgroundColor: COLOR.white,
+      borderRadius: 4,
+      borderWidth: 1,
+      borderColor: COLOR.focus,
+      overflow: 'hidden',
+      maxHeight: 200,
+    };
+
+    if (spaceBelow >= listHeight || spaceBelow > spaceAbove) {
+      dropdownStyle.top = adjustedY + selectPosition.height;
+    } else {
+      dropdownStyle.bottom = SCREEN_HEIGHT - adjustedY;
+    }
+
     return (
       <Modal
         visible={selectModalVisible}
         transparent={true}
-        animationType="fade"
+        animationType="none"
         onRequestClose={() => setSelectModalVisible(false)}
       >
         <TouchableOpacity
-          style={styles.modalOverlay}
+          style={{ flex: 1 }}
           activeOpacity={1}
           onPress={() => setSelectModalVisible(false)}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Chọn đáp án</Text>
-              <TouchableOpacity onPress={() => setSelectModalVisible(false)}>
-                <Ionicons name="close-circle" size={24} color={COLOR.textSecondary} />
-              </TouchableOpacity>
-            </View>
-            <ScrollView style={{ maxHeight: 250, width: '100%' }} showsVerticalScrollIndicator={false}>
-              {options.map((opt, idx) => (
-                <TouchableOpacity
-                  key={`opt-${idx}`}
-                  style={styles.modalOption}
-                  onPress={() => handleSelectOption(opt)}
-                  activeOpacity={0.6}
-                >
-                  <Text style={styles.modalOptionText}>{opt}</Text>
-                </TouchableOpacity>
-              ))}
+          <View style={dropdownStyle}>
+            <ScrollView style={{ width: '100%' }} showsVerticalScrollIndicator={false}>
+              {options.map((opt, idx) => {
+                const isSelected = currentSelectInput?.id ? userAnswers[currentSelectInput.id] === opt : false;
+                return (
+                  <TouchableOpacity
+                    key={`opt-${idx}`}
+                    style={{
+                      height: INPUT_HEIGHT,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderBottomWidth: idx < options.length - 1 ? 1 : 0,
+                      borderBottomColor: COLOR.grayLight,
+                      backgroundColor: isSelected ? COLOR.grayLight : 'transparent',
+                    }}
+                    onPress={() => handleSelectOption(opt)}
+                  >
+                    <Text style={{
+                      fontSize: SIZE.md,
+                      color: COLOR.text,
+                      textAlign: 'center'
+                    }}>
+                      {opt}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
-            <TouchableOpacity
-              style={styles.modalCancelButton}
-              onPress={() => setSelectModalVisible(false)}
-            >
-              <Text style={styles.modalCancelText}>Hủy</Text>
-            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -405,13 +573,12 @@ const QuestionFormView: React.FC<_Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     paddingHorizontal: SPACING.md,
-    paddingBottom: SPACING.lg,
   },
   groupsContainer: {
     width: '100%',
     flexDirection: 'column',
+    // borderWidth: 1, //dev
   },
   groupWrapper: {
     width: '100%',
@@ -420,16 +587,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   groupLabelContainer: {
-    marginRight: SPACING.sm,
-    paddingTop: SPACING.xs,
+    width: '100%',
+    marginBottom: SPACING.sm,
+    // borderWidth: 1, //dev
   },
   groupLabelText: {
     fontSize: SIZE.md,
-    fontWeight: 'bold',
     color: COLOR.text,
   },
   columnsContainer: {
     flex: 1,
+    gap: SPACING.md,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
@@ -438,14 +606,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    minWidth: 100,
+    minWidth: 96,
+    // borderWidth: 1, //dev
+    // borderColor: 'red', //dev
   },
   rowWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 30,
-    marginVertical: 2,
+    width: '100%',
+    // borderWidth: 1, //dev
+    // borderColor: 'green', //dev
   },
   absoluteContainer: {
     width: '100%',
@@ -453,67 +624,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     overflow: 'hidden',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: COLOR.white,
-    borderRadius: 16,
-    padding: SPACING.lg,
-    alignItems: 'center',
-    shadowColor: COLOR.black,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 8,
-  },
-  modalHeader: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: COLOR.grayLight,
-    paddingBottom: SPACING.sm,
-    marginBottom: SPACING.md,
-  },
-  modalTitle: {
-    fontSize: SIZE.lg,
-    fontWeight: 'bold',
-    color: COLOR.primary,
-  },
-  modalOption: {
-    width: '100%',
-    paddingVertical: SPACING.md,
-    backgroundColor: COLOR.background,
-    borderRadius: 10,
-    marginBottom: SPACING.sm,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: COLOR.grayLight,
-  },
-  modalOptionText: {
-    fontSize: SIZE.md,
-    fontWeight: '600',
-    color: COLOR.text,
-  },
-  modalCancelButton: {
-    width: '100%',
-    paddingVertical: SPACING.md,
-    marginTop: SPACING.md,
-    backgroundColor: COLOR.grayLight,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalCancelText: {
-    fontSize: SIZE.md,
-    fontWeight: 'bold',
-    color: COLOR.textSecondary,
-  }
 });
 
 export default memo(QuestionFormView);
