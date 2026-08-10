@@ -1,11 +1,9 @@
 import OptionPicker from '@/components/math/OptionPicker';
 import BottomNavigation from '@/components/shared/BottomNavigation';
-import VirtualKeyboard from '@/components/shared/VirtualKeyboard';
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
-import { QuestionType } from '@/enums/math.enum';
 import { QUESTION_MOCKS } from '@/services/mocks/question.mock';
 import { ShapeElement } from '@/services/types/question.types';
-import { calcQuestionScore, checkQuestionCompletion, getCanvasLayout } from '@/utils/math.util';
+import { calcQuestionScore, checkQuestionCompletion } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
@@ -20,7 +18,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 // Component hiển thị ảnh tự động điều chỉnh chiều cao theo tỷ lệ
 const AutoHeightImage = ({ uri }: { uri: string }) => {
   const [aspectRatio, setAspectRatio] = useState(1);
-
   React.useEffect(() => {
     if (uri) {
       RNImage.getSize(uri, (width, height) => {
@@ -30,7 +27,6 @@ const AutoHeightImage = ({ uri }: { uri: string }) => {
       });
     }
   }, [uri]);
-
   return (
     <RNImage
       source={{ uri }}
@@ -57,27 +53,13 @@ const MathScreen: React.FC = () => {
   const [pickerPosition, setPickerPosition] = useState<{ x: number, y: number } | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [incompleteQuestions, setIncompleteQuestions] = useState<number[]>([]);
-
   const flatListRef = useRef<FlatList>(null);
+  const currentQuestion = questions[currentIndex] || QUESTION_MOCKS[currentIndex];
 
   // Initialize questions
   React.useEffect(() => {
     setQuestions(QUESTION_MOCKS);
   }, []);
-
-  const currentQuestion = questions[currentIndex] || QUESTION_MOCKS[currentIndex];
-  const qInputs = userAnswers[currentQuestion.id] || {};
-
-  const handleKeyPress = (key: string) => {
-    if (activeInputId === null) return;
-    const currentVal = qInputs[activeInputId] || '';
-    let newVal = currentVal + key;
-    const maxLength = ('inputLength' in currentQuestion && currentQuestion.inputLength) || 2;
-    if (newVal.length > maxLength) {
-      newVal = newVal.slice(1);
-    }
-    updateAnswer(currentQuestion.id, activeInputId, newVal);
-  };
 
   const handleCheck = () => {
     setActiveInputId(null);
@@ -131,11 +113,6 @@ const MathScreen: React.FC = () => {
     }
   }, [currentIndex]);
 
-  // Hàm tính toán layout động cho Canvas dựa trên các phần tử
-  const getCanvasLayoutCallback = useCallback((elements: any[]) => {
-    return getCanvasLayout(elements);
-  }, []);
-
   const handleConnectionsChange = useCallback((id: number, conns: { from: number, to: number }[]) => {
     updateConnections(id, conns);
   }, [updateConnections]);
@@ -163,7 +140,6 @@ const MathScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.root} edges={['top']}>
-        {/* Header chuẩn với nút Check bên phải */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -206,35 +182,6 @@ const MathScreen: React.FC = () => {
           onNext={handleNext}
           onPrev={handlePrev}
         />
-
-        {activeInputId !== null && (
-          ('type' in currentQuestion && currentQuestion.type === QuestionType.FILL
-            && ('elements' in currentQuestion)
-            && !((currentQuestion.elements?.find(el => el.id === activeInputId) as any)?.valueOptions))
-          || ('type' in currentQuestion && currentQuestion.type === QuestionType.FORM
-            && (() => {
-              const qForm = currentQuestion as any;
-              let foundInput: any = null;
-              if (qForm.groups) {
-                for (const g of qForm.groups) {
-                  for (const c of g.columns) {
-                    for (const r of c.rows) {
-                      const found = r.inputs.find((el: any) => el.id === activeInputId);
-                      if (found) {
-                        foundInput = found;
-                        break;
-                      }
-                    }
-                    if (foundInput) break;
-                  }
-                  if (foundInput) break;
-                }
-              }
-              return foundInput && foundInput.type === 'number';
-            })())
-        ) && (
-            <VirtualKeyboard onKeyPress={handleKeyPress} />
-          )}
       </SafeAreaView>
 
       {/* OptionsPicker được đưa ra root để dùng tọa độ tuyệt đối */}
@@ -270,6 +217,7 @@ const MathScreen: React.FC = () => {
         }
         return null;
       })()}
+
       {/* Modal xác nhận chấm điểm */}
       <GradeConfirmModal
         visible={showConfirmModal}

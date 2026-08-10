@@ -11,6 +11,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
     id: uniqueID(), //3 cols
     type: QuestionType.FORM,
     question: "Tính",
+    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
     groups: [
       {
         label: "a) Tính",
@@ -86,7 +87,6 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         style: {},
       },
     ],
-    image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
     inputLength: 2,
   },
   {

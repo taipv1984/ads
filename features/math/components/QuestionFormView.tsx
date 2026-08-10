@@ -5,7 +5,6 @@ import {
   CheckboxInput, ImageView, LabelView, LineView, QuestionForm, QuestionInput,
   RadioInput, SelectInput, TextInput
 } from '@/services/types/question.types';
-
 import { Ionicons } from '@expo/vector-icons';
 import React, { memo, useState } from 'react';
 import {
@@ -231,6 +230,8 @@ const QuestionFormView: React.FC<_Props> = ({
         }
 
         if (isFocused) {
+          borderStyle.backgroundColor = '#FFF9C4';
+
           if (isBottomLine) {
             innerBorderStyle.borderColor = COLOR.focus;
           } else {
@@ -250,16 +251,14 @@ const QuestionFormView: React.FC<_Props> = ({
           }
         }
 
-        const inputWidth = txtInput.width || Math.max(40, (questionForm.inputLength || 1) * 20);
+        const inputLength = questionForm.inputLength ?? 1
+        const inputWidth = txtInput.width || Math.max(40, inputLength * 20);
         const inputHeight = txtInput.height || INPUT_HEIGHT;
 
         if (txtInput.type === 'number') {
           content = (
-            <TouchableOpacity
+            <View
               key={key}
-              activeOpacity={0.7}
-              disabled={isReview}
-              onPress={() => txtInput.id && onSelectInput(txtInput.id)}
               style={[
                 commonStyle,
                 borderStyle,
@@ -267,33 +266,53 @@ const QuestionFormView: React.FC<_Props> = ({
                   width: inputWidth,
                   height: inputHeight,
                   justifyContent: 'center',
-                  alignItems: txtInput.textAlign === 'left' ? 'flex-start' : txtInput.textAlign === 'right' ? 'flex-end' : 'center',
-                  paddingHorizontal: isBottomLine ? 0 : (txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0),
                 }
               ]}
             >
               {isBottomLine ? (
                 <View style={[innerBorderStyle, { width: '100%', height: 23, justifyContent: 'center' }]}>
-                  <Text style={{
+                  <RNTextInput
+                    editable={!isReview}
+                    value={val}
+                    onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
+                    onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
+                    textAlign={txtInput.textAlign || 'center'}
+                    keyboardType="number-pad"
+                    maxLength={inputLength}
+                    style={{
+                      color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                      fontSize: SIZE.md,
+                      fontWeight: 'bold',
+                      padding: 0,
+                      margin: 0,
+                      paddingHorizontal: isBottomLine ? 0 : (txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0),
+                      paddingTop: 0,
+                      paddingBottom: 0
+                    }}
+                  />
+                </View>
+              ) : (
+                <RNTextInput
+                  editable={!isReview}
+                  value={val}
+                  onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
+                  onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
+                  textAlign={txtInput.textAlign || 'center'}
+                  keyboardType="number-pad"
+                  maxLength={inputLength}
+                  style={{
                     color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
                     fontSize: SIZE.md,
                     fontWeight: 'bold',
-                    textAlign: txtInput.textAlign || 'center',
-                  }}>
-                    {val}
-                  </Text>
-                </View>
-              ) : (
-                <Text style={{
-                  color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
-                  fontSize: SIZE.md,
-                  fontWeight: 'bold',
-                  textAlign: txtInput.textAlign || 'center',
-                }}>
-                  {val}
-                </Text>
+                    padding: 0,
+                    margin: 0,
+                    paddingHorizontal: txtInput.textAlign && txtInput.textAlign !== 'center' ? 5 : 0,
+                    paddingTop: 0,
+                    paddingBottom: 0
+                  }}
+                />
               )}
-            </TouchableOpacity>
+            </View>
           );
         } else {
           content = (
@@ -317,6 +336,8 @@ const QuestionFormView: React.FC<_Props> = ({
                     onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                     onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
                     textAlign={txtInput.textAlign || 'center'}
+                    keyboardType="default"
+                    maxLength={inputLength}
                     style={{
                       color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
                       fontSize: SIZE.md,
@@ -336,6 +357,8 @@ const QuestionFormView: React.FC<_Props> = ({
                   onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                   onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
                   textAlign={txtInput.textAlign || 'center'}
+                  keyboardType="default"
+                  maxLength={inputLength}
                   style={{
                     color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
                     fontSize: SIZE.md,
