@@ -1,10 +1,9 @@
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
-import { LabelFormat, ViewMode } from '@/enums/math.enum';
+import { QuestionQuizStyle, ViewMode } from '@/enums/math.enum';
 import { QuestionQuiz, QuestionQuizOption } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MarkdownView } from '@/components/shared/MarkdownView';
 
 interface _Props {
   questionQuiz: QuestionQuiz;
@@ -41,7 +40,6 @@ const QuestionQuizView: React.FC<_Props> = ({
   };
 
   const getOptionStyles = (
-    labelFormat: LabelFormat,
     isChoice: boolean,
     isCorrect: boolean
   ) => {
@@ -71,16 +69,11 @@ const QuestionQuizView: React.FC<_Props> = ({
   const renderOption = (question: QuestionQuiz, option: QuestionQuizOption, index: number) => {
     const currentVal = userAnswers[question.id] || '';
     const quizOptions = currentVal ? currentVal.split(',') : [];
-
     const optionIdx = index.toString();
     const isChoice = quizOptions.includes(optionIdx);
-
     const isCorrect = !!option.isCorrect;
-
-    const labelFormat = question.labelFormat || LabelFormat.HIDE;
-    const isMulti = question.options.filter(o => o.isCorrect).length > 1;
-
-    const optionStyles = getOptionStyles(labelFormat, isChoice, isCorrect);
+    const optionStyle = question.optionStyle ?? QuestionQuizStyle.BLANK;
+    const optionStyles = getOptionStyles(isChoice, isCorrect);
 
     return (
       <TouchableOpacity
@@ -93,47 +86,49 @@ const QuestionQuizView: React.FC<_Props> = ({
           optionStyles
         ]}
       >
-        {labelFormat === LabelFormat.INPUT && (
+        {optionStyle === QuestionQuizStyle.CHECKBOX && (
           <View style={styles.inputIconContainer}>
-            {isMulti ? (
-              isChoice ? (
-                <Ionicons
-                  name="checkbox"
-                  size={24}
-                  color={isReview ? (isCorrect ? COLOR.success : COLOR.error) : COLOR.focus}
-                />
-              ) : (
-                <Ionicons
-                  name="square-outline"
-                  size={24}
-                  color={COLOR.textSecondary}
-                />
-              )
+            {isChoice ? (
+              <Ionicons
+                name="checkbox"
+                size={24}
+                color={isReview ? (isCorrect ? COLOR.success : COLOR.error) : COLOR.focus}
+              />
             ) : (
-              isChoice ? (
-                <Ionicons
-                  name="radio-button-on"
-                  size={24}
-                  color={isReview ? (isCorrect ? COLOR.success : COLOR.error) : COLOR.focus}
-                />
-              ) : (
-                <Ionicons
-                  name="radio-button-off"
-                  size={24}
-                  color={COLOR.textSecondary}
-                />
-              )
+              <Ionicons
+                name="square-outline"
+                size={24}
+                color={COLOR.textSecondary}
+              />
             )}
           </View>
         )}
 
-        {labelFormat === LabelFormat.ALPHABET && (
+        {optionStyle === QuestionQuizStyle.RADIO && (
+          <View style={styles.inputIconContainer}>
+            {isChoice ? (
+              <Ionicons
+                name="radio-button-on"
+                size={24}
+                color={isReview ? (isCorrect ? COLOR.success : COLOR.error) : COLOR.focus}
+              />
+            ) : (
+              <Ionicons
+                name="radio-button-off"
+                size={24}
+                color={COLOR.textSecondary}
+              />
+            )}
+          </View>
+        )}
+
+        {optionStyle === QuestionQuizStyle.ALPHABET && (
           <Text style={styles.prefixText}>
             {String.fromCharCode(97 + index)}.
           </Text>
         )}
 
-        {labelFormat === LabelFormat.NUMBER && (
+        {optionStyle === QuestionQuizStyle.NUMBER && (
           <Text style={styles.prefixText}>
             {index + 1}.
           </Text>
@@ -142,7 +137,8 @@ const QuestionQuizView: React.FC<_Props> = ({
         <View style={styles.optionContentWrapper}>
           <Text style={[
             styles.optionText,
-            labelFormat === LabelFormat.INPUT ? styles.optionTextWithInput : null,
+            optionStyle === QuestionQuizStyle.RADIO ? styles.optionTextWithInput : null,
+            optionStyle === QuestionQuizStyle.CHECKBOX ? styles.optionTextWithInput : null,
           ]}>
             {option.value}
           </Text>
@@ -167,27 +163,7 @@ const QuestionQuizView: React.FC<_Props> = ({
     );
   };
 
-  const renderExplanation = (question: QuestionQuiz) => {
-    if (!isReview) return null;
 
-    const hasExplain = question.explain && question.explain.trim() !== '';
-
-    if (!hasExplain) return null;
-
-    return (
-      <View style={styles.explanationBox}>
-        <Text style={styles.explanationTitle}>
-          <Ionicons name="bulb-outline" size={16} color={COLOR.focus} /> Giải thích
-        </Text>
-        {hasExplain && (
-          <MarkdownView
-            text={question.explain!}
-            style={styles.explanationText}
-          />
-        )}
-      </View>
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -195,7 +171,6 @@ const QuestionQuizView: React.FC<_Props> = ({
         <View style={styles.optionsList}>
           {questionQuiz.options.map((opt, idx) => renderOption(questionQuiz, opt, idx))}
         </View>
-        {renderExplanation(questionQuiz)}
       </View>
     </View>
   );
@@ -263,20 +238,5 @@ const styles = StyleSheet.create({
   },
   rightCheckmark: {
     marginLeft: SPACING.xs,
-  },
-  explanationBox: {
-    marginTop: SPACING.sm,
-  },
-  explanationTitle: {
-    fontSize: SIZE.md,
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    color: COLOR.focus
-  },
-  explanationText: {
-    fontSize: SIZE.md,
-    color: COLOR.text,
-    lineHeight: 22,
-    fontStyle: 'italic',
   },
 });

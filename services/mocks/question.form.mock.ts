@@ -448,7 +448,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
               },
             ],
-            style: { borderWidth: 1, borderColor: COLOR.primary, borderRadius: 8, padding: SPACING.md }
+            style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           },
           {
             rows: [
@@ -468,7 +468,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
-            style: { borderWidth: 1, borderColor: COLOR.primary, borderRadius: 8, padding: SPACING.md }
+            style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           }
         ],
         style: { marginBottom: SPACING.md }
@@ -493,7 +493,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
-            style: { borderWidth: 1, borderColor: COLOR.primary, borderRadius: 8, padding: SPACING.md }
+            style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           },
           {
             rows: [
@@ -513,7 +513,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
-            style: { borderWidth: 1, borderColor: COLOR.primary, borderRadius: 8, padding: SPACING.md }
+            style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           }
         ]
       },

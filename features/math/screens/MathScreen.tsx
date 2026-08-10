@@ -233,8 +233,8 @@ const MathScreen: React.FC = () => {
               return foundInput && foundInput.type === 'number';
             })())
         ) && (
-          <VirtualKeyboard onKeyPress={handleKeyPress} />
-        )}
+            <VirtualKeyboard onKeyPress={handleKeyPress} />
+          )}
       </SafeAreaView>
 
       {/* OptionsPicker được đưa ra root để dùng tọa độ tuyệt đối */}

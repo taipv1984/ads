@@ -10,6 +10,7 @@ import QuestionChoiceView from './QuestionChoiceView';
 import QuestionFormView from './QuestionFormView';
 import QuestionQuizView from './QuestionQuizView';
 import QuestionSortView from './QuestionSortView';
+import QuestionExplanation from './QuestionExplanation';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -39,7 +40,7 @@ const QuestionItem: React.FC<_Props> = ({
   AutoHeightImage
 }) => {
   const { height: canvasHeight, offsetY } = getCanvasLayout('elements' in question ? question.elements || [] : []);
-
+  const hasAnswered = userAnswers && Object.keys(userAnswers).length > 0;
   const handleConnectionsChangeLocal = useCallback((id: number, conns: { from: number, to: number }[]) => {
     onConnectionsChange(id, conns);
   }, [onConnectionsChange]);
@@ -124,6 +125,8 @@ const QuestionItem: React.FC<_Props> = ({
       )}
 
       {renderQuestionContent()}
+
+      <QuestionExplanation explain={question.explain} isAnswered={hasAnswered} />
     </ScrollView>
   );
 };

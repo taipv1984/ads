@@ -1,4 +1,4 @@
-import { LabelFormat, QuestionType, TextInputStyle } from "@/enums/math.enum";
+import { QuestionQuizStyle, QuestionType, TextInputStyle } from "@/enums/math.enum";
 import { ViewStyle } from "react-native";
 
 export interface Point {
@@ -146,7 +146,6 @@ export interface FormRow {
   style?: ViewStyle;
 }
 
-
 export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
   ButtonInput |
   LabelView | ImageView | LineView;
@@ -163,6 +162,7 @@ export interface BaseQuestion {
   question?: string;
   image?: string;
   score?: number; // optional total score for the question
+  explain?: string;
 }
 
 export interface QuestionQuizOption {
@@ -173,9 +173,8 @@ export interface QuestionQuizOption {
 
 export interface QuestionQuiz extends BaseQuestion {
   type: QuestionType.QUIZ;
-  labelFormat?: LabelFormat;
   options: QuestionQuizOption[];
-  explain?: string;
+  optionStyle?: QuestionQuizStyle;
 }
 
 export interface QuestionChoiceGroup {

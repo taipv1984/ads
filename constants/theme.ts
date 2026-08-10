@@ -49,10 +49,10 @@ export const SPACING = {
 } as const;
 
 export const SIZE = {
-  sm: 14,
-  md: 17,
-  lg: 20,
-  xl: 24,
+  sm: 16,
+  md: 18,
+  lg: 22,
+  xl: 26,
   thumbnail: 60,
   avatar: 40,
 } as const;

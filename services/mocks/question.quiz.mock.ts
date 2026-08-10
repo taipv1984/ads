@@ -1,4 +1,4 @@
-import { LabelFormat, QuestionType } from "@/enums/math.enum";
+import { QuestionQuizStyle, QuestionType } from "@/enums/math.enum";
 import { uniqueID } from "@/utils/app.util";
 import { Question } from "../types/question.types";
 
@@ -7,7 +7,7 @@ export const QUESTION_QUIZ_MOCKS: Question[] = [
     id: uniqueID(),
     type: QuestionType.QUIZ,
     question: "Câu hỏi trắc nghiệm: Ai là người phát minh ra thuyết tương đối?",
-    labelFormat: LabelFormat.INPUT,
+    optionStyle: QuestionQuizStyle.RADIO,
     options: [
       { value: "Isaac Newton" },
       { value: "Albert Einstein", isCorrect: true },
@@ -21,7 +21,7 @@ export const QUESTION_QUIZ_MOCKS: Question[] = [
     id: uniqueID(),
     type: QuestionType.QUIZ,
     question: "Hãy chọn các số nguyên tố trong các số sau đây:",
-    labelFormat: LabelFormat.ALPHABET,
+    optionStyle: QuestionQuizStyle.ALPHABET,
     options: [
       { value: "2", isCorrect: true },
       { value: "4" },

@@ -44,7 +44,6 @@ const QuestionChoiceView: React.FC<_Props> = ({
     const currentVal = userAnswers[groupIndex] || '';
     const selected = currentVal ? currentVal.split(',') : [];
     const isChoice = selected.includes(option);
-
     const correctAnswers = group.answer.split(',');
     const isCorrect = correctAnswers.includes(option);
     const isLong = option.length > 2;
@@ -79,7 +78,7 @@ const QuestionChoiceView: React.FC<_Props> = ({
     );
   };
 
-  const renderExplanation = (groupIndex: number, group: QuestionChoiceGroup) => {
+  const renderQuestionChoiceExplanation = (groupIndex: number, group: QuestionChoiceGroup) => {
     if (!isReview) return null;
 
     const currentVal = userAnswers[groupIndex] || '';
@@ -142,7 +141,7 @@ const QuestionChoiceView: React.FC<_Props> = ({
                 {group.options.map(opt => renderOption(groupIndex, group, opt))}
               </View>
             </View>
-            {renderExplanation(groupIndex, group)}
+            {renderQuestionChoiceExplanation(groupIndex, group)}
           </View>
         );
       })}

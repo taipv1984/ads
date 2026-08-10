@@ -5,8 +5,8 @@ export enum ViewMode {
 
 export enum QuestionType {
     FORM = 'form',
-    FILL = 'fill',
-    MATCH = 'match',
+    FILL = 'fill',      //canvas
+    MATCH = 'match',    //canvas
     CHOICE = 'choice',
     SORT = 'sort',
     QUIZ = 'quiz',
@@ -26,12 +26,12 @@ export enum ValueType {
     MULTI = 'multi',
 }
 
-//todo later
-export enum LabelFormat {
-    HIDE = 'hide',
+export enum QuestionQuizStyle {
+    BLANK = 'blank',        //default
     ALPHABET = 'alphabet',  //a, b, c, d...
     NUMBER = 'number',      //1, 2, 3, 4...
-    INPUT = 'input',        //radio for single choice, checkbox for multi choice
+    RADIO = 'radio',
+    CHECKBOX = 'checkbox',
 }
 
 export enum TextInputStyle {
