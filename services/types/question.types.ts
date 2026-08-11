@@ -68,17 +68,15 @@ export interface BaseInput {
   width?: number;
   height?: number;
   zIndex?: number;
+  style?: ViewStyle;
 }
 
 export interface TextInput extends BaseInput {
   type: 'number' | 'text';
   value?: string;
-  style?: TextInputStyle;  //box*, dot, line, circle, blank
-  bgColor?: string;
-  borderColor?: string;
-  borderWidth?: number;
-  textColor?: string;
+  inputStyle?: TextInputStyle;  //box*, dot, line, circle, blank
   textAlign?: 'left' | 'center' | 'right';  //default is center
+  isEnabled?: boolean;  //default is true
 }
 
 export interface SelectInput extends BaseInput {

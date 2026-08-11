@@ -130,7 +130,7 @@ const SelectInputItem: React.FC<{
       onPress={handlePress}
       style={[
         commonStyle,
-        { width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: borderColor, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.white, flexDirection: 'row' }
+        { width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: borderColor, borderRadius: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.white, flexDirection: 'row' }
       ]}
     >
       <Text style={{ fontSize: SIZE.md, color: textColor, flex: 1, textAlign: 'center', fontWeight: val ? 'bold' : 'normal' }}>
@@ -177,7 +177,8 @@ const QuestionFormView: React.FC<_Props> = ({
     const zIndex = getZIndex(input);
 
     let content = null;
-    const commonStyle = { zIndex };
+    const inputStyle = (input as any).style;
+    const commonStyle: any = inputStyle ? [{ zIndex }, inputStyle] : { zIndex };
 
     switch (input.type) {
       case 'label': {
@@ -186,8 +187,6 @@ const QuestionFormView: React.FC<_Props> = ({
           <View
             style={[
               commonStyle,
-              // { borderWidth: 1 },  //dev
-              // { height: INPUT_HEIGHT },//dev
               {
                 ...(lbl.width !== undefined ? { width: lbl.width } : {}),
                 ...(lbl.height !== undefined ? { height: lbl.height } : {}),
@@ -207,25 +206,32 @@ const QuestionFormView: React.FC<_Props> = ({
       case 'number':
       case 'text': {
         const txtInput = input as TextInput;
-        const val = txtInput.id ? (userAnswers[txtInput.id] || '') : '';
+        const isEnabled = txtInput.isEnabled !== false;
+        const val = isEnabled
+          ? (txtInput.id ? (userAnswers[txtInput.id] || '') : '')
+          : (txtInput.value ?? '');
         const isFocused = activeInputId === txtInput.id && !isReview;
 
         const borderBaseColor = COLOR.gray;
 
-        let borderStyle: any = { borderWidth: 1, borderColor: borderBaseColor, borderRadius: 4, backgroundColor: COLOR.white };
+        let borderStyle: any = { borderWidth: 1, borderColor: borderBaseColor, borderRadius: 0, backgroundColor: COLOR.white };
         let innerBorderStyle: any = null;
 
-        const isBottomLine = txtInput.style === TextInputStyle.DOT || txtInput.style === TextInputStyle.LINE;
+        const inputTextColor = isFocused
+          ? COLOR.focus
+          : ((txtInput.style as any)?.color || COLOR.text);
 
-        if (txtInput.style === TextInputStyle.DOT) {
+        const isBottomLine = txtInput.inputStyle === TextInputStyle.DOT || txtInput.inputStyle === TextInputStyle.LINE;
+
+        if (txtInput.inputStyle === TextInputStyle.DOT) {
           borderStyle = { backgroundColor: 'transparent' };
           innerBorderStyle = { borderBottomWidth: 1, borderStyle: 'dotted', borderColor: borderBaseColor };
-        } else if (txtInput.style === TextInputStyle.LINE) {
+        } else if (txtInput.inputStyle === TextInputStyle.LINE) {
           borderStyle = { backgroundColor: 'transparent' };
           innerBorderStyle = { borderBottomWidth: 1, borderStyle: 'solid', borderColor: borderBaseColor };
-        } else if (txtInput.style === TextInputStyle.CIRCLE) {
+        } else if (txtInput.inputStyle === TextInputStyle.CIRCLE) {
           borderStyle = { borderWidth: 1, borderColor: borderBaseColor, borderRadius: 999, backgroundColor: COLOR.white };
-        } else if (txtInput.style === TextInputStyle.BLANK) {
+        } else if (txtInput.inputStyle === TextInputStyle.BLANK) {
           borderStyle = { borderWidth: 0, backgroundColor: 'transparent' };
         }
 
@@ -236,7 +242,7 @@ const QuestionFormView: React.FC<_Props> = ({
             innerBorderStyle.borderColor = COLOR.focus;
           } else {
             borderStyle.borderColor = COLOR.focus;
-            if (txtInput.style === TextInputStyle.BOX || txtInput.style === TextInputStyle.CIRCLE) {
+            if (txtInput.inputStyle === TextInputStyle.BOX || txtInput.inputStyle === TextInputStyle.CIRCLE) {
               borderStyle.backgroundColor = COLOR.bgFocus;
             }
           }
@@ -260,19 +266,20 @@ const QuestionFormView: React.FC<_Props> = ({
             <View
               key={key}
               style={[
-                commonStyle,
                 borderStyle,
+                commonStyle,
                 {
                   width: inputWidth,
                   height: inputHeight,
                   justifyContent: 'center',
-                }
+                },
+                isFocused ? { zIndex: 12 } : {}
               ]}
             >
               {isBottomLine ? (
                 <View style={[innerBorderStyle, { width: '100%', height: 23, justifyContent: 'center' }]}>
                   <RNTextInput
-                    editable={!isReview}
+                    editable={!isReview && isEnabled}
                     value={val}
                     onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                     onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
@@ -280,7 +287,7 @@ const QuestionFormView: React.FC<_Props> = ({
                     keyboardType="number-pad"
                     maxLength={inputLength}
                     style={{
-                      color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                      color: inputTextColor,
                       fontSize: SIZE.md,
                       fontWeight: 'bold',
                       padding: 0,
@@ -293,7 +300,7 @@ const QuestionFormView: React.FC<_Props> = ({
                 </View>
               ) : (
                 <RNTextInput
-                  editable={!isReview}
+                  editable={!isReview && isEnabled}
                   value={val}
                   onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                   onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
@@ -301,7 +308,7 @@ const QuestionFormView: React.FC<_Props> = ({
                   keyboardType="number-pad"
                   maxLength={inputLength}
                   style={{
-                    color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                    color: inputTextColor,
                     fontSize: SIZE.md,
                     fontWeight: 'bold',
                     padding: 0,
@@ -319,19 +326,20 @@ const QuestionFormView: React.FC<_Props> = ({
             <View
               key={key}
               style={[
-                commonStyle,
                 borderStyle,
+                commonStyle,
                 {
                   width: inputWidth,
                   height: inputHeight,
                   justifyContent: 'center',
-                }
+                },
+                isFocused ? { zIndex: 12 } : {}
               ]}
             >
               {isBottomLine ? (
                 <View style={[innerBorderStyle, { width: '100%', height: 23, justifyContent: 'center' }]}>
                   <RNTextInput
-                    editable={!isReview}
+                    editable={!isReview && isEnabled}
                     value={val}
                     onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                     onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
@@ -339,7 +347,7 @@ const QuestionFormView: React.FC<_Props> = ({
                     keyboardType="default"
                     maxLength={inputLength}
                     style={{
-                      color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                      color: inputTextColor,
                       fontSize: SIZE.md,
                       fontWeight: 'bold',
                       padding: 0,
@@ -352,7 +360,7 @@ const QuestionFormView: React.FC<_Props> = ({
                 </View>
               ) : (
                 <RNTextInput
-                  editable={!isReview}
+                  editable={!isReview && isEnabled}
                   value={val}
                   onChangeText={(text) => txtInput.id && onAnswerChange(txtInput.id, text)}
                   onFocus={() => txtInput.id && onSelectInput(txtInput.id)}
@@ -360,7 +368,7 @@ const QuestionFormView: React.FC<_Props> = ({
                   keyboardType="default"
                   maxLength={inputLength}
                   style={{
-                    color: isFocused ? COLOR.focus : (txtInput.textColor || COLOR.text),
+                    color: inputTextColor,
                     fontSize: SIZE.md,
                     fontWeight: 'bold',
                     padding: 0,

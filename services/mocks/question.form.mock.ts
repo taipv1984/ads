@@ -8,6 +8,36 @@ import { Question } from "../types/question.types";
 
 export const QUESTION_FORM_MOCKS: Question[] = [
   {
+    id: uniqueID(),
+    type: QuestionType.FORM,
+    question: "Điền số?",
+    image: "",
+    groups: [
+      {
+        label: "",
+        columns: [
+          {
+            rows: [
+              {
+                inputs: [
+                  { id: uniqueID(), type: "number", value: "25", width: 52, isEnabled: false },
+                  { id: uniqueID(), type: "number", value: "26", width: 52, isEnabled: false, style: { marginLeft: -1, borderRadius: '0 !importal' } },
+                  { id: uniqueID(), type: "number", value: "27", width: 52, style: { marginLeft: -1 } },
+                  { id: uniqueID(), type: "number", value: "28", width: 52, isEnabled: false, style: { marginLeft: -1 } },
+                  { id: uniqueID(), type: "number", value: "29", width: 52, style: { marginLeft: -1 } }
+                ],
+                // style: { borderWidth: 1 }
+              }
+            ],
+            style: {},
+          },
+        ],
+        style: {},
+      }
+    ],
+    inputLength: 2,
+  },
+  {
     id: uniqueID(), //3 cols
     type: QuestionType.FORM,
     question: "Tính",
@@ -18,32 +48,32 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         columns: [
           {
             rows: [
-              { inputs: [{ type: "label", label: "52 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "label", label: "+" }], style: { width: 50, justifyContent: "flex-start" } },
-              { inputs: [{ type: "label", label: "47 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 50, textAlign: "right" }] }
+              { inputs: [{ type: "label", label: "50 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: "+" }], style: { width: 52, justifyContent: "flex-start" } },
+              { inputs: [{ type: "label", label: "47 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
+              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 52, textAlign: "right" }] }
             ],
             style: {},
           },
           {
             rows: [
-              { inputs: [{ type: "label", label: "88 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "label", label: MINUS }], style: { width: 50, justifyContent: "flex-start" } },
-              { inputs: [{ type: "label", label: "40 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "44", width: 50, textAlign: "right" }] }
+              { inputs: [{ type: "label", label: "88 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: MINUS }], style: { width: 52, justifyContent: "flex-start" } },
+              { inputs: [{ type: "label", label: "40 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
+              { inputs: [{ id: uniqueID(), type: "number", value: "44", width: 52, textAlign: "right" }] }
 
             ],
             style: {},
           },
           {
             rows: [
-              { inputs: [{ type: "label", label: "46 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "label", label: MINUS }], style: { width: 50, justifyContent: "flex-start" } },
-              { inputs: [{ type: "label", label: "6 " }], style: { width: 50, justifyContent: "flex-end" } },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "40", width: 50, textAlign: "right" }] }
+              { inputs: [{ type: "label", label: "46 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: MINUS }], style: { width: 52, justifyContent: "flex-start" } },
+              { inputs: [{ type: "label", label: "6 " }], style: { width: 52, justifyContent: "flex-end" } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
+              { inputs: [{ id: uniqueID(), type: "number", value: "40", width: 52, textAlign: "right" }] }
             ],
             style: {},
           },
@@ -55,31 +85,31 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         columns: [
           {
             rows: [
-              { inputs: [{ type: "label", label: "52 + 47" }], style: { width: 70, justifyContent: "flex-end" } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "52", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", style: TextInputStyle.LINE }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
+              { inputs: [{ type: "label", label: "50 + 47" }], style: { width: 70, justifyContent: "flex-end" } },
+              { inputs: [{ id: uniqueID(), type: "number", value: "50", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
             ],
             style: {},
           },
           {
             rows: [
-              { inputs: [{ type: "label", label: "47 + 52" }], style: { width: 70, justifyContent: "flex-end" } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "52", width: 70, textAlign: "right", style: TextInputStyle.LINE }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
+              { inputs: [{ type: "label", label: "47 + 50" }], style: { width: 70, justifyContent: "flex-end" } },
+              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "50", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
             ],
             style: {},
           },
           {
             rows: [
               { inputs: [{ type: "label", label: "99 " + MINUS + " 47" }], style: { width: 70, justifyContent: "flex-end" } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: MINUS, width: 70, textAlign: "left", style: TextInputStyle.DOT }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", style: TextInputStyle.LINE }] },
-              { inputs: [{ id: uniqueID(), type: "number", value: "52", width: 70, textAlign: "right", style: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: MINUS, width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },
+              { inputs: [{ id: uniqueID(), type: "number", value: "50", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
             ],
             style: {},
           },
@@ -154,7 +184,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "3", width: 20, style: TextInputStyle.DOT },
+                  { id: uniqueID(), type: "number", value: "3", width: 20, inputStyle: TextInputStyle.DOT },
                   { type: "label", label: "3", width: 20 },
                 ],
               },
@@ -162,7 +192,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { type: "label", label: "6", width: 20 },
-                  { id: uniqueID(), type: "number", value: "5", width: 20, style: TextInputStyle.DOT }
+                  { id: uniqueID(), type: "number", value: "5", width: 20, inputStyle: TextInputStyle.DOT }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 60, height: 20 } },
@@ -186,13 +216,13 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { type: "label", label: "2", width: 20 },
-                  { id: uniqueID(), type: "number", value: "4", width: 20, style: TextInputStyle.DOT }
+                  { id: uniqueID(), type: "number", value: "4", width: 20, inputStyle: TextInputStyle.DOT }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 60, height: 20 } },
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "7", width: 20, style: TextInputStyle.DOT },
+                  { id: uniqueID(), type: "number", value: "7", width: 20, inputStyle: TextInputStyle.DOT },
                   { type: "label", label: "2", width: 20 },
                 ],
               },
@@ -202,7 +232,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "5", width: 20, style: TextInputStyle.DOT },
+                  { id: uniqueID(), type: "number", value: "5", width: 20, inputStyle: TextInputStyle.DOT },
                   { type: "label", label: "6", width: 20 },
                 ],
               },
@@ -210,7 +240,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { type: "label", label: "3", width: 20 },
-                  { id: uniqueID(), type: "number", value: "3", width: 20, style: TextInputStyle.DOT }
+                  { id: uniqueID(), type: "number", value: "3", width: 20, inputStyle: TextInputStyle.DOT }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 60, height: 20 } },
@@ -435,13 +465,13 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "35", width: 50, height: 40 }], },
+              { inputs: [{ type: "label", label: "35", width: 52, height: 40 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
-                style: { width: 50, justifyContent: "flex-start" }
+                style: { width: 52, justifyContent: "flex-start" }
               },
-              { inputs: [{ type: "label", label: "5", width: 50, height: 40 }], },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
+              { inputs: [{ type: "label", label: "5", width: 52, height: 40 }], },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
               {
                 inputs: [
                   { id: uniqueID(), type: "number", value: "30", width: 40 },
@@ -459,13 +489,13 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "38", width: 50, height: 40 }], },
+              { inputs: [{ type: "label", label: "38", width: 52, height: 40 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
-                style: { width: 50, justifyContent: "flex-start" }
+                style: { width: 52, justifyContent: "flex-start" }
               },
               { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
@@ -487,10 +517,10 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 40 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
-                style: { width: 50, justifyContent: "flex-start" }
+                style: { width: 52, justifyContent: "flex-start" }
               },
               { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
@@ -507,10 +537,10 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 40 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
-                style: { width: 50, justifyContent: "flex-start" }
+                style: { width: 52, justifyContent: "flex-start" }
               },
               { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
-              { inputs: [{ type: "line" }], style: { width: 50, height: 20 } },
+              { inputs: [{ type: "line" }], style: { width: 52, height: 20 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
