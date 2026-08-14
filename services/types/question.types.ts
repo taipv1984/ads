@@ -96,7 +96,7 @@ export interface BaseInput {
 export interface TextInput extends BaseInput {
   type: 'number' | 'text';
   value?: string;
-  inputStyle?: TextInputStyle;  //box*, dot, line, circle, blank
+  inputStyle?: TextInputStyle;  //box*, dot, line
   textAlign?: 'left' | 'center' | 'right';  //default is center
   isEnabled?: boolean;  //default is true
 }

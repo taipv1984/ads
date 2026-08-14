@@ -1,10 +1,8 @@
-import { QuestionType, TextInputStyle } from "@/enums/math.enum";
-
 import { MINUS } from "@/constants/math.const";
 import { COLOR, SPACING } from "@/constants/theme";
+import { QuestionType, TextInputStyle } from "@/enums/math.enum";
 import { uniqueID } from "@/utils/app.util";
 import { Question } from "../types/question.types";
-
 
 export const QUESTION_FORM_MOCKS: Question[] = [
   // {
@@ -20,11 +18,11 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   //           rows: [
   //             {
   //               inputs: [
-  //                 { id: uniqueID(), type: "number", value: "25", width: 52, isEnabled: false },
-  //                 { id: uniqueID(), type: "number", value: "26", width: 52, isEnabled: false, style: { marginLeft: -1, borderRadius: '0 !importal' } },
-  //                 { id: uniqueID(), type: "number", value: "27", width: 52, style: { marginLeft: -1 } },
-  //                 { id: uniqueID(), type: "number", value: "28", width: 52, isEnabled: false, style: { marginLeft: -1 } },
-  //                 { id: uniqueID(), type: "number", value: "29", width: 52, style: { marginLeft: -1 } }
+  //                 { id: uniqueID(), type: "number", value: "25", width: 52, height: 52, isEnabled: false, style: { marginHorizontal: 4, borderRadius: 100 } },
+  //                 { id: uniqueID(), type: "number", value: "26", width: 52, isEnabled: false, style: { marginHorizontal: 4, borderWidth: 0 } },
+  //                 { id: uniqueID(), type: "number", value: "27", width: 52, style: { marginHorizontal: 4 } },
+  //                 { id: uniqueID(), type: "number", value: "28", width: 52, isEnabled: false, style: { marginHorizontal: 4 } },
+  //                 { id: uniqueID(), type: "number", value: "29", width: 52, style: { marginHorizontal: 4 } }
   //               ],
   //               // style: { borderWidth: 1 }
   //             }
@@ -84,7 +82,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         columns: [
           {
             rows: [
-              { inputs: [{ type: "label", label: "50 + 47" }], style: { width: 70, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: "50 + 47" }], style: { width: 70, justifyContent: "flex-end", paddingRight: 4 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "50", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },
@@ -94,7 +92,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
           },
           {
             rows: [
-              { inputs: [{ type: "label", label: "47 + 50" }], style: { width: 70, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: "47 + 50" }], style: { width: 70, justifyContent: "flex-end", paddingRight: 4 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: "+", width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: "50", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },
@@ -104,7 +102,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
           },
           {
             rows: [
-              { inputs: [{ type: "label", label: "99 " + MINUS + " 47" }], style: { width: 70, justifyContent: "flex-end" } },
+              { inputs: [{ type: "label", label: "99 " + MINUS + " 47" }], style: { width: 70, justifyContent: "flex-end", paddingRight: 4 } },
               { inputs: [{ id: uniqueID(), type: "number", value: "99", width: 70, textAlign: "right", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: MINUS, width: 70, textAlign: "left", inputStyle: TextInputStyle.DOT }] },
               { inputs: [{ id: uniqueID(), type: "number", value: "47", width: 70, textAlign: "right", inputStyle: TextInputStyle.LINE }] },

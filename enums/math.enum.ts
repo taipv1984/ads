@@ -38,6 +38,4 @@ export enum TextInputStyle {
     BOX = 'box',        // [ ]  default
     DOT = 'dot',        //......
     LINE = 'line',      //______
-    CIRCLE = 'circle',  // ( )
-    BLANK = 'blank',    // blank space
 }
