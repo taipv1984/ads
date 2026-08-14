@@ -6,6 +6,27 @@ export interface Point {
   y: number;
 }
 
+export interface AnchorPoint {
+  ref: number;
+  x: 'left' | 'center' | 'right';
+  y: 'top' | 'center' | 'bottom';
+}
+
+export interface ConnectLine {
+  source: AnchorPoint;
+  target: AnchorPoint;
+  color?: string;   //default is #000
+  stroke?: number;  //default is 2
+  style?: 'solid' | 'dashed' | 'dotted';  //default is solid
+}
+
+export interface ElementFrame {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export interface BaseElement {
   id: number;
   type: 'shape' | 'line' | 'text' | 'image';
@@ -68,6 +89,7 @@ export interface BaseInput {
   width?: number;
   height?: number;
   zIndex?: number;
+  ref?: number;
   style?: ViewStyle;
 }
 
@@ -218,6 +240,7 @@ export interface QuestionForm extends BaseQuestion {
   groups?: FormGroup[];
   rules?: QuestionRule[];
   inputLength?: number;
+  connectLines?: ConnectLine[];
 }
 
 export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm;

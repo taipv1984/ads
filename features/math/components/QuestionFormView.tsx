@@ -1,18 +1,20 @@
 import { INPUT_HEIGHT } from '@/constants/math.const';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { TextInputStyle, ViewMode } from '@/enums/math.enum';
+import { useConnectLines } from '@/hooks/useConnectLines';
 import {
   CheckboxInput, ImageView, LabelView, LineView, QuestionForm, QuestionInput,
   RadioInput, SelectInput, TextInput
 } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { memo, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
   Dimensions, Image, Modal, Platform,
   TextInput as RNTextInput, ScrollView,
   StatusBar,
   StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
+import ConnectLinesOverlay from './ConnectLinesOverlay';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -107,7 +109,8 @@ const SelectInputItem: React.FC<{
   isFocused: boolean;
   commonStyle: any;
   onSelectPress: (input: SelectInput, pos: { x: number, y: number, width: number, height: number }) => void;
-}> = memo(({ selInput, userAnswers, isReview, isFocused, commonStyle, onSelectPress }) => {
+  inputRef?: (ref: any) => void;
+}> = memo(({ selInput, userAnswers, isReview, isFocused, commonStyle, onSelectPress, inputRef }) => {
   const val = selInput.id ? (userAnswers[selInput.id] || '') : '';
   const inputWidth = selInput.width || 80;
   const inputHeight = selInput.height || INPUT_HEIGHT;
@@ -124,7 +127,10 @@ const SelectInputItem: React.FC<{
 
   return (
     <TouchableOpacity
-      ref={selectRef}
+      ref={(ref) => {
+        selectRef.current = ref;
+        inputRef?.(ref);
+      }}
       activeOpacity={0.7}
       disabled={isReview}
       onPress={handlePress}
@@ -152,8 +158,18 @@ const QuestionFormView: React.FC<_Props> = ({
   const isReview = viewMode === ViewMode.REVIEW;
   const [selectModalVisible, setSelectModalVisible] = useState(false);
   const [currentSelectInput, setCurrentSelectInput] = useState<SelectInput | null>(null);
-
+  const inputRefs = useRef<Record<number, any>>({});
   const [selectPosition, setSelectPosition] = useState<{ x: number, y: number, width: number, height: number } | null>(null);
+
+  // ── ConnectLines: tự động vẽ sau khi TextInput layout xong ────────────────
+  // containerRef trỏ vào formContent View — cần để tính offset page → local coords
+  const containerRef = useRef<any>(null);
+  const { lineData, onInputLayout } = useConnectLines(
+    questionForm.connectLines,
+    inputRefs,
+    containerRef,
+    questionForm.id,
+  );
 
   const handleSelectPress = (input: SelectInput, pos: { x: number, y: number, width: number, height: number }) => {
     if (isReview) return;
@@ -265,6 +281,15 @@ const QuestionFormView: React.FC<_Props> = ({
           content = (
             <View
               key={key}
+              ref={(ref) => {
+                if (txtInput.ref) {
+                  inputRefs.current[txtInput.ref] = ref;
+                }
+              }}
+              onLayout={() => {
+                if (txtInput.ref) onInputLayout(txtInput.ref);
+              }}
+              collapsable={false}
               style={[
                 borderStyle,
                 commonStyle,
@@ -273,6 +298,7 @@ const QuestionFormView: React.FC<_Props> = ({
                   height: inputHeight,
                   justifyContent: 'center',
                 },
+                inputStyle,
                 isFocused ? { zIndex: 12 } : {}
               ]}
             >
@@ -325,6 +351,15 @@ const QuestionFormView: React.FC<_Props> = ({
           content = (
             <View
               key={key}
+              ref={(ref) => {
+                if (txtInput.ref) {
+                  inputRefs.current[txtInput.ref] = ref;
+                }
+              }}
+              onLayout={() => {
+                if (txtInput.ref) onInputLayout(txtInput.ref);
+              }}
+              collapsable={false}
               style={[
                 borderStyle,
                 commonStyle,
@@ -333,6 +368,7 @@ const QuestionFormView: React.FC<_Props> = ({
                   height: inputHeight,
                   justifyContent: 'center',
                 },
+                inputStyle,
                 isFocused ? { zIndex: 12 } : {}
               ]}
             >
@@ -396,6 +432,11 @@ const QuestionFormView: React.FC<_Props> = ({
             isFocused={isFocused}
             commonStyle={commonStyle}
             onSelectPress={handleSelectPress}
+            inputRef={(ref) => {
+              if (selInput.ref) {
+                inputRefs.current[selInput.ref] = ref;
+              }
+            }}
           />
         );
         break;
@@ -596,7 +637,16 @@ const QuestionFormView: React.FC<_Props> = ({
 
   return (
     <View style={styles.container}>
-      {renderGroups()}
+      {/*
+        formContent: position relative + ref để:
+        1. overlay (absoluteFillObject) canh đúng vùng form
+        2. hook đo offset page→local khi tính tọa độ đường nối
+      */}
+      <View ref={containerRef} style={styles.formContent} collapsable={false}>
+        {renderGroups()}
+        {/* Overlay vẽ đường nối, pointerEvents=none nên không chặn touch */}
+        <ConnectLinesOverlay lineData={lineData} />
+      </View>
       {renderSelectModal()}
     </View>
   );
@@ -605,6 +655,11 @@ const QuestionFormView: React.FC<_Props> = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
+  },
+  formContent: {
+    position: 'relative',
+    zIndex: 0,
+    overflow: 'visible',
   },
   groupsContainer: {
     width: '100%',
