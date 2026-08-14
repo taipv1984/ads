@@ -492,7 +492,7 @@ const QuestionFormView: React.FC<_Props> = ({
         const lineInput = input as LineView;
         const strokeColor = lineInput.color || COLOR.black;
         const strokeWidth = lineInput.strokeWidth || 1;
-        const marginValue = lineInput.margin ? SPACING[lineInput.margin] : 0;
+        const marginValue = lineInput.margin ? SPACING.md : 0;
         content = (
           <View
             key={key}

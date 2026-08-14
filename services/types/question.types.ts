@@ -15,8 +15,8 @@ export interface AnchorPoint {
 export interface ConnectLine {
   source: AnchorPoint;
   target: AnchorPoint;
-  color?: string;   //default is #000
-  stroke?: number;  //default is 2
+  color?: string;
+  stroke?: number;
   style?: 'solid' | 'dashed' | 'dotted';  //default is solid
 }
 

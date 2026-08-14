@@ -1,3 +1,4 @@
+import { COLOR } from '@/constants/theme';
 import { ConnectLineGeometry } from '@/hooks/useConnectLines';
 import { ConnectLine } from '@/services/types/question.types';
 import React, { memo, useEffect, useRef } from 'react';
@@ -9,7 +10,7 @@ interface _Props {
 
 const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
   midpoint, distance, angle,
-  color = '#000000', stroke = 1, style = 'solid'
+  color = COLOR.gray, stroke = 1, style = 'solid'
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const strokeWidth = stroke ?? 2;

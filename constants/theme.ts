@@ -39,7 +39,10 @@ export const SPACING = {
   md: 12,
   lg: 20,
   xl: 24,
-  xxl: 32,
+  x3: 30,
+  x4: 40,
+  x5: 50,
+  x6: 60,
 
   // Các biến cố định cho Layout
   screenPadding: 16,

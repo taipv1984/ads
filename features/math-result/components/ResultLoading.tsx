@@ -65,7 +65,7 @@ const ResultLoading: React.FC<_Props> = ({
 const styles = StyleSheet.create({
   loadingContainer: {
     padding: SPACING.xl,
-    paddingTop: SPACING.xxl,
+    paddingTop: SPACING.x3,
     alignItems: 'center',
     minHeight: 300,
   },
