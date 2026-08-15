@@ -7,6 +7,8 @@ import { getAnchorPoint, getAngleDeg, getDistance, getMidpoint } from '../utils/
 
 export interface ConnectLineGeometry {
   id: number;
+  sourcePoint: Point;
+  targetPoint: Point;
   midpoint: Point;
   distance: number;
   angle: number;
@@ -150,9 +152,11 @@ export function useConnectLines(
         const srcPoint = getAnchorPoint(srcLayout, cl.source);
         const tgtPoint = getAnchorPoint(tgtLayout, cl.target);
 
-        const midpoint = getMidpoint(srcPoint, tgtPoint);
-        const distance = getDistance(srcPoint, tgtPoint);
-        const angle = getAngleDeg(srcPoint, tgtPoint);
+        const sourcePoint = srcPoint;
+        const targetPoint = tgtPoint;
+        const midpoint = getMidpoint(sourcePoint, targetPoint);
+        const distance = getDistance(sourcePoint, targetPoint);
+        const angle = getAngleDeg(sourcePoint, targetPoint);
 
         if (!isFinite(distance) || distance <= 0 || !isFinite(angle)) {
           anyMeasureFailed = true;
@@ -160,16 +164,15 @@ export function useConnectLines(
           return;
         }
 
-        // Tạo ra một ID vẽ duy nhất dựa trên ref của source và target
         const lineId = cl.source.ref * 100000 + cl.target.ref;
 
         console.log(`[ConnectLine #${lineId}] Source #${cl.source.ref} local layout:`, srcLayout);
         console.log(`[ConnectLine #${lineId}] Target #${cl.target.ref} local layout:`, tgtLayout);
         console.log(
-          `[ConnectLine #${lineId}] src(${cl.source.x},${cl.source.y}) local: (${safeFixed(srcPoint.x)}, ${safeFixed(srcPoint.y)})`
+          `[ConnectLine #${lineId}] src(${cl.source.x},${cl.source.y}) local: (${safeFixed(sourcePoint.x)}, ${safeFixed(sourcePoint.y)})`
         );
         console.log(
-          `[ConnectLine #${lineId}] tgt(${cl.target.x},${cl.target.y}) local: (${safeFixed(tgtPoint.x)}, ${safeFixed(tgtPoint.y)})`
+          `[ConnectLine #${lineId}] tgt(${cl.target.x},${cl.target.y}) local: (${safeFixed(targetPoint.x)}, ${safeFixed(targetPoint.y)})`
         );
         console.log(
           `[ConnectLine #${lineId}] Mid(${safeFixed(midpoint.x)},${safeFixed(midpoint.y)})`,
@@ -179,6 +182,8 @@ export function useConnectLines(
         onLineDone({
           ...cl,
           id: lineId,
+          sourcePoint,
+          targetPoint,
           midpoint,
           distance,
           angle,

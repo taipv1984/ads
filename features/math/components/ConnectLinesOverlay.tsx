@@ -9,7 +9,7 @@ interface _Props {
 }
 
 const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
-  midpoint, distance, angle,
+  sourcePoint, distance, angle,
   color = COLOR.gray, stroke = 1, style = 'solid'
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
@@ -28,15 +28,15 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
     <Animated.View
       style={{
         position: 'absolute',
-        left: midpoint.x - distance / 2,
-        top: midpoint.y - strokeWidth / 2,
+        left: sourcePoint.x,
+        top: sourcePoint.y - strokeWidth / 2,
         width: distance,
         height: strokeWidth,
         backgroundColor: isDashed ? 'transparent' : color,
         borderBottomColor: color,
         borderBottomWidth: isDashed ? strokeWidth : 0,
         borderStyle: style === 'dashed' ? 'dashed' : style === 'dotted' ? 'dotted' : 'solid',
-        transformOrigin: 'center',
+        transformOrigin: 'left center',
         transform: [{ rotate: `${angle}deg` }],
         zIndex: 1,
         opacity,
@@ -82,8 +82,10 @@ const ConnectLinesOverlay: React.FC<_Props> = memo(
         line.color === other?.color &&
         line.stroke === other?.stroke &&
         line.style === other?.style &&
-        line.midpoint.x === other?.midpoint.x &&
-        line.midpoint.y === other?.midpoint.y
+        line.sourcePoint.x === other?.sourcePoint.x &&
+        line.sourcePoint.y === other?.sourcePoint.y &&
+        line.targetPoint.x === other?.targetPoint.x &&
+        line.targetPoint.y === other?.targetPoint.y
       );
     });
   },
