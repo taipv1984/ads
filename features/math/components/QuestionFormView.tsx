@@ -36,6 +36,20 @@ const getZIndex = (input: QuestionInput): number => {
   }
 };
 
+const resolveInputStyle = (input: { style?: any; width?: number; height?: number }): any => {
+  const rawStyle = (input.style ?? {}) as any;
+  const mergedStyle = { ...rawStyle };
+
+  if (input.width !== undefined) {
+    mergedStyle.width = input.width;
+  }
+  if (input.height !== undefined) {
+    mergedStyle.height = input.height;
+  }
+
+  return mergedStyle;
+};
+
 const FormImageView: React.FC<{
   uri: string;
   width?: number;
@@ -136,7 +150,11 @@ const SelectInputItem: React.FC<{
       onPress={handlePress}
       style={[
         commonStyle,
-        { width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: borderColor, borderRadius: 3, justifyContent: 'center', alignItems: 'center', backgroundColor: COLOR.white, flexDirection: 'row' }
+        {
+          width: inputWidth, height: inputHeight, borderWidth: 1, borderColor: borderColor, borderRadius: 3,
+          justifyContent: 'center', alignItems: 'center',
+          backgroundColor: COLOR.white, flexDirection: 'row'
+        }
       ]}
     >
       <Text style={{ fontSize: SIZE.md, color: textColor, flex: 1, textAlign: 'center', fontWeight: val ? 'bold' : 'normal' }}>
@@ -193,26 +211,32 @@ const QuestionFormView: React.FC<_Props> = ({
     const zIndex = getZIndex(input);
 
     let content = null;
-    const inputStyle = (input as any).style;
-    const commonStyle: any = inputStyle ? [{ zIndex }, inputStyle] : { zIndex };
+    const inputStyle = resolveInputStyle(input as any);
+    const commonStyle: any = [{ zIndex }, inputStyle];
 
     switch (input.type) {
       case 'label': {
         const lbl = input as LabelView;
+        const labelStyle = resolveInputStyle(lbl as any) as any;
+        const containerStyle = {
+          ...(labelStyle.width !== undefined ? { width: labelStyle.width } : {}),
+          ...(labelStyle.height !== undefined ? { height: labelStyle.height } : {}),
+          justifyContent: 'center',
+          alignItems: 'center',
+        };
+        const textStyle = {
+          color: labelStyle.textColor ?? labelStyle.color ?? COLOR.text,
+          fontSize: SIZE.md,
+          fontWeight: labelStyle.fontWeight ?? 'normal',
+          ...(labelStyle.textAlign ? { textAlign: labelStyle.textAlign } : {}),
+        };
+
         content = (
           <View
-            style={[
-              commonStyle,
-              {
-                ...(lbl.width !== undefined ? { width: lbl.width } : {}),
-                ...(lbl.height !== undefined ? { height: lbl.height } : {}),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }
-            ]}
+            style={[commonStyle, containerStyle]}
             key={key}
           >
-            <Text style={[{ color: lbl.color || COLOR.text, fontSize: SIZE.md }, lbl.fontWeight === 'bold' ? { fontWeight: 'bold' } : {}]}>
+            <Text style={[textStyle]}>
               {lbl.label}
             </Text>
           </View>
@@ -230,22 +254,24 @@ const QuestionFormView: React.FC<_Props> = ({
         const inputTextColor = isFocused
           ? COLOR.focus
           : ((txtInput.style as any)?.color || COLOR.text);
-        const isBottomLine = txtInput.inputStyle === TextInputStyle.DOT || txtInput.inputStyle === TextInputStyle.LINE;
         const isDotInput = txtInput.inputStyle === TextInputStyle.DOT;
         const isLineInput = txtInput.inputStyle === TextInputStyle.LINE;
+        const isBottomLine = isDotInput || isLineInput;
 
-        let customStyle: any = { borderWidth: 1, borderColor: COLOR.gray, borderRadius: 3, backgroundColor: COLOR.white };
+        let customStyle: any = {
+          borderWidth: 1, borderColor: COLOR.gray, borderRadius: 3,
+          backgroundColor: COLOR.bgFocus
+        };
 
         if (isBottomLine) {
-          customStyle = { ...customStyle, borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0, paddingBottom: -2 };
-        }
-
-        if (isDotInput || isLineInput) {
-          customStyle = { ...customStyle, borderBottomWidth: 0, borderStyle: 'solid', backgroundColor: 'transparent' };
+          customStyle = {
+            ...customStyle,
+            borderWidth: 0, borderStyle: 'solid',
+            borderRadius: 0
+          };
         }
 
         if (isFocused) {
-          customStyle.backgroundColor = '#FFF9C4';
           customStyle.borderColor = COLOR.focus;
           customStyle.backgroundColor = COLOR.bgFocus;
         }
@@ -304,6 +330,8 @@ const QuestionFormView: React.FC<_Props> = ({
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       alignItems: 'center',
+                      overflow: 'hidden',
+                      // borderWidth: 1,
                     }}>
                       {Array.from({ length: 10 }).map((_, index) => (
                         <View
@@ -477,12 +505,13 @@ const QuestionFormView: React.FC<_Props> = ({
       case 'image': {
         const imgInput = input as ImageView;
         if (!imgInput.uri) return null;
+        const imageStyle = resolveInputStyle(imgInput as any) as any;
         content = (
           <FormImageView
             key={key}
             uri={imgInput.uri}
-            width={imgInput.width}
-            height={imgInput.height}
+            width={imageStyle.width}
+            height={imageStyle.height}
             style={commonStyle}
           />
         );
@@ -491,8 +520,7 @@ const QuestionFormView: React.FC<_Props> = ({
       case 'line': {
         const lineInput = input as LineView;
         const strokeColor = lineInput.color || COLOR.black;
-        const strokeWidth = lineInput.strokeWidth || 1;
-        const marginValue = lineInput.margin ? SPACING.md : 0;
+        const strokeWidth = lineInput.stroke || 1;
         content = (
           <View
             key={key}
@@ -500,7 +528,6 @@ const QuestionFormView: React.FC<_Props> = ({
               commonStyle,
               {
                 width: '100%',
-                paddingHorizontal: marginValue,
                 marginVertical: SPACING.xs,
               }
             ]}
