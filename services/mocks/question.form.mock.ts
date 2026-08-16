@@ -12,6 +12,123 @@ export const QUESTION_FORM_MOCKS: Question[] = [
     image: "",
     groups: [
       {
+        columns: [
+          {
+            rows: [
+              {
+                inputs: [{ id: uniqueID(), ref: 1, type: "number", value: "1", width: 50, height: 50, isEnabled: false, style: { marginTop: 140, borderRadius: 100 } }],
+              },
+            ],
+          },
+          {
+            rows: [
+              {
+                inputs: [{ id: uniqueID(), ref: 2, type: "number", value: "3", width: 50, height: 50, style: {} }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 3, type: "number", value: "4", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 4, type: "number", value: "5", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 5, type: "number", value: "6", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 6, type: "number", value: "7", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+            ],
+          },
+          {
+            rows: [
+              {
+                inputs: [{ id: uniqueID(), ref: 7, type: "number", value: "8", width: 50, height: 50, style: {} }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 8, type: "number", value: "9", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 9, type: "number", value: "10", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 10, type: "number", value: "11", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+              {
+                inputs: [{ id: uniqueID(), ref: 11, type: "number", value: "12", width: 50, height: 50, style: { marginTop: 20 } }],
+              },
+            ],
+          },
+          {
+            rows: [
+              {
+                inputs: [{ id: uniqueID(), ref: 12, type: "number", value: "2", width: 50, height: 50, isEnabled: false, style: { marginTop: 140, borderRadius: 100 } }],
+              },
+            ],
+          },
+        ],
+      }
+    ],
+    connectLines: [
+      {
+        source: { ref: 1, x: 'center', y: 'center' },
+        target: { ref: 2, x: 'left', y: 'center' },
+        label: "+1"
+      },
+      {
+        source: { ref: 1, x: 'center', y: 'center' },
+        target: { ref: 3, x: 'left', y: 'center' },
+        label: "+2"
+      },
+      {
+        source: { ref: 1, x: 'center', y: 'center' },
+        target: { ref: 4, x: 'left', y: 'center' },
+        label: "+3"
+      },
+      {
+        source: { ref: 1, x: 'center', y: 'center' },
+        target: { ref: 5, x: 'left', y: 'center' },
+        label: "+4"
+      },
+      {
+        source: { ref: 1, x: 'center', y: 'center' },
+        target: { ref: 6, x: 'left', y: 'center' },
+        label: "+5"
+      },
+      {
+        source: { ref: 12, x: 'center', y: 'center' },
+        target: { ref: 7, x: 'right', y: 'center' },
+        label: "+6"
+      },
+      {
+        source: { ref: 12, x: 'center', y: 'center' },
+        target: { ref: 8, x: 'right', y: 'center' },
+        label: "+7"
+      },
+      {
+        source: { ref: 12, x: 'center', y: 'center' },
+        target: { ref: 9, x: 'right', y: 'center' },
+        label: "+8"
+      },
+      {
+        source: { ref: 12, x: 'center', y: 'center' },
+        target: { ref: 10, x: 'right', y: 'center' },
+        label: "+9"
+      },
+      {
+        source: { ref: 12, x: 'center', y: 'center' },
+        target: { ref: 11, x: 'right', y: 'center' },
+        label: "+10"
+      },
+    ],
+    inputLength: 2,
+  },
+  {
+    id: uniqueID(),
+    type: QuestionType.FORM,
+    question: "Điền số?",
+    image: "",
+    groups: [
+      {
         label: "",
         columns: [
           {
