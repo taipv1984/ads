@@ -77,61 +77,71 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 2, x: 'left', y: 'center' },
         label: "+1",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 3, x: 'left', y: 'center' },
         label: "+2",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 4, x: 'left', y: 'center' },
         label: "+3",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 5, x: 'left', y: 'center' },
         label: "+4",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 6, x: 'left', y: 'center' },
         label: "+5",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 7, x: 'right', y: 'center' },
         label: "+6",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 8, x: 'right', y: 'center' },
         label: "+7",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 9, x: 'right', y: 'center' },
         label: "+8",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 10, x: 'right', y: 'center' },
         label: "+9",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 11, x: 'right', y: 'center' },
         label: "+10",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
     ],
     inputLength: 2,
@@ -196,19 +206,22 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 2, x: 'center', y: 'top' },
         label: "+a",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 3, x: 'center', y: 'top' },
         label: "+b",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
         target: { ref: 4, x: 'center', y: 'top' },
         label: "+c",
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 1, x: 'center', y: 'center' },
@@ -227,35 +240,40 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         target: { ref: 7, x: 'center', y: 'bottom' },
         label: "+x",
         labelOffset: -12,
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 8, x: 'center', y: 'bottom' },
         label: "+y",
         labelOffset: -12,
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 9, x: 'center', y: 'bottom' },
         label: "+z",
         labelOffset: -12,
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 10, x: 'center', y: 'bottom' },
         label: "+w",
         labelOffset: -12,
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
       {
         source: { ref: 12, x: 'center', y: 'center' },
         target: { ref: 11, x: 'center', y: 'bottom' },
         label: "+@",
         labelOffset: -12,
-        labelAnchor: 'last'
+        labelAnchor: 'last',
+        style: 'arrow',
       },
     ],
     inputLength: 2,
@@ -439,7 +457,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
       {
         source: { ref: 2, x: 'right', y: 'bottom' },
         target: { ref: 3, x: 'left', y: 'top' },
-        style: 'dashed',
+        style: 'arrow',
         stroke: 1,
         label: "+2"
       }

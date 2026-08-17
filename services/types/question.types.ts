@@ -20,7 +20,7 @@ export interface ConnectLine {
   labelAnchor?: 'first' | 'center' | 'last'; // default: 'center'
   color?: string;
   stroke?: number;
-  style?: 'solid' | 'dashed' | 'dotted';  //default is solid
+  style?: 'line' | 'arrow';  //default is line
 }
 
 export interface ElementFrame {

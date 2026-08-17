@@ -48,11 +48,11 @@ const getConnectLineLabelPosition = (
 
 const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
   sourcePoint, midpoint, targetPoint, distance, angle, label, labelOffset, labelAnchor = 'center',
-  color = COLOR.gray, stroke = 1, style = 'solid'
+  color = COLOR.gray, stroke = 1, style = 'line'
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const strokeWidth = stroke ?? 1;
-  const isDashed = style === 'dashed' || style === 'dotted';
+  const isArrow = style === 'arrow';
   const labelPosition = label && label.trim() !== ''
     ? getConnectLineLabelPosition(midpoint, sourcePoint, targetPoint, label, labelOffset, labelAnchor)
     : null;
@@ -65,6 +65,23 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
     }).start();
   }, [opacity]);
 
+  const arrowSize = 10;
+  const arrowHalf = 4;
+  const arrowStyle = isArrow ? {
+    position: 'absolute' as const,
+    right: -1,
+    top: -(arrowHalf * 0.9),
+    width: 0,
+    height: 0,
+    borderLeftWidth: arrowSize,
+    borderTopWidth: arrowHalf,
+    borderBottomWidth: arrowHalf,
+    borderLeftColor: color,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    zIndex: 2,
+  } : null;
+
   return (
     <>
       <Animated.View
@@ -74,16 +91,26 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
           top: sourcePoint.y - strokeWidth / 2,
           width: distance,
           height: strokeWidth,
-          backgroundColor: isDashed ? 'transparent' : color,
-          borderBottomColor: color,
-          borderBottomWidth: isDashed ? strokeWidth : 0,
-          borderStyle: style === 'dashed' ? 'dashed' : style === 'dotted' ? 'dotted' : 'solid',
+          overflow: 'visible',
           transformOrigin: 'left center',
           transform: [{ rotate: `${angle}deg` }],
           zIndex: 1,
           opacity,
         }}
-      />
+      >
+        <View
+          style={{
+            width: distance,
+            height: strokeWidth,
+            backgroundColor: color,
+            borderBottomColor: color,
+            borderBottomWidth: 0,
+            borderStyle: 'solid',
+          }}
+        />
+
+        {isArrow && <View style={arrowStyle} />}
+      </Animated.View>
 
       {labelPosition && (
         <View
