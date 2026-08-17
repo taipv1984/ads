@@ -16,6 +16,8 @@ export interface ConnectLine {
   source: AnchorPoint;
   target: AnchorPoint;
   label?: string;
+  labelOffset?: number;  //px, default is 15
+  labelAnchor?: 'first' | 'center' | 'last'; // default: 'center'
   color?: string;
   stroke?: number;
   style?: 'solid' | 'dashed' | 'dotted';  //default is solid

@@ -13,45 +13,30 @@ const getConnectLineLabelPosition = (
   sourcePoint: { x: number; y: number },
   targetPoint: { x: number; y: number },
   labelText: string,
-  source?: { x: string; y: string },
-  target?: { x: string; y: string },
+  labelOffset: number = 15,
+  labelAnchor: 'first' | 'center' | 'last' = 'center',
 ) => {
   const dx = targetPoint.x - sourcePoint.x;
   const dy = targetPoint.y - sourcePoint.y;
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-
-  const labelHeight = 22;
-  const labelWidth = Math.min(88, Math.max(28, labelText.length * 9 + 12));
-  const closeGap = 8;
-  const sideGap = 10;
-
-  // Calculate the shift along the line to center on the visible segment.
-  // The circle has a radius of 25px when its anchor is 'center'.
   const length = Math.hypot(dx, dy) || 1;
   const ux = dx / length;
   const uy = dy / length;
 
-  const padSource = source?.x === 'center' ? 25 : 0;
-  const padTarget = target?.x === 'center' ? 25 : 0;
-  const shiftDist = (padSource - padTarget) / 2;
+  const anchorRatio = labelAnchor === 'first' ? 0.25 : labelAnchor === 'last' ? 0.75 : 0.5;
+  const anchorOffset = (anchorRatio - 0.5) * length;
+  const anchorX = midpoint.x + ux * anchorOffset;
+  const anchorY = midpoint.y + uy * anchorOffset;
 
-  const shiftX = shiftDist * ux;
-  const shiftY = shiftDist * uy;
+  const labelHeight = 24;
+  const labelWidth = Math.min(88, Math.max(28, labelText.length * 9 + 12));
 
-  let left = 0;
-  let top = 0;
+  const normalX = -uy;
+  const normalY = ux;
+  const upwardNormalX = normalY > 0 ? -normalX : normalX;
+  const upwardNormalY = normalY > 0 ? -normalY : normalY;
 
-  if (absDx >= absDy) {
-    // Keep short labels close to the connector, just above the line.
-    left = midpoint.x + shiftX - labelWidth / 2;
-    top = midpoint.y + shiftY - labelHeight - closeGap;
-  } else {
-    // Keep vertical connector labels offset to the side, but close to the line.
-    const signX = dx >= 0 ? 1 : -1;
-    left = midpoint.x + shiftX + signX * sideGap - labelWidth / 2;
-    top = midpoint.y + shiftY - labelHeight / 2;
-  }
+  const left = anchorX + upwardNormalX * labelOffset - labelWidth / 2;
+  const top = anchorY + upwardNormalY * labelOffset - labelHeight / 2;
 
   return {
     left,
@@ -62,14 +47,14 @@ const getConnectLineLabelPosition = (
 };
 
 const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
-  sourcePoint, midpoint, targetPoint, distance, angle, label, source, target,
+  sourcePoint, midpoint, targetPoint, distance, angle, label, labelOffset, labelAnchor = 'center',
   color = COLOR.gray, stroke = 1, style = 'solid'
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const strokeWidth = stroke ?? 1;
   const isDashed = style === 'dashed' || style === 'dotted';
   const labelPosition = label && label.trim() !== ''
-    ? getConnectLineLabelPosition(midpoint, sourcePoint, targetPoint, label, source, target)
+    ? getConnectLineLabelPosition(midpoint, sourcePoint, targetPoint, label, labelOffset, labelAnchor)
     : null;
 
   useEffect(() => {
@@ -107,7 +92,6 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
             left: labelPosition.left,
             top: labelPosition.top,
             width: labelPosition.labelWidth,
-            height: labelPosition.labelHeight,
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 4,
