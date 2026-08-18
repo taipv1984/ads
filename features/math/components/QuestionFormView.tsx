@@ -205,9 +205,11 @@ const QuestionFormView: React.FC<_Props> = ({
   };
 
   // Toggle layout helpers used by line rendering
-  const renderInput = (input: QuestionInput) => {
+  const renderInput = (input: QuestionInput, inputIndex: number, rowIndex: number, colIndex: number, groupIndex: number) => {
     const inputId = 'id' in input ? (input as any).id : undefined;
-    const key = `input-${input.type}-${inputId || Math.random()}`;
+    const key = inputId !== undefined
+      ? `input-${groupIndex}-${colIndex}-${rowIndex}-${inputIndex}-${input.type}-${inputId}`
+      : `input-${groupIndex}-${colIndex}-${rowIndex}-${inputIndex}-${input.type}`;
     const zIndex = getZIndex(input);
 
     let content = null;
@@ -561,7 +563,7 @@ const QuestionFormView: React.FC<_Props> = ({
                   <View key={`col-${cIdx}`} style={[styles.columnWrapper, col.style]}>
                     {col.rows.map((row, rIdx) => (
                       <View key={`row-${rIdx}`} style={[styles.rowWrapper, row.style]}>
-                        {row.inputs.map((input) => renderInput(input))}
+                        {row.inputs.map((input, inputIndex) => renderInput(input, inputIndex, rIdx, cIdx, gIdx))}
                       </View>
                     ))}
                   </View>

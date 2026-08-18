@@ -66,7 +66,7 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
   }, [opacity]);
 
   const arrowSize = 10;
-  const arrowHalf = 4;
+  const arrowHalf = 5;
   const arrowStyle = isArrow ? {
     position: 'absolute' as const,
     right: -1,

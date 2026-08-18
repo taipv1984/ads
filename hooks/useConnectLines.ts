@@ -6,7 +6,7 @@ import { getAnchorPoint, getAngleDeg, getDistance, getMidpoint } from '../utils/
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface ConnectLineGeometry {
-  id: number;
+  id: string;
   sourcePoint: Point;
   targetPoint: Point;
   midpoint: Point;
@@ -164,7 +164,8 @@ export function useConnectLines(
           return;
         }
 
-        const lineId = cl.source.ref * 100000 + cl.target.ref;
+        // Tạo ra một ID vẽ duy nhất dựa trên ref của source và target
+        const lineId = `${cl.source.ref}-${cl.target.ref}-${index}`;
 
         console.log(`[ConnectLine #${lineId}] Source #${cl.source.ref} local layout:`, srcLayout);
         console.log(`[ConnectLine #${lineId}] Target #${cl.target.ref} local layout:`, tgtLayout);
@@ -251,5 +252,5 @@ export function useConnectLines(
     [expectedIds, scheduleRemeasure],
   );
 
-  return { lineData: lineData, onInputLayout };
+  return { lineData, onInputLayout };
 }
