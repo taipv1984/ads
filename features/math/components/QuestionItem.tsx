@@ -1,7 +1,7 @@
 import { MarkdownView } from '@/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
-import { Question, QuestionChoice, QuestionForm, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
+import { Question, QuestionChoice, QuestionForm, QuestionQuiz, QuestionSort, QuestionTable } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
@@ -10,6 +10,7 @@ import QuestionChoiceView from './QuestionChoiceView';
 import QuestionFormView from './QuestionFormView';
 import QuestionQuizView from './QuestionQuizView';
 import QuestionSortView from './QuestionSortView';
+import QuestionTableView from './QuestionTableView';
 import QuestionExplanation from './QuestionExplanation';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -96,6 +97,17 @@ const QuestionItem: React.FC<_Props> = ({
             questionForm={question as QuestionForm}
             userAnswers={userAnswers}
             onAnswerChange={(formId, val) => updateAnswer(question.id, formId, val)}
+            activeInputId={index === currentIndex ? activeInputId : null}
+            onSelectInput={onSelectInput}
+            viewMode={ViewMode.EDIT}
+          />
+        );
+      case QuestionType.TABLE:
+        return (
+          <QuestionTableView
+            questionTable={question as QuestionTable}
+            userAnswers={userAnswers}
+            onAnswerChange={(cellId, val) => updateAnswer(question.id, cellId, val)}
             activeInputId={index === currentIndex ? activeInputId : null}
             onSelectInput={onSelectInput}
             viewMode={ViewMode.EDIT}

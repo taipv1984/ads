@@ -251,10 +251,10 @@ export const checkQuestionCompletion = (
         });
       }
       const inputs = allInputs.filter(el =>
-        (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') && (el as BaseInput).id
-      ) as BaseInput[];
+        (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') && (el as { id?: number }).id
+      ) as Array<BaseInput & { id: number }>;
       if (inputs.length === 0) return true;
-      return inputs.every(i => userInputs[i.id!] && userInputs[i.id!].trim() !== '');
+      return inputs.every(i => userInputs[i.id] && userInputs[i.id].trim() !== '');
     }
 
     // Phải có ít nhất 1 kết nối

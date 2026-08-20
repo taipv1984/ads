@@ -5,6 +5,7 @@ export enum ViewMode {
 
 export enum QuestionType {
     FORM = 'form',
+    TABLE = 'table',
     FILL = 'fill',      //canvas
     MATCH = 'match',    //canvas
     CHOICE = 'choice',

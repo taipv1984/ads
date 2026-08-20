@@ -167,18 +167,18 @@ export function useConnectLines(
         // Tạo ra một ID vẽ duy nhất dựa trên ref của source và target
         const lineId = `${cl.source.ref}-${cl.target.ref}-${index}`;
 
-        console.log(`[ConnectLine #${lineId}] Source #${cl.source.ref} local layout:`, srcLayout);
-        console.log(`[ConnectLine #${lineId}] Target #${cl.target.ref} local layout:`, tgtLayout);
-        console.log(
-          `[ConnectLine #${lineId}] src(${cl.source.x},${cl.source.y}) local: (${safeFixed(sourcePoint.x)}, ${safeFixed(sourcePoint.y)})`
-        );
-        console.log(
-          `[ConnectLine #${lineId}] tgt(${cl.target.x},${cl.target.y}) local: (${safeFixed(targetPoint.x)}, ${safeFixed(targetPoint.y)})`
-        );
-        console.log(
-          `[ConnectLine #${lineId}] Mid(${safeFixed(midpoint.x)},${safeFixed(midpoint.y)})`,
-          `Dist:${safeFixed(distance)} Angle:${safeFixed(angle)}°`
-        );
+        // console.log(`[ConnectLine #${lineId}] Source #${cl.source.ref} local layout:`, srcLayout);
+        // console.log(`[ConnectLine #${lineId}] Target #${cl.target.ref} local layout:`, tgtLayout);
+        // console.log(
+        //   `[ConnectLine #${lineId}] src(${cl.source.x},${cl.source.y}) local: (${safeFixed(sourcePoint.x)}, ${safeFixed(sourcePoint.y)})`
+        // );
+        // console.log(
+        //   `[ConnectLine #${lineId}] tgt(${cl.target.x},${cl.target.y}) local: (${safeFixed(targetPoint.x)}, ${safeFixed(targetPoint.y)})`
+        // );
+        // console.log(
+        //   `[ConnectLine #${lineId}] Mid(${safeFixed(midpoint.x)},${safeFixed(midpoint.y)})`,
+        //   `Dist:${safeFixed(distance)} Angle:${safeFixed(angle)}°`
+        // );
 
         onLineDone({
           ...cl,

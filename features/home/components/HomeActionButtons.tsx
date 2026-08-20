@@ -1,11 +1,13 @@
 import { COLOR, SHADOWS, SIZE, SPACING } from '@/constants/theme';
 import { useGlobalState as useGlobal } from '@/context/GlobalContext';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const HomeActionButtons = () => {
   const { isPurchased } = useGlobal();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -16,7 +18,8 @@ const HomeActionButtons = () => {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.primaryButton}>
+      <TouchableOpacity style={styles.primaryButton}
+        onPress={() => router.push('/dev')}>
         <Ionicons name="game-controller-outline" size={24} color={COLOR.white} style={styles.icon} />
         <Text style={styles.primaryButtonText}>BẮT ĐẦU (CÂU 1)</Text>
       </TouchableOpacity>

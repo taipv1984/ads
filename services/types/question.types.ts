@@ -235,4 +235,27 @@ export interface QuestionForm extends BaseQuestion {
   connectLines?: ConnectLine[];
 }
 
-export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm;
+export interface TableCell {
+  id: number;
+  label?: string;
+  input?: QuestionInput;
+  colspan?: number;
+  rowspan?: number;
+  style?: ViewStyle;
+}
+
+export interface TableRow {
+  id: number;
+  cells: TableCell[];
+}
+
+export interface QuestionTable extends BaseQuestion {
+  type: QuestionType.TABLE;
+  columnCount: number;
+  rows: TableRow[];
+  borderWidth?: number;
+  borderColor?: string;
+  borderStyle?: 'solid' | 'dashed' | 'dotted';  //default is solid
+}
+
+export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm | QuestionTable;
