@@ -1,5 +1,5 @@
 import { QuestionQuizStyle, QuestionType, TextInputStyle } from "@/enums/math.enum";
-import { ViewStyle } from "react-native";
+import { ImageSourcePropType, TextStyle, ViewStyle } from "react-native";
 
 export interface Point {
   x: number;
@@ -93,6 +93,7 @@ export interface BaseInput {
   zIndex?: number;
   ref?: number;
   style?: ViewStyle;
+  textStyle?: TextStyle;   // style cho text/value hiển thị bên trong input
 }
 
 export interface TextInput extends BaseInput {
@@ -134,7 +135,8 @@ export interface LabelView extends BaseInput {
 
 export interface ImageView extends BaseInput {
   type: 'image';
-  uri: string;
+  uri?: string;
+  source?: ImageSourcePropType;
 }
 
 export interface LineView extends BaseInput {
@@ -231,7 +233,7 @@ export interface QuestionForm extends BaseQuestion {
   type: QuestionType.FORM;
   groups?: FormGroup[];
   rules?: QuestionRule[];
-  inputLength?: number;
+  inputLength?: number;   //2*
   connectLines?: ConnectLine[];
 }
 
@@ -241,7 +243,8 @@ export interface TableCell {
   input?: QuestionInput;
   colspan?: number;
   rowspan?: number;
-  style?: ViewStyle;
+  style?: ViewStyle;       // style cho View container của ô
+  textStyle?: TextStyle;   // style cho Text label bên trong ô
 }
 
 export interface TableRow {

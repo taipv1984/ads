@@ -2,7 +2,8 @@ import { INPUT_HEIGHT, INPUT_WIDTH } from '@/constants/math.const';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { TextInputStyle } from '@/enums/math.enum';
 import {
-  CheckboxInput, ImageView,
+  CheckboxInput,
+  ImageView,
   LabelView,
   LineView,
   QuestionInput,
@@ -11,11 +12,10 @@ import {
   TextInput
 } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Dimensions, Image, TextInput as RNTextInput, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { TextInput as RNTextInput, Text, TouchableOpacity, View } from 'react-native';
+import ImageItem from './ImageItem';
 import { SelectInputItem } from './SelectInputItem';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export const getZIndex = (input: QuestionInput): number => {
   switch (input.type) {
@@ -39,69 +39,6 @@ export const resolveInputStyle = (input: { style?: any; width?: number; height?:
 
   return mergedStyle;
 };
-
-export const FormImageView: React.FC<{
-  uri: string;
-  width?: number;
-  height?: number;
-  style?: any;
-}> = ({ uri, width, height, style }) => {
-  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
-  const [hasError, setHasError] = useState(false);
-  const [containerWidth, setContainerWidth] = useState<number>(SCREEN_WIDTH - SPACING.md * 2);
-
-  React.useEffect(() => {
-    if (uri && !hasError) {
-      Image.getSize(
-        uri,
-        (w, h) => setAspectRatio(w / h),
-        () => setHasError(true)
-      );
-    }
-  }, [uri, hasError]);
-
-  if (!uri) return null;
-
-  const source = hasError ? require('@/assets/images/no-image.png') : { uri };
-
-  if (aspectRatio) {
-    let imgWidth = width || 100;
-    let imgHeight = height || imgWidth / aspectRatio;
-
-    if (imgWidth > containerWidth) {
-      imgWidth = containerWidth;
-      imgHeight = imgWidth / aspectRatio;
-    }
-
-    return (
-      <View
-        style={style}
-        onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-      >
-        <Image
-          source={source}
-          style={{ width: imgWidth, height: imgHeight }}
-          resizeMode="contain"
-          onError={() => setHasError(true)}
-        />
-      </View>
-    );
-  }
-
-  const fallbackWidth = width || 100;
-  const fallbackHeight = height || 100;
-  return (
-    <View style={style}>
-      <Image
-        source={source}
-        style={{ width: fallbackWidth, height: fallbackHeight }}
-        resizeMode="contain"
-        onError={() => setHasError(true)}
-      />
-    </View>
-  );
-};
-
 
 export interface _Props {
   input: QuestionInput;
@@ -128,7 +65,7 @@ export const FormInputItem: React.FC<_Props> = ({
   currentSelectInputId,
   selectInputModalVisible,
   handleSelectPress,
-  inputLength = 1,
+  inputLength = 2,
   onInputLayout,
   inputRefCallback,
 }) => {
@@ -167,7 +104,9 @@ export const FormInputItem: React.FC<_Props> = ({
         ? (txtInput.id ? (userAnswers[txtInput.id] || '') : '')
         : (txtInput.value ?? '');
       const isFocused = activeInputId === txtInput.id && !isReview;
-      const inputTextColor = isFocused ? COLOR.focus : ((txtInput.style as any)?.color || COLOR.text);
+      const inputTextColor = isFocused
+        ? COLOR.focus
+        : (txtInput.textStyle?.color as string | undefined) ?? COLOR.text;
       const isDotInput = txtInput.inputStyle === TextInputStyle.DOT;
       const isLineInput = txtInput.inputStyle === TextInputStyle.LINE;
       const isBottomLine = isDotInput || isLineInput;
@@ -233,7 +172,10 @@ export const FormInputItem: React.FC<_Props> = ({
               textAlign={txtInput.textAlign || 'center'}
               keyboardType="number-pad"
               maxLength={inputLength}
-              style={{ color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4, margin: 0 }}
+              style={[
+                { color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4, margin: 0 },
+                txtInput.textStyle,
+              ]}
             />
           </View>
         );
@@ -274,7 +216,10 @@ export const FormInputItem: React.FC<_Props> = ({
               textAlign={txtInput.textAlign || 'center'}
               keyboardType="default"
               maxLength={inputLength}
-              style={{ color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4 }}
+              style={[
+                { color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4 },
+                txtInput.textStyle,
+              ]}
             />
           </View>
         );
@@ -322,12 +267,15 @@ export const FormInputItem: React.FC<_Props> = ({
             color={isChecked ? COLOR.focus : COLOR.textSecondary}
           />
           {rcInput.label ? (
-            <Text style={{
-              fontSize: SIZE.md,
-              color: COLOR.text,
-              marginLeft: rcInput.textAlign === 'right' ? 0 : SPACING.xs,
-              marginRight: rcInput.textAlign === 'right' ? SPACING.xs : 0,
-            }}>
+            <Text style={[
+              {
+                fontSize: SIZE.md,
+                color: COLOR.text,
+                marginLeft: rcInput.textAlign === 'right' ? 0 : SPACING.xs,
+                marginRight: rcInput.textAlign === 'right' ? SPACING.xs : 0,
+              },
+              rcInput.textStyle,
+            ]}>
               {rcInput.label}
             </Text>
           ) : null}
@@ -336,11 +284,12 @@ export const FormInputItem: React.FC<_Props> = ({
     }
     case 'image': {
       const imgInput = input as ImageView;
-      if (!imgInput.uri) return null;
+      if (!imgInput.uri && !imgInput.source) return null;
       const imageStyle = resolveInputStyle(imgInput as any) as any;
       return (
-        <FormImageView
+        <ImageItem
           uri={imgInput.uri}
+          source={imgInput.source}
           width={imageStyle.width}
           height={imageStyle.height}
           style={commonStyle}

@@ -102,7 +102,7 @@ const QuestionTableView: React.FC<_Props> = ({
 
   const renderCellContent = (cell: typeof flatCells[0]) => {
     if (cell.label) {
-      return <Text style={styles.labelText}>{cell.label}</Text>;
+      return <Text style={[styles.labelText, cell.textStyle]}>{cell.label}</Text>;
     }
     if (cell.input) {
       return (
