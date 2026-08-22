@@ -128,18 +128,18 @@ export interface CheckboxInput extends BaseInput {
   textAlign?: 'left' | 'right';   //default is left
 }
 
-export interface LabelView extends BaseInput {
+export interface LabelInput extends BaseInput {
   type: 'label';
   label: string;
 }
 
-export interface ImageView extends BaseInput {
+export interface ImageInput extends BaseInput {
   type: 'image';
   uri?: string;
   source?: ImageSourcePropType;
 }
 
-export interface LineView extends BaseInput {
+export interface LineInput extends BaseInput {
   type: 'line';
   color?: string;
   stroke?: number;
@@ -162,7 +162,7 @@ export interface FormRow {
 }
 
 export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
-  LabelView | ImageView | LineView;
+  LabelInput | ImageInput | LineInput;
 
 export interface QuestionRule {
   id: number;

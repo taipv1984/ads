@@ -3,9 +3,9 @@ import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { TextInputStyle } from '@/enums/math.enum';
 import {
   CheckboxInput,
-  ImageView,
-  LabelView,
-  LineView,
+  ImageInput,
+  LabelInput,
+  LineInput,
   QuestionInput,
   RadioInput,
   SelectInput,
@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { TextInput as RNTextInput, Text, TouchableOpacity, View } from 'react-native';
-import ImageItem from './ImageItem';
+import ImageView from './ImageView';
 import { SelectInputItem } from './SelectInputItem';
 
 export const getZIndex = (input: QuestionInput): number => {
@@ -75,7 +75,7 @@ export const FormInputItem: React.FC<_Props> = ({
 
   switch (input.type) {
     case 'label': {
-      const lbl = input as LabelView;
+      const lbl = input as LabelInput;
       const labelStyle = resolveInputStyle(lbl as any) as any;
       const containerStyle = {
         ...(labelStyle.width !== undefined ? { width: labelStyle.width } : {}),
@@ -283,11 +283,11 @@ export const FormInputItem: React.FC<_Props> = ({
       );
     }
     case 'image': {
-      const imgInput = input as ImageView;
+      const imgInput = input as ImageInput;
       if (!imgInput.uri && !imgInput.source) return null;
       const imageStyle = resolveInputStyle(imgInput as any) as any;
       return (
-        <ImageItem
+        <ImageView
           uri={imgInput.uri}
           source={imgInput.source}
           width={imageStyle.width}
@@ -297,7 +297,7 @@ export const FormInputItem: React.FC<_Props> = ({
       );
     }
     case 'line': {
-      const lineInput = input as LineView;
+      const lineInput = input as LineInput;
       const strokeColor = lineInput.color || COLOR.black;
       const strokeWidth = lineInput.stroke || 1;
       return (

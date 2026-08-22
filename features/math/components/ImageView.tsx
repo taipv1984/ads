@@ -12,7 +12,7 @@ export interface _Props {
   style?: any;
 }
 
-export const ImageItem: React.FC<_Props> = ({ uri, source, width, height, style }) => {
+export const ImageView: React.FC<_Props> = ({ uri, source, width, height, style }) => {
   const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const [hasError, setHasError] = useState(false);
   const [containerWidth, setContainerWidth] = useState<number>(SCREEN_WIDTH - SPACING.md * 2);
@@ -90,4 +90,4 @@ export const ImageItem: React.FC<_Props> = ({ uri, source, width, height, style 
   );
 };
 
-export default ImageItem;
+export default ImageView;
