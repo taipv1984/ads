@@ -6,7 +6,9 @@ import {
   CheckboxInput,
   Question,
   QuestionChoice,
-  QuestionElement, QuestionForm, QuestionInput, QuestionSort, RadioInput, SelectInput, ShapeElement,
+  QuestionConnect,
+  QuestionElement, QuestionForm,
+  QuestionInput, QuestionSort, RadioInput, SelectInput, ShapeElement,
   TextInput
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
@@ -257,6 +259,10 @@ export const checkQuestionCompletion = (
       return inputs.every(i => userInputs[i.id] && userInputs[i.id].trim() !== '');
     }
 
+    case QuestionType.CONNECT: {
+      return userConnections && userConnections.length > 0;
+    }
+
     // Phải có ít nhất 1 kết nối
     case QuestionType.MATCH: {
       return userConnections.length > 0;
@@ -421,6 +427,53 @@ export const calcQuestionFillScore = (
 
   const finalScore =
     totalRequiredCount > 0 ? Math.round((totalCorrectCount / totalRequiredCount) * questionScore) : 0;
+
+  return { isCorrect, finalScore };
+};
+
+export const calcQuestionConnectScore = (
+  question: QuestionConnect,
+  userConnections: Array<{ from: number; to: number }>
+): { isCorrect: boolean; finalScore: number } => {
+  const correctConnections = question.correctConnections || [];
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const correctTotal = correctConnections.length;
+
+  if (correctTotal === 0) {
+    return { isCorrect: true, finalScore: questionScore };
+  }
+
+  let correctCount = 0;
+  let incorrectCount = 0;
+
+  userConnections.forEach((conn) => {
+    const isMatched = (() => {
+      const groups = question.groups || [];
+      const allInputs: any[] = [];
+      groups.forEach((g) => g.columns.forEach((c) => c.rows.forEach((r) => allInputs.push(...r.inputs))));
+      const hasMainGroup = allInputs.some((i) => i.connectGroup === 'main');
+
+      if (hasMainGroup) {
+        return correctConnections.some((ans) => ans.sourceRef === conn.from && ans.targetRef === conn.to);
+      }
+
+      return correctConnections.some((ans) => {
+        return (
+          (ans.sourceRef === conn.from && ans.targetRef === conn.to) ||
+          (ans.sourceRef === conn.to && ans.targetRef === conn.from)
+        );
+      });
+    })();
+
+    if (isMatched) {
+      correctCount++;
+    } else {
+      incorrectCount++;
+    }
+  });
+
+  const finalScore = calcFinalScore(questionScore, correctTotal, correctCount, incorrectCount);
+  const isCorrect = correctCount === correctTotal && incorrectCount === 0;
 
   return { isCorrect, finalScore };
 };
@@ -606,6 +659,13 @@ export const calcQuestionScore = (
     }
     case QuestionType.FORM: {
       const result = calcQuestionFormScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
+      break;
+    }
+    case QuestionType.CONNECT: {
+      const qConnect = question as QuestionConnect;
+      const result = calcQuestionConnectScore(qConnect, userConnections);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;

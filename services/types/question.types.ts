@@ -94,6 +94,8 @@ export interface BaseInput {
   ref?: number;
   style?: ViewStyle;
   textStyle?: TextStyle;   // style cho text/value hiển thị bên trong input
+  connectGroup?: 'sub' | 'main' | 'left' | 'right' | 'top' | 'bottom';
+  allowConnect?: boolean;
 }
 
 export interface TextInput extends BaseInput {
@@ -237,6 +239,25 @@ export interface QuestionForm extends BaseQuestion {
   connectLines?: ConnectLine[];
 }
 
+export interface UserConnectionLink {
+  id?: string;
+  sourceRef: number;
+  targetRef: number;
+  color?: string;
+}
+
+export interface QuestionFormAnswerLink {
+  sourceRef: number;
+  targetRef: number;
+}
+
+export interface QuestionConnect extends BaseQuestion {
+  type: QuestionType.CONNECT;
+  groups?: FormGroup[];
+  connectLines?: ConnectLine[];
+  correctConnections?: QuestionFormAnswerLink[];
+}
+
 export interface TableCell {
   id: number;
   label?: string;
@@ -261,4 +282,4 @@ export interface QuestionTable extends BaseQuestion {
   borderStyle?: 'solid' | 'dashed' | 'dotted';  //default is solid
 }
 
-export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm | QuestionTable;
+export type Question = QuestionQuiz | QuestionChoice | QuestionSort | QuestionFill | QuestionMatch | QuestionForm | QuestionTable | QuestionConnect;

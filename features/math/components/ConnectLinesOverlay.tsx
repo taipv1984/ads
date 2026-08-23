@@ -1,5 +1,5 @@
 import { COLOR, SIZE } from '@/constants/theme';
-import { ConnectLineGeometry } from '@/hooks/useConnectLines';
+import { ConnectLineGeometry } from '@/hooks/useDrawConnectLines';
 import { ConnectLine } from '@/services/types/question.types';
 import React, { memo, useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
@@ -69,7 +69,7 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
   const arrowHalf = 5;
   const arrowStyle = isArrow ? {
     position: 'absolute' as const,
-    right: -1,
+    right: 0,
     top: -(arrowHalf * 0.9),
     width: 0,
     height: 0,
@@ -87,14 +87,13 @@ const ConnectLineItem: React.FC<ConnectLine & ConnectLineGeometry> = memo(({
       <Animated.View
         style={{
           position: 'absolute',
-          left: sourcePoint.x,
-          top: sourcePoint.y - strokeWidth / 2,
+          left: midpoint.x - distance / 2,
+          top: midpoint.y - strokeWidth / 2,
           width: distance,
           height: strokeWidth,
           overflow: 'visible',
-          transformOrigin: 'left center',
           transform: [{ rotate: `${angle}deg` }],
-          zIndex: 1,
+          zIndex: 0,
           opacity,
         }}
       >

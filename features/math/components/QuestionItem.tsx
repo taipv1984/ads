@@ -1,17 +1,18 @@
 import { MarkdownView } from '@/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
-import { Question, QuestionChoice, QuestionForm, QuestionQuiz, QuestionSort, QuestionTable } from '@/services/types/question.types';
+import { Question, QuestionChoice, QuestionForm, QuestionQuiz, QuestionSort, QuestionTable, QuestionConnect } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import React, { memo, useCallback } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import QuestionCanvas from './QuestionCanvas';
 import QuestionChoiceView from './QuestionChoiceView';
+import QuestionExplanation from './QuestionExplanation';
 import QuestionFormView from './QuestionFormView';
 import QuestionQuizView from './QuestionQuizView';
 import QuestionSortView from './QuestionSortView';
 import QuestionTableView from './QuestionTableView';
-import QuestionExplanation from './QuestionExplanation';
+import QuestionConnectView from './QuestionConnectView';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const QuestionItem: React.FC<_Props> = ({
   index,
   currentIndex,
   userAnswers,
-  userConnections,
+  userConnections = [],
   activeInputId,
   onSelectInput,
   onConnectionsChange,
@@ -91,10 +92,11 @@ const QuestionItem: React.FC<_Props> = ({
             viewMode={ViewMode.EDIT}
           />
         );
-      case QuestionType.FORM:
+      case QuestionType.FORM: {
+        const qForm = question as QuestionForm;
         return (
           <QuestionFormView
-            questionForm={question as QuestionForm}
+            questionForm={qForm}
             userAnswers={userAnswers}
             onAnswerChange={(formId, val) => updateAnswer(question.id, formId, val)}
             activeInputId={index === currentIndex ? activeInputId : null}
@@ -102,6 +104,22 @@ const QuestionItem: React.FC<_Props> = ({
             viewMode={ViewMode.EDIT}
           />
         );
+      }
+      case QuestionType.CONNECT: {
+        const qConnect = question as QuestionConnect;
+        return (
+          <QuestionConnectView
+            questionConnect={qConnect}
+            userAnswers={userAnswers}
+            userConnections={userConnections}
+            onAnswerChange={(formId, val) => updateAnswer(question.id, formId, val)}
+            onConnectionsChange={(conns) => handleConnectionsChangeLocal(question.id, conns)}
+            activeInputId={index === currentIndex ? activeInputId : null}
+            onSelectInput={onSelectInput}
+            viewMode={ViewMode.EDIT}
+          />
+        );
+      }
       case QuestionType.TABLE:
         return (
           <QuestionTableView

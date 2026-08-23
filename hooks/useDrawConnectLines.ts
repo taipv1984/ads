@@ -24,7 +24,7 @@ function safeFixed(n: number, digits = 1): string {
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 /**
- * useConnectLines — Tự động đo layout và tính toán dữ liệu đường nối.
+ * useDrawConnectLines — Tự động đo layout và tính toán dữ liệu đường nối.
  *
  * Cập nhật cấu trúc:
  *   Sử dụng ConnectLine.source.ref và ConnectLine.target.ref thay thế cho
@@ -35,7 +35,7 @@ function safeFixed(n: number, digits = 1): string {
  * @param containerRef  - ref của formContent View (để làm mốc đo relative)
  * @param questionId    - id câu hỏi hiện tại (để reset khi chuyển câu)
  */
-export function useConnectLines(
+export function useDrawConnectLines(
   connectLines: ConnectLine[] | undefined,
   inputRefs: React.MutableRefObject<Record<number, any>>,
   containerRef: React.MutableRefObject<any>,
