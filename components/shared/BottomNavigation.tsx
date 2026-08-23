@@ -20,7 +20,7 @@ const Dot = ({ active }: { active: boolean }) => {
 
   const animatedStyle = useAnimatedStyle(() => ({
     width: width.value,
-    backgroundColor: active ? COLOR.primary : '#BDBDBD',
+    backgroundColor: active ? COLOR.primary : COLOR.grayLight,
   }));
 
   return <Animated.View style={[styles.dot, animatedStyle]} />;
@@ -89,16 +89,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: SPACING.md,
-    paddingVertical: 12,
+    paddingVertical: SPACING.md,
     backgroundColor: COLOR.white,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: COLOR.grayLight,
     ...SHADOWS.small,
   },
   navBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    borderRadius: SPACING.borderRadius,
     backgroundColor: COLOR.primary,
     minWidth: 110,
     alignItems: 'center',
@@ -120,14 +120,14 @@ const styles = StyleSheet.create({
   },
   dots: {
     flexDirection: 'row',
-    gap: 6,
+    gap: SPACING.xs,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
   },
   dot: {
     height: 8,
-    borderRadius: 4,
+    borderRadius: SPACING.xs,
   },
 });
 

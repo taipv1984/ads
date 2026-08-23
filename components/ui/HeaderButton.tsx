@@ -1,7 +1,7 @@
+import { COLOR, SHADOWS, SIZE } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLOR, SHADOWS, SIZE } from '@/constants/theme';
 
 interface _Props {
   icon: any;
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: '#FF4500',
+    backgroundColor: COLOR.primary,
     minWidth: 18,
     height: 18,
     borderRadius: 10,

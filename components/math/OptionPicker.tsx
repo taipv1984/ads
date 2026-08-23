@@ -1,6 +1,7 @@
+import { COLOR, SPACING } from '@/constants/theme';
+import { GAME_CONFIG } from '@/game_config';
 import React from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
-import { GAME_CONFIG } from '@/game_config';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SCALE = SCREEN_WIDTH / GAME_CONFIG.virtualWidth;
@@ -102,12 +103,12 @@ const OptionPicker: React.FC<_Props> = ({ options, onSelect, onClose, position, 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    backgroundColor: '#fff',
-    borderRadius: 5,
+    backgroundColor: COLOR.white,
+    borderRadius: SPACING.borderRadius,
     borderWidth: 2,
-    borderColor: '#FF9800',
+    borderColor: COLOR.primary,
     elevation: 10,
-    shadowColor: '#000',
+    shadowColor: COLOR.black,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -127,12 +128,12 @@ const styles = StyleSheet.create({
   arrowUp: {
     top: -ARROW_SIZE - 1, // Khớp với viền 2px
     borderBottomWidth: ARROW_SIZE,
-    borderBottomColor: '#FF9800',
+    borderBottomColor: COLOR.primary,
   },
   arrowDown: {
     bottom: -ARROW_SIZE - 1, // Khớp với viền 2px
     borderTopWidth: ARROW_SIZE,
-    borderTopColor: '#FF9800',
+    borderTopColor: COLOR.primary,
   },
   content: {
     flex: 1,
@@ -145,15 +146,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   pressedBtn: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: COLOR.grayLight,
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLOR.grayLight,
   },
   optionText: {
     fontWeight: 'bold',
-    color: '#333',
+    color: COLOR.text,
   }
 });
 
