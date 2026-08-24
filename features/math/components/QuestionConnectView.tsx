@@ -14,7 +14,9 @@ import { getAngleDeg, getDistance, getMidpoint } from '@/utils/point.util';
 import React, { memo, useMemo, useRef, useState } from 'react';
 import {
   StyleSheet,
-  View
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import ConnectLinesOverlay from './ConnectLinesOverlay';
 import FormGroupsRender from './FormGroupsRender';
@@ -70,7 +72,7 @@ const QuestionConnectView: React.FC<_Props> = ({
   }, [question]);
 
   // Whether any input belongs to `main` group. If true, use main-sub rules.
-  const hasMainGroup = useMemo(() => allInputs.some((i) => i.connectGroup === 'main'), [allInputs]);
+  const hasMainGroup = useMemo(() => allInputs.some((i) => i.group === 'main'), [allInputs]);
 
   // Hook for drag gesture & line calculations
   const {
@@ -103,6 +105,11 @@ const QuestionConnectView: React.FC<_Props> = ({
     }
     setSelectInputModalVisible(false);
     setCurrentSelectInput(null);
+  };
+
+  const handleResetConnections = () => {
+    if (isReview) return;
+    onConnectionsChange([]);
   };
 
   // Build line geometry data for ConnectLinesOverlay
@@ -222,8 +229,8 @@ const QuestionConnectView: React.FC<_Props> = ({
         collapsable={false}
         style={[
           styles.inputItemWrapper,
-          isHovered && styles.hoveredInputStyle,
-          isActiveSource && styles.activeSourceInputStyle,
+          // Prefer hovered (target) style when both hovered and active source coincide
+          isHovered ? styles.hoveredInputStyle : isActiveSource ? styles.activeSourceInputStyle : undefined,
         ]}
       >
         <View pointerEvents="none">
@@ -255,6 +262,13 @@ const QuestionConnectView: React.FC<_Props> = ({
         <FormGroupsRender groups={question?.groups} renderInput={renderInput} />
         <ConnectLinesOverlay lineData={lineData} />
       </View>
+      {userConnections && userConnections.length > 0 && (
+        <View style={styles.resetWrapper}>
+          <TouchableOpacity accessibilityLabel="Reset connections" onPress={handleResetConnections} style={styles.resetButton}>
+            <Text style={styles.resetIcon}>↺</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <SelectInputModal
         visible={selectInputModalVisible}
         onClose={() => setSelectInputModalVisible(false)}
@@ -284,13 +298,31 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   hoveredInputStyle: {
-    borderColor: COLOR.blue, // Highlight border on hover target
-    backgroundColor: COLOR.bgShape,
+    transform: [{ scale: 1.1 }],
+    zIndex: 3,
     borderRadius: SPACING.borderRadius,
   },
   activeSourceInputStyle: {
-    borderColor: COLOR.blue, // Highlight active source input
+    transform: [{ scale: 1.1 }],
+    zIndex: 3,
     borderRadius: SPACING.borderRadius,
+  },
+  resetWrapper: {
+    alignItems: 'center',
+    marginTop: SPACING.md,
+  },
+  resetButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLOR.primary,
+  },
+  resetIcon: {
+    fontSize: 20,
+    color: COLOR.primary,
   },
 });
 

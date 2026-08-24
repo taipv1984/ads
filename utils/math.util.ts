@@ -451,7 +451,7 @@ export const calcQuestionConnectScore = (
       const groups = question.groups || [];
       const allInputs: any[] = [];
       groups.forEach((g) => g.columns.forEach((c) => c.rows.forEach((r) => allInputs.push(...r.inputs))));
-      const hasMainGroup = allInputs.some((i) => i.connectGroup === 'main');
+      const hasMainGroup = allInputs.some((i) => i.group === 'main');
 
       if (hasMainGroup) {
         return correctConnections.some((ans) => ans.sourceRef === conn.from && ans.targetRef === conn.to);

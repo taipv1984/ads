@@ -55,7 +55,7 @@ export function useDragConnectLines({
   }, [allInputs]);
 
   // Whether any input belongs to `main` group. If true, use main-sub rules.
-  const hasMainGroup = useMemo(() => allInputs.some((i) => i.connectGroup === 'main'), [allInputs]);
+  const hasMainGroup = useMemo(() => allInputs.some((i) => i.group === 'main'), [allInputs]);
 
   // Calibrate container page offset using a known input layout and its touch pageX/pageY
   const calibrateContainerOffset = useCallback(
@@ -78,7 +78,7 @@ export function useDragConnectLines({
     (refId: number, pageX?: number, pageY?: number) => {
       if (isReview) return;
       const inputConfig = inputMap[refId];
-      if (inputConfig?.allowConnect === false) return;
+      if (inputConfig?.isEnabled === false) return;
 
       if (pageX !== undefined && pageY !== undefined) {
         calibrateContainerOffset(refId, pageX, pageY);
@@ -130,6 +130,8 @@ export function useDragConnectLines({
     (touchX: number, touchY: number, sourceRef: number): number | null => {
       const sourceInput = inputMap[sourceRef];
       if (!sourceInput) return null;
+      // If source explicitly disallows connections, it cannot be a source
+      if (sourceInput.isEnabled === false) return null;
 
       let bestTargetRef: number | null = null;
       let minDistance = Infinity;
@@ -140,20 +142,22 @@ export function useDragConnectLines({
 
         const targetInput = inputMap[targetRef];
         if (!targetInput) continue;
+        // If target explicitly disallows connections, skip it
+        if (targetInput.isEnabled === false) continue;
 
         // 1. Same group constraint
         if (
-          sourceInput.connectGroup &&
-          targetInput.connectGroup &&
-          sourceInput.connectGroup === targetInput.connectGroup
+          sourceInput.group &&
+          targetInput.group &&
+          sourceInput.group === targetInput.group
         ) {
           continue;
         }
 
         // 2. Level constraint (main-sub) when `hasMainGroup` is true
         if (hasMainGroup) {
-          const srcLevel = sourceInput.connectGroup === 'main' ? 'main' : 'sub';
-          const tgtLevel = targetInput.connectGroup === 'main' ? 'main' : 'sub';
+          const srcLevel = sourceInput.group === 'main' ? 'main' : 'sub';
+          const tgtLevel = targetInput.group === 'main' ? 'main' : 'sub';
 
           // Cannot connect main to main or sub to sub
           if (srcLevel === tgtLevel) continue;
@@ -205,7 +209,7 @@ export function useDragConnectLines({
             for (const [key, layout] of Object.entries(inputLayouts)) {
               const refId = Number(key);
               const inputConfig = inputMap[refId];
-              if (inputConfig?.allowConnect === false) continue;
+              if (inputConfig?.isEnabled === false) continue;
 
               const centerX = layout.x + layout.width / 2;
               const centerY = layout.y + layout.height / 2;
@@ -276,50 +280,55 @@ export function useDragConnectLines({
             const srcInput = inputMap[srcRef];
             const tgtInput = inputMap[tgtRef];
 
-            let updated = [...userConnections];
-
-            // Filter out existing connection between exact same 2 inputs if any
-            updated = updated.filter(
-              (c) =>
-                !(
-                  (c.from === srcRef && c.to === tgtRef) ||
-                  (c.from === tgtRef && c.to === srcRef)
-                )
-            );
-
-            // Overwrite logic based on whether there is a main group
-            if (!hasMainGroup) {
-              //case: 1-1 connection. Overwrite any previous line from src or tgt
-              const srcMax = srcInput?.connectGroup === 'main' ? 99 : 1;
-              const tgtMax = tgtInput?.connectGroup === 'main' ? 99 : 1;
-
-              if (srcMax === 1) {
-                updated = updated.filter((c) => c.from !== srcRef && c.to !== srcRef);
-              }
-              if (tgtMax === 1) {
-                updated = updated.filter((c) => c.from !== tgtRef && c.to !== tgtRef);
-              }
+            // If either side explicitly disallows connect, ignore
+            if (srcInput?.isEnabled === false || tgtInput?.isEnabled === false) {
+              // do nothing
             } else {
-              // case: 1-n Sub input can only connect to 1 main input
-              const srcLevel = srcInput?.connectGroup === 'main' ? 'main' : 'sub';
-              const tgtLevel = tgtInput?.connectGroup === 'main' ? 'main' : 'sub';
+              let updated = [...userConnections];
 
-              const subRef = srcLevel === 'sub' ? srcRef : tgtLevel === 'sub' ? tgtRef : null;
-              if (subRef !== null) {
-                // Remove existing connection for this sub input
-                updated = updated.filter((c) => c.from !== subRef && c.to !== subRef);
+              // Filter out existing connection between exact same 2 inputs if any
+              updated = updated.filter(
+                (c) =>
+                  !(
+                    (c.from === srcRef && c.to === tgtRef) ||
+                    (c.from === tgtRef && c.to === srcRef)
+                  )
+              );
+
+              // Overwrite logic based on whether there is a main group
+              if (!hasMainGroup) {
+                // Peer case: 1:1 connection. Overwrite any previous line from src or tgt
+                const srcMax = srcInput?.group === 'main' ? 99 : 1;
+                const tgtMax = tgtInput?.group === 'main' ? 99 : 1;
+
+                if (srcMax === 1) {
+                  updated = updated.filter((c) => c.from !== srcRef && c.to !== srcRef);
+                }
+                if (tgtMax === 1) {
+                  updated = updated.filter((c) => c.from !== tgtRef && c.to !== tgtRef);
+                }
+              } else {
+                // Main-sub case: Sub input can only connect to 1 main input
+                const srcLevel = srcInput?.group === 'main' ? 'main' : 'sub';
+                const tgtLevel = tgtInput?.group === 'main' ? 'main' : 'sub';
+
+                const subRef = srcLevel === 'sub' ? srcRef : tgtLevel === 'sub' ? tgtRef : null;
+                if (subRef !== null) {
+                  // Remove existing connection for this sub input
+                  updated = updated.filter((c) => c.from !== subRef && c.to !== subRef);
+                }
               }
+
+              // Ensure source is main and target is sub if hierarchical for consistency, or keep as selected
+              const newConn =
+                hasMainGroup && (srcInput?.group === 'main' ? 'main' : 'sub') === 'sub'
+                  ? { from: tgtRef, to: srcRef }
+                  : { from: srcRef, to: tgtRef };
+
+              updated.push(newConn);
+              onConnectionsChange(updated);
             }
-
-            const newConn =
-              hasMainGroup && (srcInput?.connectGroup === 'main' ? 'main' : 'sub') === 'sub'
-                ? { from: tgtRef, to: srcRef }
-                : { from: srcRef, to: tgtRef };
-
-            updated.push(newConn);
-            onConnectionsChange(updated);
           }
-
           // Reset gesture state
           currentSourceRef.current = null;
           currentHoverRef.current = null;

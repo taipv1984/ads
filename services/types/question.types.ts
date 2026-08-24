@@ -94,8 +94,8 @@ export interface BaseInput {
   ref?: number;
   style?: ViewStyle;
   textStyle?: TextStyle;   // style cho text/value hiển thị bên trong input
-  connectGroup?: 'sub' | 'main' | 'left' | 'right' | 'top' | 'bottom';
-  allowConnect?: boolean;
+  group?: 'sub' | 'main' | 'left' | 'right' | 'top' | 'bottom';
+  isEnabled?: boolean;  //default is true
 }
 
 export interface TextInput extends BaseInput {
@@ -104,7 +104,6 @@ export interface TextInput extends BaseInput {
   value?: string;
   inputStyle?: TextInputStyle;  //box*, dot, line
   textAlign?: 'left' | 'center' | 'right';  //default is center
-  isEnabled?: boolean;  //default is true
 }
 
 export interface SelectInput extends BaseInput {
