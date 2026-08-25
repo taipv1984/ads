@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   groupWrapper: {
     width: '100%',
     flexDirection: 'row',
-    marginBottom: SPACING.md,
+    marginBottom: SPACING.lg,
     alignItems: 'flex-start',
   },
   groupLabelContainer: {
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
   groupLabelText: {
     fontSize: SIZE.md,
     color: COLOR.text,
-    fontWeight: 'bold',
   },
   columnsContainer: {
     flex: 1,

@@ -207,7 +207,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   {
     id: uniqueID(),
     type: QuestionType.FORM,
-    question: "Điền số?",
+    question: "Điền số? a",
     image: "",
     groups: [
       {
@@ -348,7 +348,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   {
     id: uniqueID(),
     type: QuestionType.FORM,
-    question: "Điền số?",
+    question: "Điền số? b",
     image: "",
     groups: [
       {
@@ -480,7 +480,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   {
     id: uniqueID(),
     type: QuestionType.FORM,
-    question: "Điền số? x",
+    question: "Điền số? c",
     groups: [
       {
         columns: [
@@ -647,7 +647,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   {
     id: uniqueID(), //3 cols
     type: QuestionType.FORM,
-    question: "Điền số?",
+    question: "Điền số? d",
     groups: [
       {
         label: 'a) Điền số thích hợp vào ô trống',
@@ -656,22 +656,22 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { type: "label", label: "4", width: 40 },
-                  { type: "label", label: "5", width: 40 },
+                  { type: "label", label: "4", width: 44, height: 44 },
+                  { type: "label", label: "5", width: 44, height: 44 },
                 ]
               },
               { inputs: [{ type: "label", label: "+" }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
-                  { type: "label", label: "3", width: 40 },
-                  { id: uniqueID(), type: "number", value: "3" }
+                  { type: "label", label: "3", width: 44 },
+                  { id: uniqueID(), type: "number", value: "3", height: 44 }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
               {
                 inputs: [
                   { id: uniqueID(), type: "number", value: "7" },
-                  { type: "label", label: "8", width: 40 },
+                  { type: "label", label: "8", width: 44 },
                 ],
               },
             ],
@@ -681,20 +681,20 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { id: uniqueID(), type: "number", value: "3" },
-                  { type: "label", label: "9", width: 40 },
+                  { type: "label", label: "9", width: 44 },
                 ],
               },
               { inputs: [{ type: "label", label: MINUS, }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
-                  { type: "label", label: "2", width: 40 },
-                  { type: "label", label: "7", width: 40 },
+                  { type: "label", label: "2", width: 44, height: 44 },
+                  { type: "label", label: "7", width: 44, height: 44 },
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
               {
                 inputs: [
-                  { type: "label", label: "5", width: 40 },
+                  { type: "label", label: "5", width: 44 },
                   { id: uniqueID(), type: "number", value: "7" },
                 ],
               },
@@ -710,21 +710,21 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { id: uniqueID(), type: "number", value: "3", inputStyle: TextInputStyle.DOT },
-                  { type: "label", label: "3", width: 40 },
+                  { type: "label", label: "3", width: 44 },
                 ],
               },
               { inputs: [{ type: "label", label: "+" }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
-                  { type: "label", label: "6", width: 40 },
+                  { type: "label", label: "6", width: 44 },
                   { id: uniqueID(), type: "number", value: "5", inputStyle: TextInputStyle.DOT }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
               {
                 inputs: [
-                  { type: "label", label: "9", width: 40, height: 40 },
-                  { type: "label", label: "8", width: 40, height: 40 },
+                  { type: "label", label: "9", width: 44, height: 44 },
+                  { type: "label", label: "8", width: 44, height: 44 },
                 ],
               },
             ],
@@ -733,14 +733,14 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { type: "label", label: "9", width: 40, height: 40 },
-                  { type: "label", label: "6", width: 40, height: 40 },
+                  { type: "label", label: "9", width: 44, height: 44 },
+                  { type: "label", label: "6", width: 44, height: 44 },
                 ],
               },
               { inputs: [{ type: "label", label: MINUS }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
-                  { type: "label", label: "2", width: 40 },
+                  { type: "label", label: "2", width: 44 },
                   { id: uniqueID(), type: "number", value: "4", inputStyle: TextInputStyle.LINE }
                 ],
               },
@@ -748,7 +748,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               {
                 inputs: [
                   { id: uniqueID(), type: "number", value: "7", inputStyle: TextInputStyle.LINE },
-                  { type: "label", label: "2", width: 40 },
+                  { type: "label", label: "2", width: 44 },
                 ],
               },
             ],
@@ -850,38 +850,6 @@ export const QUESTION_FORM_MOCKS: Question[] = [
     inputLength: 2,
   },
   {
-    id: uniqueID(), //2 cols
-    type: QuestionType.FORM,
-    question: "Điền số thích hợp vào chỗ chấm:",
-    groups: [
-      {
-        columns: [
-          {
-            rows: [
-              {
-                inputs: [
-                  { type: "label", label: "92 - " },
-                  { id: uniqueID(), type: "number", value: "10" },
-                  { type: "label", label: " = 82" },
-                ],
-                style: { marginBottom: SPACING.md }
-              },
-              {
-                inputs: [
-                  { type: "label", label: "39 - " },
-                  { id: uniqueID(), type: "number", value: "2" },
-                  { type: "label", label: " = 37" }
-                ]
-              }
-            ],
-            style: {},
-          },
-        ]
-      },
-    ],
-    inputLength: 2,
-  },
-  {
     id: uniqueID(), //1 col+ select input
     type: QuestionType.FORM,
     question: "Điền dấu **> < =** vào ô trống",
@@ -966,16 +934,16 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "35", width: 44, height: 40 }], },
+              { inputs: [{ type: "label", label: "35", width: 44, height: 44 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }
               },
-              { inputs: [{ type: "label", label: "5", width: 44, height: 40 }], },
+              { inputs: [{ type: "label", label: "5", width: 44, height: 44 }], },
               { inputs: [{ type: "line" }], style: { width: 44, height: 20 } },
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "30", width: 40 },
+                  { id: uniqueID(), type: "number", value: "30", width: 44 },
                 ],
               },
             ],
@@ -990,14 +958,14 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "38", width: 44, height: 40 }], },
+              { inputs: [{ type: "label", label: "38", width: 44, height: 44 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }
               },
-              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 44 }], },
               { inputs: [{ type: "line" }], style: { width: 44, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 44 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           }
@@ -1015,14 +983,14 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 44 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }
               },
-              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 44 }], },
               { inputs: [{ type: "line" }], style: { width: 44, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 44 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           },
@@ -1035,14 +1003,14 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "38", width: 44 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }
               },
-              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "8", width: 44 }], },
               { inputs: [{ type: "line" }], style: { width: 44, height: 20 } },
-              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 40 }], },
+              { inputs: [{ id: uniqueID(), type: "number", value: "30", width: 44 }], },
             ],
             style: { borderWidth: 1, borderColor: COLOR.blue, borderRadius: 8, padding: SPACING.md }
           }

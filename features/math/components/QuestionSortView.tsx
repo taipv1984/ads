@@ -112,7 +112,7 @@ const QuestionSortView: React.FC<_Props> = ({
         if (!isReview) return null;
         const currentVal = userAnswers[groupIndex] || group.options.join(',');
         const isCorrect = currentVal === group.answer;
-        if (isCorrect) return <Text style={styles.correctText}>Chính xác</Text>;
+        if (isCorrect) return <Text style={styles.correctText}>Đúng</Text>;
         return (
             <Text style={styles.explanationText}>
                 Đáp án đúng là: <Text style={styles.boldText}>{group.answer.split(',').join(', ')}</Text>

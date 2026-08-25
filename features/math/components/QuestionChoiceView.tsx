@@ -89,7 +89,7 @@ const QuestionChoiceView: React.FC<_Props> = ({
     const isMissing = correctAnswers.some(a => !userChoices.includes(a));
 
     if (!isWrong && !isMissing) return (
-      <Text style={styles.correctText}>Chính xác</Text>
+      <Text style={styles.correctText}>Đúng</Text>
     );
 
     if (group.answer.includes(',')) {

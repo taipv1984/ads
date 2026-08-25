@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     fontSize: SIZE.md,
     fontWeight: 'bold',
     color: COLOR.focus,
-    marginLeft: SPACING.xs,
     flex: 1,
   },
   chevronIcon: {

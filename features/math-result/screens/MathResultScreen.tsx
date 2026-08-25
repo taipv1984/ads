@@ -80,7 +80,7 @@ const MathResultScreen = () => {
                 <Text style={[
                   styles.filterButtonText,
                   { color: COLOR.success }
-                ]}>Chính xác {correctCount}</Text>
+                ]}>Đúng {correctCount}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -94,7 +94,7 @@ const MathResultScreen = () => {
                 <Text style={[
                   styles.filterButtonText,
                   { color: COLOR.error }
-                ]}>Chưa đúng {incorrectCount}</Text>
+                ]}>Sai {incorrectCount}</Text>
               </TouchableOpacity>
             </View>
           </View>
