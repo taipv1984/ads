@@ -917,6 +917,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
         ]
       },
     ],
+    inputLength: 0
   },
   {
     id: uniqueID(),

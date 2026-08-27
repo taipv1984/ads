@@ -167,7 +167,7 @@ export const FormInputItem: React.FC<_Props> = ({
               onFocus={() => txtInput.id && onSelectInput && onSelectInput(txtInput.id)}
               textAlign={txtInput.textAlign || 'center'}
               keyboardType="number-pad"
-              maxLength={inputLength}
+              maxLength={inputLength > 0 ? inputLength : undefined}
               style={[
                 { color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4, margin: 0 },
                 txtInput.textStyle,
@@ -211,7 +211,7 @@ export const FormInputItem: React.FC<_Props> = ({
               onFocus={() => txtInput.id && onSelectInput && onSelectInput(txtInput.id)}
               textAlign={txtInput.textAlign || 'center'}
               keyboardType="default"
-              maxLength={inputLength}
+              maxLength={inputLength > 0 ? inputLength : undefined}
               style={[
                 { color: inputTextColor, fontSize: SIZE.md, fontWeight: 'bold', padding: 4 },
                 txtInput.textStyle,
