@@ -1,4 +1,4 @@
-import { INPUT_HEIGHT } from '@/constants/math.const';
+import { INPUT_HEIGHT, INPUT_WIDTH } from '@/constants/math.const';
 import { COLOR, SIZE } from '@/constants/theme';
 import { SelectInput } from '@/services/types/question.types';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,7 +25,7 @@ export const SelectInputItem: React.FC<SelectInputItemProps> = memo(({
   inputRef,
 }) => {
   const val = selInput.id ? (userAnswers[selInput.id] || '') : '';
-  const inputWidth = selInput.width || 80;
+  const inputWidth = selInput.width || 2 * INPUT_WIDTH;
   const inputHeight = selInput.height || INPUT_HEIGHT;
   const selectRef = React.useRef<any>(null);
 

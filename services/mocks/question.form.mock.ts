@@ -17,24 +17,24 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "3", width: 44, height: 44, style: { borderRadius: 0, marginBottom: -1 } },
+                  { id: uniqueID(), type: "number", value: "3", style: { borderRadius: 0, marginBottom: -1 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "4", width: 44, height: 44, style: { borderRadius: 0, marginRight: -1 } },
-                  { id: uniqueID(), type: "number", value: "2", width: 44, height: 44, style: { borderRadius: 0, } },
-                  { id: uniqueID(), type: "number", value: "5", width: 44, height: 44, style: { borderRadius: 0, marginLeft: -1 } },
+                  { id: uniqueID(), type: "number", value: "4", style: { borderRadius: 0, marginRight: -1 } },
+                  { id: uniqueID(), type: "number", value: "2", style: { borderRadius: 0, } },
+                  { id: uniqueID(), type: "number", value: "5", style: { borderRadius: 0, marginLeft: -1 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "6", width: 44, height: 44, style: { borderRadius: 0, marginTop: -1 } },
+                  { id: uniqueID(), type: "number", value: "6", style: { borderRadius: 0, marginTop: -1 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "11", isEnabled: false, width: 44, height: 44, style: { backgroundColor: COLOR.bgSuccess } },
+                  { id: uniqueID(), type: "number", value: "11", isEnabled: false, style: { backgroundColor: COLOR.bgSuccess } },
                 ],
                 style: { marginTop: SPACING.lg }
               },
@@ -59,20 +59,20 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 2, type: "number", value: "4", width: 44, height: 44, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 2, type: "number", value: "4", style: { borderRadius: 100 } },
                 ],
                 style: { marginBottom: SPACING.x3 }
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 3, type: "number", value: "3", width: 44, height: 44, style: { borderRadius: 100 } },
-                  { id: uniqueID(), ref: 1, type: "number", value: "5", width: 44, height: 44, style: { borderRadius: 100, marginHorizontal: SPACING.x3 } },
-                  { id: uniqueID(), ref: 4, type: "number", value: "7", width: 44, height: 44, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 3, type: "number", value: "3", style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 1, type: "number", value: "5", style: { borderRadius: 100, marginHorizontal: SPACING.x3 } },
+                  { id: uniqueID(), ref: 4, type: "number", value: "7", style: { borderRadius: 100 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 5, type: "number", value: "6", width: 44, height: 44, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 5, type: "number", value: "6", style: { borderRadius: 100 } },
                 ],
                 style: { marginTop: SPACING.x3 }
               },
@@ -87,21 +87,21 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 11, type: "number", value: "3", width: 44, height: 44, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 11, type: "number", value: "3", style: { borderRadius: 100 } },
                 ],
                 style: { marginBottom: 30 }
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 12, type: "number", value: "7", width: 44, height: 44, style: { borderRadius: 100, marginHorizontal: 40 } },
-                  { id: uniqueID(), ref: 13, type: "number", value: "5", width: 44, height: 44, style: { borderRadius: 100, marginHorizontal: 40 } },
+                  { id: uniqueID(), ref: 12, type: "number", value: "7", style: { borderRadius: 100, marginHorizontal: 40 } },
+                  { id: uniqueID(), ref: 13, type: "number", value: "5", style: { borderRadius: 100, marginHorizontal: 40 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 14, type: "number", value: "2", width: 44, height: 44, style: { borderRadius: 100 } },
-                  { id: uniqueID(), ref: 15, type: "number", value: "6", width: 44, height: 44, style: { borderRadius: 100, marginHorizontal: 80 } },
-                  { id: uniqueID(), ref: 16, type: "number", value: "4", width: 44, height: 44, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 14, type: "number", value: "2", style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 15, type: "number", value: "6", style: { borderRadius: 100, marginHorizontal: 80 } },
+                  { id: uniqueID(), ref: 16, type: "number", value: "4", style: { borderRadius: 100 } },
                 ],
                 style: { marginTop: SPACING.x3 }
               },
@@ -171,17 +171,17 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "14", isEnabled: false, width: 44, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), type: "number", value: MINUS, isEnabled: false, width: 44, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), ref: 1, type: "number", value: "9", isEnabled: false, width: 44, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), type: "number", value: "=", isEnabled: false, width: 44, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), type: "number", value: "5", width: 44, style: {} },
+                  { id: uniqueID(), type: "number", value: "14", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
+                  { id: uniqueID(), type: "number", value: MINUS, isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
+                  { id: uniqueID(), ref: 1, type: "number", value: "9", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
+                  { id: uniqueID(), type: "number", value: "=", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
+                  { id: uniqueID(), type: "number", value: "5", style: {} },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 2, type: "number", value: "4", width: 44, height: 44, style: { marginHorizontal: 10, borderRadius: 100 } },
-                  { id: uniqueID(), ref: 3, type: "number", value: "4", width: 44, height: 44, style: { marginHorizontal: 10, borderRadius: 100 } }
+                  { id: uniqueID(), ref: 2, type: "number", value: "4", style: { marginHorizontal: 10, borderRadius: 100 } },
+                  { id: uniqueID(), ref: 3, type: "number", value: "4", style: { marginHorizontal: 10, borderRadius: 100 } }
                 ],
                 style: { marginTop: SPACING.x3 }
               },
@@ -215,26 +215,26 @@ export const QUESTION_FORM_MOCKS: Question[] = [
           {
             rows: [
               {
-                inputs: [{ id: uniqueID(), ref: 1, type: "number", value: "1", width: 44, height: 44, isEnabled: false, style: { marginTop: 100, borderRadius: 100 } }],
+                inputs: [{ id: uniqueID(), ref: 1, type: "number", value: "1", isEnabled: false, style: { marginTop: 100, borderRadius: 100 } }],
               },
             ],
           },
           {
             rows: [
               {
-                inputs: [{ id: uniqueID(), ref: 2, type: "number", value: "3", width: 44, style: {} }],
+                inputs: [{ id: uniqueID(), ref: 2, type: "number", value: "3", style: {} }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 3, type: "number", value: "4", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 3, type: "number", value: "4", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 4, type: "number", value: "5", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 4, type: "number", value: "5", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 5, type: "number", value: "6", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 5, type: "number", value: "6", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 6, type: "number", value: "7", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 6, type: "number", value: "7", style: { marginTop: 10 } }],
               },
             ],
           }
@@ -245,26 +245,26 @@ export const QUESTION_FORM_MOCKS: Question[] = [
           {
             rows: [
               {
-                inputs: [{ id: uniqueID(), ref: 7, type: "number", value: "8", width: 44, style: {} }],
+                inputs: [{ id: uniqueID(), ref: 7, type: "number", value: "8", style: {} }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 8, type: "number", value: "9", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 8, type: "number", value: "9", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 9, type: "number", value: "10", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 9, type: "number", value: "10", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 10, type: "number", value: "11", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 10, type: "number", value: "11", style: { marginTop: 10 } }],
               },
               {
-                inputs: [{ id: uniqueID(), ref: 11, type: "number", value: "12", width: 44, style: { marginTop: 10 } }],
+                inputs: [{ id: uniqueID(), ref: 11, type: "number", value: "12", style: { marginTop: 10 } }],
               },
             ],
           },
           {
             rows: [
               {
-                inputs: [{ id: uniqueID(), ref: 12, type: "number", value: "2", width: 44, height: 44, isEnabled: false, style: { marginTop: 100, borderRadius: 100 } }],
+                inputs: [{ id: uniqueID(), ref: 12, type: "number", value: "2", isEnabled: false, style: { marginTop: 100, borderRadius: 100 } }],
               },
             ],
           },
@@ -357,16 +357,16 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 1, type: "number", value: "25", width: 44, height: 44, isEnabled: false, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 1, type: "number", value: "25", isEnabled: false, style: { borderRadius: 100 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 2, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 3, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 4, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 5, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 6, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 2, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 3, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 4, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 5, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 6, type: "number", value: "25", style: { marginHorizontal: 10 } },
                 ],
                 style: { marginTop: SPACING.x6 },
               }
@@ -381,16 +381,16 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 7, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 8, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 9, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 10, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
-                  { id: uniqueID(), ref: 11, type: "number", value: "25", width: 44, style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 7, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 8, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 9, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 10, type: "number", value: "25", style: { marginHorizontal: 10 } },
+                  { id: uniqueID(), ref: 11, type: "number", value: "25", style: { marginHorizontal: 10 } },
                 ],
               },
               {
                 inputs: [
-                  { id: uniqueID(), ref: 12, type: "number", value: "25", width: 44, height: 44, isEnabled: false, style: { borderRadius: 100 } },
+                  { id: uniqueID(), ref: 12, type: "number", value: "25", isEnabled: false, style: { borderRadius: 100 } },
                 ],
                 style: { marginTop: SPACING.x6 },
               }
@@ -488,11 +488,11 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 1, type: "number", value: "25", width: 44, height: 44, isEnabled: false, style: { marginHorizontal: 4, borderRadius: 100 } },
-                  { id: uniqueID(), ref: 2, type: "number", value: "26", width: 44, isEnabled: false, style: { marginHorizontal: 4 } },
-                  { id: uniqueID(), ref: 3, type: "number", value: "27", width: 44, style: { marginHorizontal: 4 } },
-                  { id: uniqueID(), ref: 4, type: "number", value: "28", width: 44, isEnabled: false, style: { marginHorizontal: 4 } },
-                  { id: uniqueID(), ref: 5, type: "number", value: "29", width: 44, height: 44, style: { marginHorizontal: 4, borderRadius: 100 } }
+                  { id: uniqueID(), ref: 1, type: "number", value: "25", isEnabled: false, style: { marginHorizontal: 4, borderRadius: 100 } },
+                  { id: uniqueID(), ref: 2, type: "number", value: "26", isEnabled: false, style: { marginHorizontal: 4 } },
+                  { id: uniqueID(), ref: 3, type: "number", value: "27", style: { marginHorizontal: 4 } },
+                  { id: uniqueID(), ref: 4, type: "number", value: "28", isEnabled: false, style: { marginHorizontal: 4 } },
+                  { id: uniqueID(), ref: 5, type: "number", value: "29", style: { marginHorizontal: 4, borderRadius: 100 } }
                 ],
               }
             ],
@@ -506,8 +506,8 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), ref: 11, type: "number", value: "5", width: 44, height: 44, isEnabled: false, style: { marginHorizontal: 30, borderRadius: 100 } },
-                  { id: uniqueID(), ref: 12, type: "number", value: "0", width: 44, style: { marginHorizontal: 30 } },
+                  { id: uniqueID(), ref: 11, type: "number", value: "5", isEnabled: false, style: { marginHorizontal: 30, borderRadius: 100 } },
+                  { id: uniqueID(), ref: 12, type: "number", value: "0", style: { marginHorizontal: 30 } },
                 ],
               }
             ],
@@ -656,15 +656,15 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { type: "label", label: "4", width: 44, height: 44 },
-                  { type: "label", label: "5", width: 44, height: 44 },
+                  { type: "label", label: "4", width: 44 },
+                  { type: "label", label: "5", width: 44 },
                 ]
               },
               { inputs: [{ type: "label", label: "+" }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
                   { type: "label", label: "3", width: 44 },
-                  { id: uniqueID(), type: "number", value: "3", height: 44 }
+                  { id: uniqueID(), type: "number", value: "3" }
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
@@ -687,8 +687,8 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ type: "label", label: MINUS, }], style: { width: 80, justifyContent: "flex-start" } },
               {
                 inputs: [
-                  { type: "label", label: "2", width: 44, height: 44 },
-                  { type: "label", label: "7", width: 44, height: 44 },
+                  { type: "label", label: "2", width: 44 },
+                  { type: "label", label: "7", width: 44 },
                 ],
               },
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
@@ -723,8 +723,8 @@ export const QUESTION_FORM_MOCKS: Question[] = [
               { inputs: [{ type: "line" }], style: { width: 80, height: 20 } },
               {
                 inputs: [
-                  { type: "label", label: "9", width: 44, height: 44 },
-                  { type: "label", label: "8", width: 44, height: 44 },
+                  { type: "label", label: "9", width: 44 },
+                  { type: "label", label: "8", width: 44 },
                 ],
               },
             ],
@@ -733,8 +733,8 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { type: "label", label: "9", width: 44, height: 44 },
-                  { type: "label", label: "6", width: 44, height: 44 },
+                  { type: "label", label: "9", width: 44 },
+                  { type: "label", label: "6", width: 44 },
                 ],
               },
               { inputs: [{ type: "label", label: MINUS }], style: { width: 80, justifyContent: "flex-start" } },
@@ -934,12 +934,12 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "35", width: 44, height: 44 }], },
+              { inputs: [{ type: "label", label: "35", width: 44 }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }
               },
-              { inputs: [{ type: "label", label: "5", width: 44, height: 44 }], },
+              { inputs: [{ type: "label", label: "5", width: 44 }], },
               { inputs: [{ type: "line" }], style: { width: 44, height: 20 } },
               {
                 inputs: [
@@ -958,7 +958,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
                 ],
                 style: { marginBottom: SPACING.md }
               },
-              { inputs: [{ type: "label", label: "38", width: 44, height: 44 }], },
+              { inputs: [{ type: "label", label: "38" }], },
               {
                 inputs: [{ type: "label", label: MINUS }],
                 style: { width: 44, justifyContent: "flex-start" }

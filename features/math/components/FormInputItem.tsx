@@ -36,6 +36,7 @@ export const resolveInputStyle = (input: { style?: any; width?: number; height?:
   if (input.height !== undefined) {
     mergedStyle.height = input.height;
   }
+  mergedStyle.alignItems = 'center';
 
   return mergedStyle;
 };
@@ -77,21 +78,16 @@ export const FormInputItem: React.FC<_Props> = ({
     case 'label': {
       const lbl = input as LabelInput;
       const labelStyle = resolveInputStyle(lbl as any) as any;
-      const containerStyle = {
-        ...(labelStyle.width !== undefined ? { width: labelStyle.width } : {}),
-        ...(labelStyle.height !== undefined ? { height: labelStyle.height } : {}),
-        justifyContent: 'center',
-        alignItems: 'center',
-      };
       const textStyle = {
-        color: labelStyle.textColor ?? labelStyle.color ?? COLOR.text,
-        fontSize: SIZE.md,
-        fontWeight: labelStyle.fontWeight ?? 'normal',
+        ...(lbl.textStyle ?? {}),
+        color: lbl.textStyle?.color ?? labelStyle.textColor ?? labelStyle.color ?? COLOR.text,
+        fontSize: lbl.textStyle?.fontSize ?? SIZE.md,
+        fontWeight: lbl.textStyle?.fontWeight ?? labelStyle.fontWeight ?? 'normal',
         ...(labelStyle.textAlign ? { textAlign: labelStyle.textAlign } : {}),
       };
 
       return (
-        <View style={[commonStyle, containerStyle]}>
+        <View style={commonStyle}>
           <Text style={[textStyle]}>{lbl.label}</Text>
         </View>
       );
@@ -248,6 +244,7 @@ export const FormInputItem: React.FC<_Props> = ({
       const currentVal = rcInput.id ? (userAnswers[rcInput.id] || '') : '';
       const isChecked = currentVal === rcInput.value;
       const isRadio = rcInput.type === 'radio';
+      const inputHeight = rcInput.height || INPUT_HEIGHT;
       return (
         <TouchableOpacity
           activeOpacity={0.7}
@@ -256,7 +253,7 @@ export const FormInputItem: React.FC<_Props> = ({
           style={{
             flexDirection: rcInput.textAlign === 'right' ? 'row-reverse' : 'row',
             alignItems: 'center',
-            paddingHorizontal: SPACING.xs,
+            height: inputHeight,
           }}
         >
           <Ionicons
