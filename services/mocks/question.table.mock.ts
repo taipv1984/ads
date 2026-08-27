@@ -11,52 +11,46 @@ export const QUESTION_TABLE_MOCKS: QuestionTable[] = [
     columnCount: 4,
     rows: [
       {
-        id: uniqueID(),
         cells: [
-          { id: uniqueID(), label: '3' },
-          { id: uniqueID(), label: '4' },
-          { id: uniqueID(), label: '3' },
-          { id: uniqueID(), label: '13', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '3' },
+          { label: '4' },
+          { label: '3' },
+          { label: '13', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          { id: uniqueID(), label: '0' },
-          { id: uniqueID(), label: '4' },
-          { id: uniqueID(), label: '3' },
-          { id: uniqueID(), label: '12', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '0' },
+          { label: '4' },
+          { label: '3' },
+          { label: '12', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
           {
-            id: uniqueID(),
             input: {
               type: 'image',
               uri: 'https://www.vhv.rs/dpng/d/15-151266_blue-circle-png-logo-transparent-png.png',
               width: 44,
             }
           },
-          { id: uniqueID(), label: '4' },
+          { label: '4' },
           {
-            id: uniqueID(),
             input: {
               type: 'image',
               source: require("@/assets/images/logo.png"),
               width: 34,
             }
           },
-          { id: uniqueID(), label: '11', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '11', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          { id: uniqueID(), label: '10', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
-          { id: uniqueID(), label: '15', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
-          { id: uniqueID(), label: '11', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '10', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '15', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
+          { label: '11', style: { backgroundColor: COLOR.yellowLight }, textStyle: { color: COLOR.error } },
         ],
       },
     ],
@@ -68,44 +62,26 @@ export const QUESTION_TABLE_MOCKS: QuestionTable[] = [
     columnCount: 6,
     rows: [
       {
-        id: uniqueID(),
         cells: [
           {
-            id: uniqueID(),
             label: '12',
             rowspan: 2,
             style: { backgroundColor: COLOR.bgSuccess }
           },
-          { id: uniqueID(), label: '1' },
-          { id: uniqueID(), label: '2' },
-          { id: uniqueID(), label: '3' },
-          { id: uniqueID(), label: '4' },
-          { id: uniqueID(), label: '5' },
+          { label: '1' },
+          { label: '2' },
+          { label: '3' },
+          { label: '4' },
+          { label: '5' },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          {
-            id: uniqueID(),
-            label: '13',
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', value: '14', inputStyle: TextInputStyle.DOT }
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', value: '15', inputStyle: TextInputStyle.DOT }
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', value: '16', inputStyle: TextInputStyle.DOT }
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', value: '17', inputStyle: TextInputStyle.DOT }
-          },
+          { label: '13', },
+          { input: { id: uniqueID(), type: 'number', value: '14', inputStyle: TextInputStyle.DOT } },
+          { input: { id: uniqueID(), type: 'number', value: '15', inputStyle: TextInputStyle.DOT } },
+          { input: { id: uniqueID(), type: 'number', value: '16', inputStyle: TextInputStyle.DOT } },
+          { input: { id: uniqueID(), type: 'number', value: '17', inputStyle: TextInputStyle.DOT } },
         ],
       },
     ],
@@ -118,10 +94,8 @@ export const QUESTION_TABLE_MOCKS: QuestionTable[] = [
     columnCount: 5,
     rows: [
       {
-        id: uniqueID(),
         cells: [
           {
-            id: uniqueID(),
             label: 'PHÉP CỘNG',
             colspan: 5,
             style: { backgroundColor: '#e2e8f0' }, // styling for header
@@ -129,47 +103,26 @@ export const QUESTION_TABLE_MOCKS: QuestionTable[] = [
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          {
-            id: uniqueID(),
-            label: '+',
-            colspan: 2,
-            rowspan: 2,
-          },
-          { id: uniqueID(), label: '15' },
-          { id: uniqueID(), label: '28' },
-          { id: uniqueID(), label: '42' },
+          { label: '+', colspan: 2, rowspan: 2, },
+          { label: '15' },
+          { label: '28' },
+          { label: '42' },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          { id: uniqueID(), label: '7' },
-          { id: uniqueID(), label: '14' },
-          { id: uniqueID(), label: '19' },
+          { label: '7' },
+          { label: '14' },
+          { label: '19' },
         ],
       },
       {
-        id: uniqueID(),
         cells: [
-          {
-            id: uniqueID(),
-            label: '=',
-            colspan: 2,
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'text', inputStyle: TextInputStyle.LINE }
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', inputStyle: TextInputStyle.DOT }
-          },
-          {
-            id: uniqueID(),
-            input: { id: uniqueID(), type: 'number', style: { borderWidth: 0 } }
-          },
+          { label: '=', colspan: 2, },
+          { input: { id: uniqueID(), type: 'text', inputStyle: TextInputStyle.LINE } },
+          { input: { id: uniqueID(), type: 'number', inputStyle: TextInputStyle.DOT } },
+          { input: { id: uniqueID(), type: 'number', style: { borderWidth: 0 } } },
         ],
       },
     ],

@@ -165,6 +165,7 @@ export interface FormRow {
 export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
   LabelInput | ImageInput | LineInput;
 
+//todo update for QuestionValidate voi nhieu kieu rule khac nhau
 export interface QuestionRule {
   id: number;
   formula: string; //'#9 + #10 === 32'
@@ -258,7 +259,6 @@ export interface QuestionConnect extends BaseQuestion {
 }
 
 export interface TableCell {
-  id: number;
   label?: string;
   input?: QuestionInput;
   colspan?: number;
@@ -268,7 +268,6 @@ export interface TableCell {
 }
 
 export interface TableRow {
-  id: number;
   cells: TableCell[];
 }
 

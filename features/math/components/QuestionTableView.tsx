@@ -143,7 +143,7 @@ const QuestionTableView: React.FC<_Props> = ({
           const height = cell.renderedRowspan * CELL_HEIGHT;
           return (
             <View
-              key={`cell_${cell.id || index}`}
+              key={`cell_${index}`}
               style={[
                 styles.cellBase,
                 {
