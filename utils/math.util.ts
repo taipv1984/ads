@@ -9,7 +9,7 @@ import {
   QuestionConnect,
   QuestionElement, QuestionForm,
   QuestionInput, QuestionSort, RadioInput, SelectInput, ShapeElement,
-  TextInput
+  TextInput, QuestionTable
 } from '@/services/types/question.types';
 import { ScoreFeedback } from '@/services/types/score-feedback.types';
 import { DEFAULT_Z_INDEX, RenderLayer, SCALE } from '../features/math/components/shared/BaseElements';
@@ -252,6 +252,23 @@ export const checkQuestionCompletion = (
           });
         });
       }
+      const inputs = allInputs.filter(el =>
+        (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') && (el as { id?: number }).id
+      ) as Array<BaseInput & { id: number }>;
+      if (inputs.length === 0) return true;
+      return inputs.every(i => userInputs[i.id] && userInputs[i.id].trim() !== '');
+    }
+
+    case QuestionType.TABLE: {
+      const qTable = question as QuestionTable;
+      const allInputs: QuestionInput[] = [];
+      qTable.rows.forEach(row => {
+        row.cells.forEach(cell => {
+          if (cell.input) {
+            allInputs.push(cell.input);
+          }
+        });
+      });
       const inputs = allInputs.filter(el =>
         (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') && (el as { id?: number }).id
       ) as Array<BaseInput & { id: number }>;
@@ -534,6 +551,48 @@ export const calcQuestionFormScore = (
   return { isCorrect, finalScore };
 };
 
+export const calcQuestionTableScore = (
+  question: Question,
+  userInputs: Record<number, string>
+): { isCorrect: boolean; finalScore: number } => {
+  if (question.type !== QuestionType.TABLE) return { isCorrect: false, finalScore: 0 };
+  let isCorrect = true;
+  let totalCorrectCount = 0;
+  let totalRequiredCount = 0;
+  const questionScore = question.score !== undefined ? question.score : 1;
+  const qTable = question as QuestionTable;
+
+  const allInputs: QuestionInput[] = [];
+  qTable.rows.forEach((row) => {
+    row.cells.forEach((cell) => {
+      if (cell.input) {
+        allInputs.push(cell.input);
+      }
+    });
+  });
+
+  // 1. Kiểm tra các ô Input có id và có value
+  for (const el of allInputs) {
+    if (el.type === 'number' || el.type === 'text' || el.type === 'select' || el.type === 'radio' || el.type === 'checkbox') {
+      const input = el as TextInput | SelectInput | RadioInput | CheckboxInput;
+      if (input.id && input.value && input.value.trim() !== '') {
+        totalRequiredCount++;
+        const userVal = userInputs[input.id] || '';
+        if (userVal === input.value) {
+          totalCorrectCount++;
+        } else {
+          isCorrect = false;
+        }
+      }
+    }
+  }
+
+  const finalScore =
+    totalRequiredCount > 0 ? Math.round((totalCorrectCount / totalRequiredCount) * questionScore) : 0;
+
+  return { isCorrect, finalScore };
+};
+
 /**
  * Tính điểm cho câu hỏi dạng chọn (choice)
  */
@@ -690,6 +749,12 @@ export const calcQuestionScore = (
     }
     case QuestionType.QUIZ: {
       const result = calcQuestionQuizScore(question, userInputs);
+      isCorrect = result.isCorrect;
+      finalScore = result.finalScore;
+      break;
+    }
+    case QuestionType.TABLE: {
+      const result = calcQuestionTableScore(question, userInputs);
       isCorrect = result.isCorrect;
       finalScore = result.finalScore;
       break;

@@ -1,14 +1,40 @@
+import { MarkdownView } from '@/components/shared/MarkdownView';
 import { COLOR, SIZE, SPACING } from '@/constants/theme';
 import { QuestionType, ViewMode } from '@/enums/math.enum';
 import QuestionCanvas from '@/features/math/components/QuestionCanvas';
 import QuestionChoiceView from '@/features/math/components/QuestionChoiceView';
+import QuestionConnectView from '@/features/math/components/QuestionConnectView';
+import QuestionExplanation from '@/features/math/components/QuestionExplanation';
+import QuestionFormView from '@/features/math/components/QuestionFormView';
 import QuestionQuizView from '@/features/math/components/QuestionQuizView';
 import QuestionSortView from '@/features/math/components/QuestionSortView';
-import { Question, QuestionChoice, QuestionQuiz, QuestionSort } from '@/services/types/question.types';
+import QuestionTableView from '@/features/math/components/QuestionTableView';
+import { Question, QuestionChoice, QuestionConnect, QuestionForm, QuestionQuiz, QuestionSort, QuestionTable } from '@/services/types/question.types';
 import { getCanvasLayout } from '@/utils/math.util';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image as RNImage, StyleSheet, Text, View } from 'react-native';
+
+// Component hiển thị ảnh tự động điều chỉnh chiều cao theo tỷ lệ
+const AutoHeightImage = React.memo(({ uri }: { uri: string }) => {
+  const [aspectRatio, setAspectRatio] = useState(1);
+  React.useEffect(() => {
+    if (uri) {
+      RNImage.getSize(uri, (width, height) => {
+        setAspectRatio(width / height);
+      }, (error) => {
+        console.error('Không lấy được kích thước ảnh:', error);
+      });
+    }
+  }, [uri]);
+  return (
+    <RNImage
+      source={{ uri }}
+      style={{ width: '100%', aspectRatio }}
+      resizeMode="contain"
+    />
+  );
+});
 
 interface _Props {
   question: Question;
@@ -88,6 +114,41 @@ const MatchResultItem = React.memo(({
             viewMode={ViewMode.REVIEW}
           />
         );
+      case QuestionType.FORM:
+        return (
+          <QuestionFormView
+            questionForm={question as QuestionForm}
+            userAnswers={userAnswers}
+            onAnswerChange={() => { }}
+            activeInputId={null}
+            onSelectInput={() => { }}
+            viewMode={ViewMode.REVIEW}
+          />
+        );
+      case QuestionType.CONNECT:
+        return (
+          <QuestionConnectView
+            questionConnect={question as QuestionConnect}
+            userAnswers={userAnswers}
+            userConnections={userConnections}
+            onAnswerChange={() => { }}
+            onConnectionsChange={() => { }}
+            activeInputId={null}
+            onSelectInput={() => { }}
+            viewMode={ViewMode.REVIEW}
+          />
+        );
+      case QuestionType.TABLE:
+        return (
+          <QuestionTableView
+            questionTable={question as QuestionTable}
+            userAnswers={userAnswers}
+            onAnswerChange={() => { }}
+            activeInputId={null}
+            onSelectInput={() => { }}
+            viewMode={ViewMode.REVIEW}
+          />
+        );
       default:
         return null;
     }
@@ -112,11 +173,19 @@ const MatchResultItem = React.memo(({
 
       {question.question && question.question !== "" && (
         <View style={styles.cardContentWrapper}>
-          <Text style={styles.cardContent}>{question.question}</Text>
+          <MarkdownView style={styles.cardContent} text={question.question} />
+        </View>
+      )}
+
+      {question.image && (
+        <View style={styles.imageWrapper}>
+          <AutoHeightImage uri={question.image} />
         </View>
       )}
 
       {renderResultContent()}
+
+      <QuestionExplanation explain={question.explain} isAnswered={true} />
     </View>
   );
 });
@@ -126,6 +195,7 @@ export default MatchResultItem;
 const styles = StyleSheet.create({
   resultCard: {
     paddingTop: SPACING.md,
+    paddingBottom: SPACING.md,
   },
   resultCardHeader: {
     flexDirection: 'row',
@@ -181,5 +251,10 @@ const styles = StyleSheet.create({
     fontSize: SIZE.md,
     color: COLOR.text,
     lineHeight: 22,
+  },
+  imageWrapper: {
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
   },
 });

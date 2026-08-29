@@ -100,16 +100,20 @@ export const FormInputItem: React.FC<_Props> = ({
         ? (txtInput.id ? (userAnswers[txtInput.id] || '') : '')
         : (txtInput.value ?? '');
       const isFocused = activeInputId === txtInput.id && !isReview;
+
+      const isCorrect = val === txtInput.value;
       const inputTextColor = isFocused
         ? COLOR.focus
-        : (txtInput.textStyle?.color as string | undefined) ?? COLOR.text;
+        : (isReview && txtInput.id && isEnabled
+          ? (isCorrect ? COLOR.success : COLOR.error)
+          : (txtInput.textStyle?.color as string | undefined) ?? COLOR.text);
       const isDotInput = txtInput.inputStyle === TextInputStyle.DOT;
       const isLineView = txtInput.inputStyle === TextInputStyle.LINE;
       const isBottomLine = isDotInput || isLineView;
 
       let customStyle: any = {
         borderWidth: 1, borderColor: COLOR.gray, borderRadius: 3,
-        backgroundColor: COLOR.bgFocus
+        backgroundColor: COLOR.white
       };
 
       if (isBottomLine) {
@@ -124,9 +128,18 @@ export const FormInputItem: React.FC<_Props> = ({
         customStyle.backgroundColor = COLOR.bgFocus;
       }
 
-      if (isReview && txtInput.id) {
+      if (isReview && txtInput.id && isEnabled) {
+        customStyle.borderColor = isCorrect ? COLOR.success : COLOR.error;
+        customStyle.backgroundColor = isCorrect ? COLOR.bgSuccess : COLOR.bgError;
+      } else if (isReview && txtInput.id) {
         customStyle.borderColor = COLOR.textSecondary;
       }
+
+      const reviewIndicatorColor = isFocused
+        ? COLOR.focus
+        : (isReview && txtInput.id && isEnabled
+          ? (isCorrect ? COLOR.success : COLOR.error)
+          : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray));
 
       const inputWidth = txtInput.width || Math.max(INPUT_WIDTH, inputLength * INPUT_WIDTH / 2);
       const inputHeight = txtInput.height || INPUT_HEIGHT;
@@ -150,11 +163,11 @@ export const FormInputItem: React.FC<_Props> = ({
             {(isDotInput || isLineView) && (
               <View style={{ position: 'absolute', left: 4, right: 4, bottom: 8, alignItems: 'center' }}>
                 {isLineView ? (
-                  <View style={{ width: '100%', height: 1, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray) }} />
+                  <View style={{ width: '100%', height: 1, backgroundColor: reviewIndicatorColor }} />
                 ) : (
                   <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', overflow: 'hidden' }}>
                     {Array.from({ length: 10 }).map((_, index) => (
-                      <View key={index} style={{ width: 2, height: 2, borderRadius: 2, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray), marginRight: index < 9 ? 2 : 0 }} />
+                      <View key={index} style={{ width: 2, height: 2, borderRadius: 2, backgroundColor: reviewIndicatorColor, marginRight: index < 9 ? 2 : 0 }} />
                     ))}
                   </View>
                 )}
@@ -194,11 +207,11 @@ export const FormInputItem: React.FC<_Props> = ({
             {(isDotInput || isLineView) && (
               <View style={{ position: 'absolute', left: 10, right: 10, bottom: 8, alignItems: 'center' }}>
                 {isLineView ? (
-                  <View style={{ width: '100%', height: 2, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray) }} />
+                  <View style={{ width: '100%', height: 2, backgroundColor: reviewIndicatorColor }} />
                 ) : (
                   <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     {Array.from({ length: 10 }).map((_, index) => (
-                      <View key={index} style={{ width: 3, height: 3, borderRadius: 1.5, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray), marginRight: index < 9 ? 2 : 0 }} />
+                      <View key={index} style={{ width: 3, height: 3, borderRadius: 1.5, backgroundColor: reviewIndicatorColor, marginRight: index < 9 ? 2 : 0 }} />
                     ))}
                   </View>
                 )}

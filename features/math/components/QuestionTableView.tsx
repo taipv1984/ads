@@ -124,48 +124,50 @@ const QuestionTableView: React.FC<_Props> = ({
 
   return (
     <View style={styles.container}>
-      <View style={[
-        styles.tableContainer,
-        {
-          height: containerHeight,
-          ...(borderWidth > 0 ? {
-            borderTopWidth: borderWidth,
-            borderLeftWidth: borderWidth,
-            borderColor: borderColor,
-            borderStyle: borderStyle,
-          } : {})
-        }
-      ]}>
-        {flatCells.map((cell, index) => {
-          const leftPercent = (cell.colIndex / columnCount) * 100;
-          const widthPercent = (cell.renderedColspan / columnCount) * 100;
-          const top = cell.rowIndex * CELL_HEIGHT;
-          const height = cell.renderedRowspan * CELL_HEIGHT;
-          return (
-            <View
-              key={`cell_${index}`}
-              style={[
-                styles.cellBase,
-                {
-                  position: 'absolute',
-                  left: `${leftPercent}%`,
-                  width: `${widthPercent}%`,
-                  top,
-                  height,
-                  ...(borderWidth > 0 ? {
-                    borderRightWidth: borderWidth,
-                    borderBottomWidth: borderWidth,
-                    borderColor: borderColor,
-                    borderStyle: borderStyle,
-                  } : {})
-                },
-                cell.style
-              ]}
-            >
-              {renderCellContent(cell)}
-            </View>
-          );
-        })}
+      <View style={{ minHeight: containerHeight }}>
+        <View style={[
+          styles.tableContainer,
+          {
+            height: containerHeight,
+            ...(borderWidth > 0 ? {
+              borderTopWidth: borderWidth,
+              borderLeftWidth: borderWidth,
+              borderColor: borderColor,
+              borderStyle: borderStyle,
+            } : {})
+          }
+        ]}>
+          {flatCells.map((cell, index) => {
+            const leftPercent = (cell.colIndex / columnCount) * 100;
+            const widthPercent = (cell.renderedColspan / columnCount) * 100;
+            const top = cell.rowIndex * CELL_HEIGHT;
+            const height = cell.renderedRowspan * CELL_HEIGHT;
+            return (
+              <View
+                key={`cell_${index}`}
+                style={[
+                  styles.cellBase,
+                  {
+                    position: 'absolute',
+                    left: `${leftPercent}%`,
+                    width: `${widthPercent}%`,
+                    top,
+                    height,
+                    ...(borderWidth > 0 ? {
+                      borderRightWidth: borderWidth,
+                      borderBottomWidth: borderWidth,
+                      borderColor: borderColor,
+                      borderStyle: borderStyle,
+                    } : {})
+                  },
+                  cell.style
+                ]}
+              >
+                {renderCellContent(cell)}
+              </View>
+            );
+          })}
+        </View>
       </View>
       <SelectInputModal
         visible={selectInputModalVisible}

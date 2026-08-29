@@ -171,10 +171,10 @@ export const QUESTION_FORM_MOCKS: Question[] = [
             rows: [
               {
                 inputs: [
-                  { id: uniqueID(), type: "number", value: "14", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), type: "number", value: MINUS, isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), ref: 1, type: "number", value: "9", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
-                  { id: uniqueID(), type: "number", value: "=", isEnabled: false, style: { borderWidth: 0, backgroundColor: '#fff' } },
+                  { id: uniqueID(), type: "number", value: "14", isEnabled: false, style: { borderWidth: 0, backgroundColor: 'transparent' } },
+                  { id: uniqueID(), type: "number", value: MINUS, isEnabled: false, style: { borderWidth: 0, backgroundColor: 'transparent' } },
+                  { id: uniqueID(), ref: 1, type: "number", value: "9", isEnabled: false, style: { borderWidth: 0, backgroundColor: 'transparent' } },
+                  { id: uniqueID(), type: "number", value: "=", isEnabled: false, style: { borderWidth: 0, backgroundColor: 'transparent' } },
                   { id: uniqueID(), type: "number", value: "5", style: {} },
                 ],
               },
@@ -550,7 +550,7 @@ export const QUESTION_FORM_MOCKS: Question[] = [
   {
     id: uniqueID(), //3 cols
     type: QuestionType.FORM,
-    question: "Tính",
+    // question: "Tính",
     image: "https://hieusach24h.com/wp-content/uploads/2021/09/logo-hieu-sach-24h.png",
     groups: [
       {

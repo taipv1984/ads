@@ -35,8 +35,16 @@ export const SelectInputItem: React.FC<SelectInputItemProps> = memo(({
     });
   };
 
-  const borderColor = isFocused ? COLOR.focus : COLOR.gray;
-  const textColor = val ? COLOR.focus : COLOR.text;
+  const isCorrect = val === selInput.value;
+  const borderColor = isReview
+    ? (isCorrect ? COLOR.success : COLOR.error)
+    : (isFocused ? COLOR.focus : COLOR.gray);
+  const bgColor = isReview
+    ? (isCorrect ? COLOR.bgSuccess : COLOR.bgError)
+    : COLOR.white;
+  const textColor = isReview
+    ? (isCorrect ? COLOR.success : COLOR.error)
+    : (val ? COLOR.focus : COLOR.text);
 
   return (
     <TouchableOpacity
@@ -57,7 +65,7 @@ export const SelectInputItem: React.FC<SelectInputItemProps> = memo(({
           borderRadius: 3,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: COLOR.white,
+          backgroundColor: bgColor,
           flexDirection: 'row',
         },
       ]}
