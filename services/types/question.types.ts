@@ -143,24 +143,8 @@ export interface LineView extends BaseInput {
   stroke?: number;
 }
 
-export interface FormGroup {
-  label?: string;
-  columns: FormColumn[];
-  style?: ViewStyle;
-}
-
-export interface FormColumn {
-  rows: FormRow[];
-  style?: ViewStyle;
-}
-
-export interface FormRow {
-  inputs: QuestionInput[];
-  style?: ViewStyle;
-}
-
-export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
-  LabelView | ImageInput | LineView;
+export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput | ImageInput |
+  LabelView | LineView;
 
 //todo update for QuestionValidate voi nhieu kieu rule khac nhau
 export interface QuestionRule {
@@ -226,6 +210,22 @@ export interface QuestionFill extends BaseQuestion {
 export interface QuestionMatch extends BaseQuestion {
   type: QuestionType.MATCH;
   elements?: QuestionElement[];
+}
+
+export interface FormGroup {
+  label?: string;
+  columns: FormColumn[];
+  style?: ViewStyle;
+}
+
+export interface FormColumn {
+  rows: FormRow[];
+  style?: ViewStyle;
+}
+
+export interface FormRow {
+  inputs: QuestionInput[];
+  style?: ViewStyle;
 }
 
 export interface QuestionForm extends BaseQuestion {
