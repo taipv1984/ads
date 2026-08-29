@@ -87,7 +87,8 @@ export interface ImageElement extends BaseElement {
 export type QuestionElement = ShapeElement | LineElement | TextElement | ImageElement;
 
 export interface BaseInput {
-  type: 'number' | 'text' | 'select' | 'radio' | 'checkbox' | 'label' | 'image' | 'line';
+  id?: number;
+  type: 'number' | 'text' | 'select' | 'radio' | 'checkbox' | 'image' | 'label' | 'line';
   width?: number;
   height?: number;
   zIndex?: number;
@@ -99,7 +100,6 @@ export interface BaseInput {
 }
 
 export interface TextInput extends BaseInput {
-  id: number;
   type: 'number' | 'text';
   value?: string;
   inputStyle?: TextInputStyle;  //box*, dot, line
@@ -107,14 +107,12 @@ export interface TextInput extends BaseInput {
 }
 
 export interface SelectInput extends BaseInput {
-  id: number;
   type: 'select';
   value?: string;
   valueOptions?: string; //'["Đ", "S"]'
 }
 
 export interface RadioInput extends BaseInput {
-  id: number;
   type: 'radio';
   value?: string;
   label?: string;
@@ -122,16 +120,10 @@ export interface RadioInput extends BaseInput {
 }
 
 export interface CheckboxInput extends BaseInput {
-  id: number;
   type: 'checkbox';
   value?: string;
   label?: string;
   textAlign?: 'left' | 'right';   //default is left
-}
-
-export interface LabelInput extends BaseInput {
-  type: 'label';
-  label: string;
 }
 
 export interface ImageInput extends BaseInput {
@@ -140,7 +132,12 @@ export interface ImageInput extends BaseInput {
   source?: ImageSourcePropType;
 }
 
-export interface LineInput extends BaseInput {
+export interface LabelView extends BaseInput {
+  type: 'label';
+  label: string;
+}
+
+export interface LineView extends BaseInput {
   type: 'line';
   color?: string;
   stroke?: number;
@@ -163,7 +160,7 @@ export interface FormRow {
 }
 
 export type QuestionInput = TextInput | SelectInput | RadioInput | CheckboxInput |
-  LabelInput | ImageInput | LineInput;
+  LabelView | ImageInput | LineView;
 
 //todo update for QuestionValidate voi nhieu kieu rule khac nhau
 export interface QuestionRule {
@@ -239,13 +236,7 @@ export interface QuestionForm extends BaseQuestion {
   connectLines?: ConnectLine[];
 }
 
-export interface UserConnectionLink {
-  id?: string;
-  sourceRef: number;
-  targetRef: number;
-  color?: string;
-}
-
+//todo update for QuestionValidate voi nhieu kieu rule khac nhau
 export interface QuestionFormAnswerLink {
   sourceRef: number;
   targetRef: number;

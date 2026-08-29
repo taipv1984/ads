@@ -4,8 +4,8 @@ import { TextInputStyle } from '@/enums/math.enum';
 import {
   CheckboxInput,
   ImageInput,
-  LabelInput,
-  LineInput,
+  LabelView,
+  LineView,
   QuestionInput,
   RadioInput,
   SelectInput,
@@ -76,7 +76,7 @@ export const FormInputItem: React.FC<_Props> = ({
 
   switch (input.type) {
     case 'label': {
-      const lbl = input as LabelInput;
+      const lbl = input as LabelView;
       const labelStyle = resolveInputStyle(lbl as any) as any;
       const textStyle = {
         ...(lbl.textStyle ?? {}),
@@ -104,8 +104,8 @@ export const FormInputItem: React.FC<_Props> = ({
         ? COLOR.focus
         : (txtInput.textStyle?.color as string | undefined) ?? COLOR.text;
       const isDotInput = txtInput.inputStyle === TextInputStyle.DOT;
-      const isLineInput = txtInput.inputStyle === TextInputStyle.LINE;
-      const isBottomLine = isDotInput || isLineInput;
+      const isLineView = txtInput.inputStyle === TextInputStyle.LINE;
+      const isBottomLine = isDotInput || isLineView;
 
       let customStyle: any = {
         borderWidth: 1, borderColor: COLOR.gray, borderRadius: 3,
@@ -147,9 +147,9 @@ export const FormInputItem: React.FC<_Props> = ({
               inputStyle, isFocused ? { zIndex: 12 } : {}
             ]}
           >
-            {(isDotInput || isLineInput) && (
+            {(isDotInput || isLineView) && (
               <View style={{ position: 'absolute', left: 4, right: 4, bottom: 8, alignItems: 'center' }}>
-                {isLineInput ? (
+                {isLineView ? (
                   <View style={{ width: '100%', height: 1, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray) }} />
                 ) : (
                   <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', overflow: 'hidden' }}>
@@ -191,9 +191,9 @@ export const FormInputItem: React.FC<_Props> = ({
               inputStyle, isFocused ? { zIndex: 12 } : {}
             ]}
           >
-            {(isDotInput || isLineInput) && (
+            {(isDotInput || isLineView) && (
               <View style={{ position: 'absolute', left: 10, right: 10, bottom: 8, alignItems: 'center' }}>
-                {isLineInput ? (
+                {isLineView ? (
                   <View style={{ width: '100%', height: 2, backgroundColor: isFocused ? COLOR.focus : (isReview && txtInput.id ? COLOR.textSecondary : COLOR.gray) }} />
                 ) : (
                   <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -294,9 +294,9 @@ export const FormInputItem: React.FC<_Props> = ({
       );
     }
     case 'line': {
-      const lineInput = input as LineInput;
-      const strokeColor = lineInput.color || COLOR.black;
-      const strokeWidth = lineInput.stroke || 1;
+      const lineView = input as LineView;
+      const strokeColor = lineView.color || COLOR.black;
+      const strokeWidth = lineView.stroke || 1;
       return (
         <View
           style={[
